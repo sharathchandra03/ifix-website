@@ -1,6 +1,33 @@
 require('dotenv').config();
 const mysql = require('mysql2/promise');
 
+function buildMysqlConfig() {
+  const connectionUrl = process.env.DATABASE_URL || process.env.MYSQL_URL;
+
+  if (connectionUrl) {
+    const parsed = new URL(connectionUrl);
+    const sslEnabled = process.env.DB_SSL === 'true' || parsed.protocol === 'mysqls:';
+
+    return {
+      host: parsed.hostname,
+      user: decodeURIComponent(parsed.username || process.env.DB_USER || 'root'),
+      password: decodeURIComponent(parsed.password || process.env.DB_PASSWORD || ''),
+      database: parsed.pathname.replace(/^\//, '') || process.env.DB_NAME || 'ifix_db',
+      port: parsed.port ? Number(parsed.port) : 3306,
+      ssl: sslEnabled ? { rejectUnauthorized: false } : undefined
+    };
+  }
+
+  return {
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    port: Number(process.env.DB_PORT || 3306),
+    ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : undefined
+  };
+}
+
 const demoProducts = [
   ['Samsung Galaxy M14 (Used)', '6GB RAM, 128GB storage, battery health 90%+', 11999, '', 'phones', 6],
   ['Redmi Note 12 (Used)', '6GB RAM, 128GB, good condition', 10999, '', 'phones', 8],
@@ -15,13 +42,7 @@ const demoProducts = [
 ];
 
 async function seed() {
-  const connection = await mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    port: Number(process.env.DB_PORT || 3306)
-  });
+  const connection = await mysql.createConnection(buildMysqlConfig());
 
   try {
     const names = ['Test Device', ...demoProducts.map(p => p[0])];
