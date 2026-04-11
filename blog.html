@@ -60,6 +60,11 @@
     .blog-post__title { font-weight: 800; font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.1; letter-spacing: -0.03em; color: var(--text); margin-bottom: 1rem; }
     .blog-post__meta { display: flex; gap: 1.5rem; flex-wrap: wrap; font-size: 0.9rem; color: var(--text-2); margin-bottom: 2rem; }
     .blog-post__meta-item { display: flex; align-items: center; gap: 0.5rem; }
+    .blog-author-row { display: flex; align-items: center; gap: 1rem; margin: 1.25rem 0 2rem; }
+    .blog-author-row__avatar { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border); flex-shrink: 0; }
+    .blog-author-row__fallback { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, var(--bg-2), var(--bg-3)); border: 1px solid var(--border); flex-shrink: 0; }
+    .blog-author-row__name { font-weight: 700; color: var(--text); margin-bottom: 0.2rem; }
+    .blog-author-row__label { font-size: 0.85rem; color: var(--text-3); }
     .blog-post__image { width: 100%; max-height: 500px; border-radius: var(--r-xl); object-fit: cover; margin-bottom: 3rem; }
     .blog-post__content { font-size: 1.05rem; line-height: 1.8; color: var(--text-2); }
     .blog-post__content h2 { font-weight: 700; font-size: 1.5rem; color: var(--text); margin: 2rem 0 1rem; }
@@ -293,7 +298,15 @@
             ${blog.category ? `<span class="blog-post__meta-item">🏷️ ${blog.category}</span>` : ''}
           </div>
         </header>
-        ${blog.author_profile_picture ? `<img src="${blog.author_profile_picture}" alt="${escapeHtml(blog.author)}" class="blog-post__image" style="max-height:220px;object-fit:cover;">` : ''}
+        <div class="blog-author-row">
+          ${blog.author_profile_picture
+            ? `<img src="${escapeHtml(blog.author_profile_picture)}" alt="${escapeHtml(blog.author)}" class="blog-author-row__avatar">`
+            : `<div class="blog-author-row__fallback"></div>`}
+          <div>
+            <div class="blog-author-row__name">${escapeHtml(blog.author)}</div>
+            <div class="blog-author-row__label">Author</div>
+          </div>
+        </div>
         ${blog.featured_image ? `<img src="${blog.featured_image}" alt="${blog.title}" class="blog-post__image">` : ''}
         <div class="blog-post__content">${blog.content}</div>
       `;

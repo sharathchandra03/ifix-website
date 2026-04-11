@@ -12,6 +12,8 @@ const useCloudinary = Boolean(
   process.env.CLOUDINARY_API_SECRET
 );
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 if (useCloudinary) {
   cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -240,6 +242,12 @@ router.put('/:id', verifyToken, async (req, res) => {
 router.post('/upload-image', verifyToken, upload.single('image'), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: 'No image uploaded' });
+  }
+
+  if (isProduction && !useCloudinary) {
+    return res.status(503).json({
+      error: 'Image uploads require Cloudinary in production. Set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET in Render.'
+    });
   }
 
   if (useCloudinary) {
