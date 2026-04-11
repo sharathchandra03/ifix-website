@@ -28,12 +28,23 @@ function buildMysqlConfig() {
   };
 }
 
+function getTargetDatabaseName() {
+  const connectionUrl = process.env.DATABASE_URL || process.env.MYSQL_URL;
+  if (connectionUrl) {
+    const parsed = new URL(connectionUrl);
+    const dbName = parsed.pathname.replace(/^\//, '').trim();
+    if (dbName) return dbName;
+  }
+
+  return process.env.DB_NAME || 'ifix_db';
+}
+
 async function columnExists(connection, tableName, columnName) {
   const [rows] = await connection.query(
     `SELECT COUNT(*) AS count
      FROM INFORMATION_SCHEMA.COLUMNS
      WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ? AND COLUMN_NAME = ?`,
-    [process.env.DB_NAME || 'ifix_db', tableName, columnName]
+    [getTargetDatabaseName(), tableName, columnName]
   );
 
   return rows[0].count > 0;
