@@ -2,6 +2,47 @@ const express = require('express');
 const router = express.Router();
 const { google } = require('googleapis');
 
+function normalizePrivateKey(value) {
+  if (!value) return '';
+  return String(value)
+    .trim()
+    .replace(/^"|"$/g, '')
+    .replace(/\\n/g, '\n');
+}
+
+function buildGoogleCredentials() {
+  const rawJson = process.env.GOOGLE_SERVICE_ACCOUNT_JSON || process.env.GOOGLE_SHEETS_CREDENTIALS_JSON;
+
+  if (rawJson) {
+    try {
+      const credentials = JSON.parse(rawJson);
+      if (credentials.private_key) {
+        credentials.private_key = normalizePrivateKey(credentials.private_key);
+      }
+      return credentials;
+    } catch (error) {
+      throw new Error(`GOOGLE_SERVICE_ACCOUNT_JSON is invalid JSON: ${error.message}`);
+    }
+  }
+
+  const privateKey = normalizePrivateKey(process.env.GOOGLE_SHEETS_PRIVATE_KEY);
+  if (!privateKey) {
+    throw new Error('GOOGLE_SHEETS_PRIVATE_KEY is missing or invalid');
+  }
+
+  return {
+    type: 'service_account',
+    project_id: process.env.GOOGLE_PROJECT_ID,
+    private_key_id: process.env.GOOGLE_PRIVATE_KEY_ID,
+    private_key: privateKey,
+    client_email: process.env.GOOGLE_SHEETS_CLIENT_EMAIL,
+    client_id: process.env.GOOGLE_CLIENT_ID,
+    auth_uri: 'https://accounts.google.com/o/oauth2/auth',
+    token_uri: 'https://oauth2.googleapis.com/token',
+    auth_provider_x509_cert_url: 'https://www.googleapis.com/oauth2/v1/certs'
+  };
+}
+
 // POST contact form (save to database + Google Sheets)
 router.post('/', async (req, res) => {
   const {
@@ -27,21 +68,32 @@ router.post('/', async (req, res) => {
   }
 
   let connection;
+  let sheetsSynced = false;
+  let sheetsErrorMessage = '';
+  let dbSaved = false;
+  let dbErrorMessage = '';
+  let contactId = null;
   try {
-    // Save to database
-    connection = await global.db.getConnection();
-    const [result] = await connection.query(
-      'INSERT INTO contacts (name, email, phone, subject, message) VALUES (?, ?, ?, ?, ?)',
-      [
-        fullName,
-        email,
-        phone || '',
-        courseInterested || 'General Inquiry',
-        preferredMode ? `[Preferred Mode: ${preferredMode}] ${message}` : message
-      ]
-    );
+    // Save to database, but do not block Sheets if DB is unavailable.
+    try {
+      connection = await global.db.getConnection();
+      const [result] = await connection.query(
+        'INSERT INTO contacts (name, email, phone, subject, message) VALUES (?, ?, ?, ?, ?)',
+        [
+          fullName,
+          email,
+          phone || '',
+          courseInterested || 'General Inquiry',
+          preferredMode ? `[Preferred Mode: ${preferredMode}] ${message}` : message
+        ]
+      );
 
-    const contactId = result.insertId;
+      contactId = result.insertId;
+      dbSaved = true;
+    } catch (dbError) {
+      dbErrorMessage = dbError.message;
+      console.error('Database error (non-blocking for Sheets):', dbError.message);
+    }
 
     // Try to save to Google Sheets if configured
     if (process.env.GOOGLE_SHEETS_ID) {
@@ -55,20 +107,36 @@ router.post('/', async (req, res) => {
           preferredMode,
           message
         });
-        await connection.query(
-          'UPDATE contacts SET sheets_row_id = ? WHERE id = ?',
-          [Date.now().toString(), contactId]
-        );
+        sheetsSynced = true;
+        if (connection && contactId) {
+          await connection.query(
+            'UPDATE contacts SET sheets_row_id = ? WHERE id = ?',
+            [Date.now().toString(), contactId]
+          );
+        }
       } catch (sheetsError) {
+        sheetsErrorMessage = sheetsError.message;
         console.error('Google Sheets error (non-blocking):', sheetsError.message);
         // Continue even if Google Sheets fails
       }
     }
 
+    if (!dbSaved && !sheetsSynced) {
+      return res.status(500).json({
+        error: 'Unable to save contact submission',
+        dbError: dbErrorMessage || null,
+        sheetsError: sheetsErrorMessage || null
+      });
+    }
+
     res.status(201).json({
       success: true,
       message: 'Thank you for contacting us!',
-      contactId
+      contactId,
+      dbSaved,
+      sheetsSynced,
+      ...(dbErrorMessage ? { dbError: dbErrorMessage } : {}),
+      ...(sheetsErrorMessage ? { sheetsError: sheetsErrorMessage } : {})
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -79,18 +147,14 @@ router.post('/', async (req, res) => {
 
 // Helper function to append to Google Sheets
 async function appendToGoogleSheets({ firstName, lastName, email, phone, courseInterested, preferredMode, message }) {
+  const credentials = buildGoogleCredentials();
+
+  if (!credentials.client_email || !credentials.private_key || !credentials.project_id) {
+    throw new Error('Google Sheets credentials are incomplete: project_id, client_email, and private_key are required');
+  }
+
   const auth = new google.auth.GoogleAuth({
-    credentials: {
-      type: 'service_account',
-      project_id: process.env.GOOGLE_PROJECT_ID,
-      private_key_id: process.env.GOOGLE_PRIVATE_KEY_ID,
-      private_key: process.env.GOOGLE_SHEETS_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-      client_email: process.env.GOOGLE_SHEETS_CLIENT_EMAIL,
-      client_id: process.env.GOOGLE_CLIENT_ID,
-      auth_uri: 'https://accounts.google.com/o/oauth2/auth',
-      token_uri: 'https://oauth2.googleapis.com/token',
-      auth_provider_x509_cert_url: 'https://www.googleapis.com/oauth2/v1/certs'
-    },
+    credentials,
     scopes: ['https://www.googleapis.com/auth/spreadsheets']
   });
 
@@ -138,6 +202,24 @@ async function appendToGoogleSheets({ firstName, lastName, email, phone, courseI
     });
   }
 }
+
+router.get('/config-status', (req, res) => {
+  const rawJson = process.env.GOOGLE_SERVICE_ACCOUNT_JSON || process.env.GOOGLE_SHEETS_CREDENTIALS_JSON;
+  const hasInlineJson = Boolean(rawJson);
+  const hasSplitCredentials = Boolean(
+    process.env.GOOGLE_SHEETS_CLIENT_EMAIL &&
+    process.env.GOOGLE_SHEETS_PRIVATE_KEY &&
+    process.env.GOOGLE_PROJECT_ID
+  );
+
+  res.json({
+    configured: Boolean(process.env.GOOGLE_SHEETS_ID) && (hasInlineJson || hasSplitCredentials),
+    hasSpreadsheetId: Boolean(process.env.GOOGLE_SHEETS_ID),
+    hasInlineJson,
+    hasSplitCredentials,
+    range: process.env.GOOGLE_SHEETS_RANGE || 'Contacts!A:H'
+  });
+});
 
 // GET all contacts (admin only)
 router.get('/', async (req, res) => {
