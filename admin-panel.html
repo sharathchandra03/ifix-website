@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="iFix Academy - Admin Panel">
+  <title>Admin Panel - iFix Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
+
+  <style>
+    body { background: var(--bg-2); }
+
+    /* LOGIN PAGE */
+    .login-container { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem; }
+    .login-box { background: white; border: 1px solid var(--border); border-radius: var(--r-xl); padding: 3rem; max-width: 420px; width: 100%; box-shadow: var(--shadow-lg); }
+    .login-box__logo { height: 40px; margin-bottom: 2rem; text-align: center; }
+    .login-box__logo img { height: 100%; width: auto; }
+    .login-box__title { font-weight: 800; font-size: 1.5rem; color: var(--text); margin-bottom: 0.5rem; text-align: center; }
+    .login-box__subtitle { text-align: center; color: var(--text-2); font-size: 0.9rem; margin-bottom: 2rem; }
+    .form-group { margin-bottom: 1.5rem; }
+    .form-label { display: block; font-weight: 600; font-size: 0.9rem; color: var(--text); margin-bottom: 0.6rem; }
+    .form-input { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: var(--r-md); font-family: var(--ff); font-size: 0.95rem; transition: border-color 0.25s; }
+    .form-input:focus { outline: none; border-color: var(--accent); }
+    .form-error { color: var(--red); font-size: 0.85rem; margin-top: 0.35rem; }
+    .login-btn { width: 100%; padding: 0.9rem; background: var(--accent); color: white; border: none; border-radius: var(--r-md); font-weight: 600; font-size: 1rem; cursor: pointer; transition: background 0.25s; }
+    .login-btn:hover { background: var(--accent-h); }
+    .login-message { padding: 1rem; border-radius: var(--r-md); margin-bottom: 1.5rem; font-size: 0.9rem; }
+    .login-message.success { background: rgba(52, 199, 89, 0.1); color: var(--green); border: 1px solid var(--green); }
+    .login-message.error { background: rgba(255, 59, 48, 0.1); color: var(--red); border: 1px solid var(--red); }
+
+    /* ADMIN DASHBOARD */
+    .admin-layout { display: grid; grid-template-columns: 250px 1fr; min-height: 100vh; }
+    .admin-sidebar { background: var(--text); color: white; padding: 2rem 1.5rem; overflow-y: auto; }
+    .admin-sidebar__logo { font-size: 1.3rem; font-weight: 700; margin-bottom: 2.5rem; }
+    .admin-menu { display: flex; flex-direction: column; gap: 0.5rem; }
+    .admin-menu__item { padding: 0.75rem 1rem; border-radius: var(--r-md); cursor: pointer; transition: background 0.25s; }
+    .admin-menu__item:hover { background: rgba(255,255,255,0.1); }
+    .admin-menu__item.active { background: var(--accent); }
+    .admin-footer { margin-top: auto; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); }
+    .logout-btn { width: 100%; padding: 0.6rem; background: var(--red); color: white; border: none; border-radius: var(--r-md); font-weight: 600; cursor: pointer; font-size: 0.9rem; }
+
+    /* ADMIN MAIN */
+    .admin-main { background: var(--bg-2); padding: 2rem; overflow-y: auto; }
+    .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; }
+    .admin-title { font-weight: 800; font-size: 1.8rem; color: var(--text); }
+    .admin-actions { display: flex; gap: 1rem; }
+
+    /* DASHBOARD */
+    .dashboard-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem; }
+    .stat-card { background: white; padding: 1.5rem; border-radius: var(--r-lg); border: 1px solid var(--border); }
+    .stat-label { font-size: 0.85rem; color: var(--text-3); text-transform: uppercase; margin-bottom: 0.5rem; }
+    .stat-value { font-weight: 800; font-size: 2rem; color: var(--accent); }
+
+    /* BLOG MANAGEMENT TABLE */
+    .admin-section { background: white; border: 1px solid var(--border); border-radius: var(--r-lg); padding: 2rem; margin-bottom: 2.5rem; display: none; }
+    .admin-section.active { display: block; }
+    .table-container { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    th { background: var(--bg-2); padding: 1rem; text-align: left; font-weight: 600; font-size: 0.9rem; color: var(--text-2); }
+    td { padding: 1rem; border-top: 1px solid var(--border); }
+    tr:hover { background: var(--bg-3); }
+    .status-badge { display: inline-block; padding: 0.4rem 0.9rem; border-radius: 999px; font-size: 0.8rem; font-weight: 600; }
+    .status-badge.published { background: rgba(52, 199, 89, 0.1); color: var(--green); }
+    .status-badge.draft { background: rgba(255, 159, 64, 0.1); color: #FF9F40; }
+    .action-buttons { display: flex; gap: 0.5rem; }
+    .action-btn { padding: 0.5rem 1rem; border: none; border-radius: var(--r-md); font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.25s; }
+    .action-btn.edit { background: var(--accent-dim); color: var(--accent); }
+    .action-btn.edit:hover { background: var(--accent); color: white; }
+    .action-btn.delete { background: rgba(255,59,48,0.1); color: var(--red); }
+    .action-btn.delete:hover { background: var(--red); color: white; }
+
+    /* BLOG FORM */
+    .blog-form { display: none; }
+    .blog-form.active { display: block; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+    .form-row.full { grid-template-columns: 1fr; }
+    textarea { width: 100%; padding: 1rem; border: 1px solid var(--border); border-radius: var(--r-md); font-family: var(--ff); font-size: 0.95rem; resize: vertical; min-height: 300px; }
+    textarea:focus { outline: none; border-color: var(--accent); }
+    .form-buttons { display: flex; gap: 1rem; margin-top: 2rem; }
+    .save-btn { padding: 0.8rem 1.6rem; background: var(--accent); color: white; border: none; border-radius: var(--r-md); font-weight: 600; cursor: pointer; }
+    .save-btn:hover { background: var(--accent-h); }
+    .cancel-btn { padding: 0.8rem 1.6rem; background: var(--bg-2); color: var(--text); border: 1px solid var(--border); border-radius: var(--r-md); font-weight: 600; cursor: pointer; }
+
+    .editor-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 1.5rem; }
+    .editor-shell {
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      background: var(--bg);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      max-height: 560px;
+    }
+    .editor-toolbar {
+      display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 0.8rem;
+      border-bottom: 1px solid var(--border); background: var(--bg-2);
+      position: sticky; top: 0; z-index: 4;
+    }
+    .tool-btn, .tool-select {
+      border: 1px solid var(--border);
+      background: white;
+      color: var(--text);
+      border-radius: var(--r-md);
+      padding: 0.55rem 0.8rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .tool-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .tool-select { cursor: pointer; }
+    .editor-canvas {
+      min-height: 260px;
+      padding: 1rem;
+      outline: none;
+      line-height: 1.8;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .editor-canvas:empty:before { content: attr(data-placeholder); color: var(--text-3); }
+    .editor-canvas h1, .editor-canvas h2, .editor-canvas h3, .editor-canvas h4, .editor-canvas h5, .editor-canvas h6 { margin: 1rem 0 0.5rem; line-height: 1.2; }
+    .editor-canvas h4 { font-size: 1.1rem; }
+    .editor-canvas h5 { font-size: 1rem; }
+    .editor-canvas h6 { font-size: 0.95rem; }
+    .editor-canvas table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+    .editor-canvas th, .editor-canvas td { border: 1px solid var(--border-h); padding: 0.6rem; vertical-align: top; }
+    .editor-canvas img { max-width: 100%; border-radius: var(--r-md); margin: 0.5rem 0; }
+    .content-block {
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      background: white;
+      padding: 0.9rem 1rem 1rem;
+      margin-bottom: 0.85rem;
+      box-shadow: 0 1px 0 rgba(17,24,39,0.02);
+    }
+    .content-block__meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-3);
+    }
+    .content-block__editor {
+      outline: none;
+      min-height: 44px;
+      line-height: 1.8;
+    }
+    .content-block__editor:empty:before {
+      content: attr(data-placeholder);
+      color: var(--text-3);
+    }
+    .content-block--subheading .content-block__editor {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text);
+      min-height: 34px;
+    }
+    .content-block--paragraph .content-block__editor {
+      font-size: 1rem;
+      color: var(--text-2);
+      min-height: 54px;
+    }
+    .mini-panel { background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 1rem; }
+    .mini-panel__title { font-weight: 700; margin-bottom: 0.8rem; color: var(--text); }
+    .upload-row { display: flex; flex-direction: column; gap: 0.75rem; }
+    .upload-preview { width: 100%; max-height: 180px; object-fit: cover; border-radius: var(--r-md); border: 1px solid var(--border); display: none; }
+    .form-check { display: flex; align-items: center; gap: 0.65rem; padding: 0.9rem 1rem; border: 1px solid var(--border); border-radius: var(--r-md); background: var(--bg-2); }
+    .blog-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+    .block-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.9rem; }
+    .save-draft-btn, .preview-btn, .publish-btn, .schedule-btn { padding: 0.85rem 1.3rem; border-radius: var(--r-md); font-weight: 700; border: none; }
+    .save-draft-btn { background: var(--bg-2); color: var(--text); border: 1px solid var(--border); }
+    .preview-btn { background: #111827; color: #fff; }
+    .publish-btn { background: var(--accent); color: #fff; }
+    .schedule-btn { background: #5856D6; color: #fff; }
+    .save-draft-btn:hover { background: #ececf1; }
+    .preview-btn:hover { opacity: 0.92; }
+    .publish-btn:hover { background: var(--accent-h); }
+    .schedule-btn:hover { opacity: 0.92; }
+
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(17,24,39,0.55); display: none; align-items: center; justify-content: center; z-index: 500;
+      padding: 1rem;
+    }
+    .modal-backdrop.open { display: flex; }
+    .preview-modal {
+      width: min(980px, 100%); max-height: 92vh; overflow: auto; background: white; border-radius: var(--r-2xl);
+      box-shadow: var(--shadow-lg); border: 1px solid rgba(255,255,255,0.2);
+    }
+    .preview-modal__head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); }
+    .preview-modal__body { padding: 1.5rem; }
+    .close-btn { border: 1px solid var(--border); background: white; border-radius: 999px; width: 36px; height: 36px; font-size: 1rem; }
+    .preview-hero { display: grid; grid-template-columns: 1fr 280px; gap: 1.25rem; align-items: start; }
+    .preview-cover { width: 100%; min-height: 180px; object-fit: cover; border-radius: var(--r-xl); border: 1px solid var(--border); background: var(--bg-2); }
+    .preview-meta { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 1rem 0 1.25rem; color: var(--text-2); font-size: 0.9rem; }
+    .preview-content { line-height: 1.85; color: var(--text-2); }
+    .preview-content h1, .preview-content h2, .preview-content h3 { color: var(--text); margin: 1rem 0 0.6rem; }
+    .preview-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+    .preview-content th, .preview-content td { border: 1px solid var(--border-h); padding: 0.6rem; }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .admin-layout { grid-template-columns: 1fr; }
+      .admin-sidebar { display: none; }
+      .form-row { grid-template-columns: 1fr; }
+      .editor-grid, .preview-hero { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <!-- LOGIN VIEW -->
+  <div id="login-view" class="login-container">
+    <div class="login-box">
+      <div class="login-box__logo">
+        <img src="Assets/iFix Academy logo.png" alt="iFix Academy">
+      </div>
+      <h1 class="login-box__title">Admin Panel</h1>
+      <p class="login-box__subtitle">Blog & Content Management</p>
+      
+      <div id="login-message"></div>
+
+      <form onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label class="form-label">Username</label>
+          <input type="text" id="username" class="form-input" placeholder="Enter username" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" id="password" class="form-input" placeholder="Enter password" required>
+        </div>
+        <button type="submit" class="login-btn">Login</button>
+      </form>
+
+      <div style="text-align: center; margin-top: 2rem; font-size: 0.85rem; color: var(--text-2);">
+        First time? <a href="#" onclick="toggleSetupMode(); return false;" style="color: var(--accent); font-weight: 600;">Create Admin Account</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN DASHBOARD -->
+  <div id="admin-view" style="display: none;">
+    <div class="admin-layout">
+      <!-- SIDEBAR -->
+      <aside class="admin-sidebar">
+        <div class="admin-sidebar__logo">📊 iFix Admin</div>
+        <nav class="admin-menu">
+          <div class="admin-menu__item active" onclick="switchTab('dashboard')">📈 Dashboard</div>
+          <div class="admin-menu__item" onclick="switchTab('blogs')">📝 Manage Blogs</div>
+          <div class="admin-menu__item" onclick="switchTab('create-blog')">✍️ Create Blog</div>
+        </nav>
+        <div class="admin-footer">
+          <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+        </div>
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <main class="admin-main">
+        <!-- DASHBOARD TAB -->
+        <div id="dashboard" class="admin-section active">
+          <div class="admin-header">
+            <h2 class="admin-title">Dashboard</h2>
+          </div>
+          <div class="dashboard-stats">
+            <div class="stat-card">
+              <div class="stat-label">Total Blogs</div>
+              <div class="stat-value" id="stat-blogs">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Published</div>
+              <div class="stat-value" id="stat-published">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Drafts</div>
+              <div class="stat-value" id="stat-drafts">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Total Views</div>
+              <div class="stat-value" id="stat-views">0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MANAGE BLOGS TAB -->
+        <div id="blogs" class="admin-section">
+          <div class="admin-header">
+            <h2 class="admin-title">Manage Blogs</h2>
+            <button class="btn btn--primary" onclick="switchTab('create-blog')">+ New Blog</button>
+          </div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Category</th>
+                  <th>Status</th>
+                  <th>Views</th>
+                  <th>Author</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="blogs-table"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- CREATE/EDIT BLOG TAB -->
+        <div id="create-blog" class="admin-section blog-form active">
+          <div class="admin-header" style="align-items:flex-start; flex-wrap:wrap; gap:1rem;">
+            <div>
+              <h2 class="admin-title" id="form-title">Create New Post</h2>
+              <p style="color:var(--text-2); margin-top:0.35rem;">Format text, insert tables, upload images, preview first, then publish or schedule.</p>
+            </div>
+            <div class="blog-actions">
+              <button type="button" class="preview-btn" onclick="openPreview()">Preview</button>
+              <button type="button" class="save-draft-btn" onclick="saveBlog('draft')">Save Draft</button>
+              <button type="button" class="schedule-btn" onclick="saveBlog('scheduled')">Schedule</button>
+              <button type="button" class="publish-btn" onclick="saveBlog('published')">Publish Now</button>
+            </div>
+          </div>
+
+          <form id="blog-form" onsubmit="event.preventDefault(); saveBlog('published'); return false;">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Title *</label>
+                <input type="text" id="blog-title" class="form-input" placeholder="Blog title" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Author *</label>
+                <input type="text" id="blog-author" class="form-input" placeholder="Your name" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Post Date *</label>
+                <input type="date" id="blog-post-date" class="form-input" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Category</label>
+                <input type="text" id="blog-category" class="form-input" placeholder="General, Tutorial, Review">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Status</label>
+                <select id="blog-status" class="form-input" style="cursor:pointer;">
+                  <option value="draft">Draft</option>
+                  <option value="published">Published</option>
+                  <option value="scheduled">Scheduled</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Schedule At</label>
+                <input type="datetime-local" id="blog-scheduled-at" class="form-input">
+              </div>
+            </div>
+
+            <div class="form-row full">
+              <div class="form-check">
+                <input type="checkbox" id="blog-trending">
+                <label for="blog-trending" class="form-label" style="margin:0;">Mark as Trending Post</label>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="mini-panel">
+                <div class="mini-panel__title">Author Profile Picture</div>
+                <div class="upload-row">
+                  <img id="author-pic-preview" class="upload-preview" alt="Author preview">
+                  <input type="hidden" id="blog-author-profile-picture">
+                  <input type="file" id="author-pic-input" accept="image/*" hidden>
+                  <button type="button" class="tool-btn" onclick="document.getElementById('author-pic-input').click()">Choose Author Image</button>
+                </div>
+              </div>
+              <div class="mini-panel">
+                <div class="mini-panel__title">Featured Image</div>
+                <div class="upload-row">
+                  <img id="featured-image-preview" class="upload-preview" alt="Featured preview">
+                  <input type="hidden" id="blog-featured-image">
+                  <input type="file" id="featured-image-input" accept="image/*" hidden>
+                  <button type="button" class="tool-btn" onclick="document.getElementById('featured-image-input').click()">Choose Featured Image</button>
+                  <button type="button" class="tool-btn" onclick="setPreviewImage('blog-featured-image', 'featured-image-preview', ''); document.getElementById('featured-image-input').value = ''">Remove</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row full">
+              <div class="form-group">
+                <label class="form-label">Introduction / Excerpt *</label>
+                <div class="editor-shell">
+                  <div class="editor-toolbar">
+                    <button type="button" class="tool-btn" onclick="formatExcerpt('bold')"><b>B</b></button>
+                    <button type="button" class="tool-btn" onclick="formatExcerpt('italic')"><i>I</i></button>
+                    <button type="button" class="tool-btn" onclick="formatExcerpt('insertUnorderedList')">•</button>
+                    <button type="button" class="tool-btn" onclick="formatExcerpt('insertOrderedList')">1.</button>
+                  </div>
+                  <div id="excerpt-editor" class="editor-canvas" contenteditable="true" data-placeholder="Enter introduction text... Use **text** for bold, *text* for italic, - for bullets, 1. for numbered lists"></div>
+                </div>
+                <small style="display:block; color:var(--text-3); margin-top:0.5rem;">Formatting: <b>bold</b>, <i>italic</i>, lists, headings, tables, images.</small>
+              </div>
+            </div>
+
+            <div class="form-row full">
+              <div class="form-group">
+                <label class="form-label">Body Content *</label>
+                <div class="editor-shell">
+                  <div class="editor-toolbar">
+                    <button type="button" class="tool-btn" onclick="applyBlock('p')">P</button>
+                    <button type="button" class="tool-btn" onclick="applyBlock('h1')">H1</button>
+                    <button type="button" class="tool-btn" onclick="applyBlock('h2')">H2</button>
+                    <button type="button" class="tool-btn" onclick="applyBlock('h3')">H3</button>
+                    <button type="button" class="tool-btn" onclick="applyBlock('h4')">H4</button>
+                    <button type="button" class="tool-btn" onclick="applyBlock('h5')">H5</button>
+                    <button type="button" class="tool-btn" onclick="applyBlock('h6')">H6</button>
+                    <button type="button" class="tool-btn" onclick="formatBody('bold')"><b>B</b></button>
+                    <button type="button" class="tool-btn" onclick="formatBody('italic')"><i>I</i></button>
+                    <button type="button" class="tool-btn" onclick="formatBody('insertUnorderedList')">• List</button>
+                    <button type="button" class="tool-btn" onclick="formatBody('insertOrderedList')">1. List</button>
+                    <select class="tool-select" id="font-size-select" onchange="applyFontSize(this.value)">
+                      <option value="">Font Size</option>
+                      <option value="12px">Small</option>
+                      <option value="16px">Normal</option>
+                      <option value="20px">Large</option>
+                      <option value="24px">XL</option>
+                    </select>
+                    <button type="button" class="tool-btn" onclick="showTableBuilder()">+ Table</button>
+                    <button type="button" class="tool-btn" onclick="document.getElementById('body-image-input').click()">+ Image</button>
+                  </div>
+                  <div id="blog-editor" class="editor-canvas" contenteditable="true" data-placeholder="Write your post body here..."></div>
+                </div>
+                <div class="mini-panel" id="table-builder" style="margin-top:1rem; display:none;">
+                  <div class="mini-panel__title">Insert Table</div>
+                  <div class="form-row" style="margin-bottom:0.75rem;">
+                    <div class="form-group"><label class="form-label">Rows</label><input type="number" id="table-rows" class="form-input" min="1" max="10" value="2"></div>
+                    <div class="form-group"><label class="form-label">Columns</label><input type="number" id="table-cols" class="form-input" min="1" max="8" value="2"></div>
+                  </div>
+                  <button type="button" class="tool-btn" onclick="insertTableFromBuilder()">Insert Table</button>
+                  <button type="button" class="tool-btn" onclick="hideTableBuilder()">Cancel</button>
+                </div>
+                <div class="block-actions">
+                  <button type="button" class="tool-btn" onclick="addBodyBlock('subheading')">+ Add Subheading</button>
+                  <button type="button" class="tool-btn" onclick="addBodyBlock('paragraph')">+ Add Paragraph</button>
+                </div>
+                <input type="file" id="body-image-input" accept="image/*" hidden>
+              </div>
+            </div>
+
+            <div class="form-row full">
+              <div class="form-group">
+                <label class="form-label">Tags (comma-separated)</label>
+                <input type="text" id="blog-tags" class="form-input" placeholder="repair, tutorial, iphone">
+              </div>
+            </div>
+
+            <input type="hidden" id="blog-image">
+            <div class="form-buttons" style="flex-wrap:wrap;">
+              <button type="button" class="cancel-btn" onclick="cancelEdit()">Cancel</button>
+              <button type="button" class="preview-btn" onclick="openPreview()">Preview Blog</button>
+              <button type="button" class="save-draft-btn" onclick="saveBlog('draft')">Save Draft</button>
+              <button type="button" class="schedule-btn" onclick="saveBlog('scheduled')">Schedule Blog</button>
+              <button type="button" class="publish-btn" onclick="saveBlog('published')">Publish Blog</button>
+            </div>
+          </form>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div id="preview-modal" class="modal-backdrop" aria-hidden="true">
+    <div class="preview-modal">
+      <div class="preview-modal__head">
+        <strong>Blog Preview</strong>
+        <button type="button" class="close-btn" onclick="closePreview()">✕</button>
+      </div>
+      <div class="preview-modal__body" id="preview-content"></div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = (
+      localStorage.getItem('ifix_api_base') ||
+      (window.location.protocol === 'file:' ? 'http://localhost:5000/api' : '/api')
+    ).replace(/\/$/, '');
+    const BLOG_DRAFT_KEY = 'ifix_admin_blog_draft_v1';
+    let token = localStorage.getItem('admin_token');
+    let isSetupMode = false;
+    let editingBlogId = null;
+    let isSavingBlog = false;
+    let allBlogs = [];
+
+    function setBlogActionButtonsDisabled(disabled) {
+      document.querySelectorAll('.save-draft-btn, .schedule-btn, .publish-btn').forEach(button => {
+        button.disabled = disabled;
+        button.style.opacity = disabled ? '0.7' : '1';
+        button.style.cursor = disabled ? 'not-allowed' : '';
+      });
+    }
+
+    function authHeaders(extraHeaders = {}) {
+      return {
+        ...extraHeaders,
+        Authorization: `Bearer ${token}`
+      };
+    }
+
+    function escapeHtml(value) {
+      return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function formatDateForDisplay(dateValue) {
+      if (!dateValue) return '-';
+      const date = new Date(dateValue);
+      if (Number.isNaN(date.getTime())) return '-';
+      return date.toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' });
+    }
+
+    function formatDateForInput(dateValue) {
+      if (!dateValue) return '';
+      const date = new Date(dateValue);
+      if (Number.isNaN(date.getTime())) return '';
+      return date.toLocaleDateString('en-CA', { timeZone: 'UTC' });
+    }
+
+    function todayForDateInput() {
+      return new Date().toISOString().slice(0, 10);
+    }
+
+    function getEditor(id) {
+      return document.getElementById(id);
+    }
+
+    function getEditorHtml(id) {
+      return getEditor(id)?.innerHTML?.trim() || '';
+    }
+
+    function setEditorHtml(id, html) {
+      const editor = getEditor(id);
+      if (editor) editor.innerHTML = html || '';
+    }
+
+    function setPreviewImage(inputId, previewId, url) {
+      const input = document.getElementById(inputId);
+      const preview = document.getElementById(previewId);
+      if (input) input.value = url || '';
+      if (preview) {
+        if (url) {
+          preview.src = url;
+          preview.style.display = 'block';
+        } else {
+          preview.removeAttribute('src');
+          preview.style.display = 'none';
+        }
+      }
+    }
+
+    function insertHtmlAtCursor(html) {
+      const editor = document.activeElement?.isContentEditable ? document.activeElement : getEditor('blog-editor');
+      if (!editor) return;
+      editor.focus();
+      const selection = window.getSelection();
+      if (!selection || selection.rangeCount === 0) {
+        editor.insertAdjacentHTML('beforeend', html);
+        syncEditorValues();
+        return;
+      }
+      const range = selection.getRangeAt(0);
+      range.deleteContents();
+      const fragment = range.createContextualFragment(html);
+      const lastNode = fragment.lastChild;
+      range.insertNode(fragment);
+      if (lastNode) {
+        range.setStartAfter(lastNode);
+        range.setEndAfter(lastNode);
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
+      syncEditorValues();
+    }
+
+    function execEditorCommand(command, value = null, editorId = 'blog-editor') {
+      const editor = getEditor(editorId);
+      if (!editor) return;
+      editor.focus();
+      document.execCommand(command, false, value);
+      syncEditorValues();
+    }
+
+    function applyHeading(level) {
+      execEditorCommand('formatBlock', `<${level}>`);
+    }
+
+    function applyBlock(tagName) {
+      const safeTag = String(tagName || 'p').toLowerCase();
+      const allowedTags = ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+      if (!allowedTags.includes(safeTag)) return;
+      execEditorCommand('formatBlock', `<${safeTag}>`);
+    }
+
+    function placeCursorInNode(node) {
+      if (!node) return;
+      const selection = window.getSelection();
+      if (!selection) return;
+      const range = document.createRange();
+      range.selectNodeContents(node);
+      range.collapse(false);
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
+
+    function createBodyBlock(type) {
+      const blockType = String(type || 'paragraph').toLowerCase();
+      const isSubheading = blockType === 'subheading';
+      const block = document.createElement('div');
+      block.className = `content-block ${isSubheading ? 'content-block--subheading' : 'content-block--paragraph'}`;
+      block.dataset.blockType = isSubheading ? 'subheading' : 'paragraph';
+      block.innerHTML = `
+        <div class="content-block__meta">
+          <span>${isSubheading ? 'Subheading' : 'Paragraph'}</span>
+        </div>
+        <div
+          class="content-block__editor"
+          contenteditable="true"
+          data-placeholder="${isSubheading ? 'Enter subheading...' : 'Enter paragraph text...'}"
+        ></div>
+      `;
+
+      return block;
+    }
+
+    function addBodyBlock(type) {
+      const editor = getEditor('blog-editor');
+      if (!editor) return;
+
+      const block = createBodyBlock(type);
+      editor.appendChild(block);
+      editor.focus();
+      placeCursorInNode(block.querySelector('.content-block__editor'));
+      syncEditorValues();
+    }
+
+    function serializeBlogEditorContent() {
+      const editor = getEditor('blog-editor');
+      if (!editor) return '';
+
+      const blocks = Array.from(editor.querySelectorAll('.content-block'));
+      if (blocks.length === 0) {
+        return editor.innerHTML.trim();
+      }
+
+      return blocks.map(block => {
+        const blockType = block.dataset.blockType === 'subheading' ? 'subheading' : 'paragraph';
+        const blockEditor = block.querySelector('.content-block__editor');
+        const blockHtml = (blockEditor?.innerHTML || '').trim();
+        const contentHtml = blockHtml || '';
+        return blockType === 'subheading'
+          ? `<h3>${contentHtml}</h3>`
+          : `<p>${contentHtml}</p>`;
+      }).join('');
+    }
+
+    function applyFontSize(size) {
+      const editor = getEditor('blog-editor');
+      if (!editor || !size) return;
+      editor.focus();
+      const selection = window.getSelection();
+      if (!selection || selection.rangeCount === 0 || selection.isCollapsed) return;
+      const range = selection.getRangeAt(0);
+      const span = document.createElement('span');
+      span.style.fontSize = size;
+      span.appendChild(range.extractContents());
+      range.insertNode(span);
+      selection.removeAllRanges();
+      const newRange = document.createRange();
+      newRange.selectNodeContents(span);
+      selection.addRange(newRange);
+      syncEditorValues();
+    }
+
+    function formatBody(command) {
+      execEditorCommand(command, null, 'blog-editor');
+    }
+
+    function formatExcerpt(command) {
+      execEditorCommand(command, null, 'excerpt-editor');
+    }
+
+    function showTableBuilder() {
+      document.getElementById('table-builder').style.display = 'block';
+    }
+
+    function hideTableBuilder() {
+      document.getElementById('table-builder').style.display = 'none';
+    }
+
+    function buildTableHtml(rows, cols) {
+      let html = '<table><tbody>';
+      for (let row = 0; row < rows; row++) {
+        html += '<tr>';
+        for (let col = 0; col < cols; col++) {
+          html += '<td>&nbsp;</td>';
+        }
+        html += '</tr>';
+      }
+      html += '</tbody></table>';
+      return html;
+    }
+
+    function insertTableFromBuilder() {
+      const rows = Math.max(1, Math.min(10, parseInt(document.getElementById('table-rows').value || '2', 10)));
+      const cols = Math.max(1, Math.min(8, parseInt(document.getElementById('table-cols').value || '2', 10)));
+      insertHtmlAtCursor(buildTableHtml(rows, cols));
+      hideTableBuilder();
+    }
+
+    function convertTextTableToHtml(text) {
+      const lines = text.trim().split(/\r?\n/).filter(Boolean);
+      if (lines.length < 2) return null;
+      const rows = lines.map(line => line.split('\t'));
+      const maxCols = Math.max(...rows.map(row => row.length));
+      let html = '<table><tbody>';
+      rows.forEach((row, rowIndex) => {
+        html += '<tr>';
+        row.forEach(cell => {
+          html += rowIndex === 0 ? `<th>${escapeHtml(cell)}</th>` : `<td>${escapeHtml(cell)}</td>`;
+        });
+        for (let i = row.length; i < maxCols; i++) {
+          html += rowIndex === 0 ? '<th>&nbsp;</th>' : '<td>&nbsp;</td>';
+        }
+        html += '</tr>';
+      });
+      html += '</tbody></table>';
+      return html;
+    }
+
+    function isLikelyHeadingLine(line, nextLine) {
+      if (!line) return false;
+      if (/^[A-Z0-9\s]{3,60}$/.test(line) && line.split(/\s+/).length <= 8) return true;
+      if (line.endsWith(':') && line.length <= 90) return true;
+      if (line.length <= 70 && nextLine && nextLine.length > line.length + 20) return true;
+      return false;
+    }
+
+    function convertSmartPlainTextToHtml(text) {
+      const lines = String(text || '').replace(/\r/g, '').split('\n');
+      const blocks = [];
+      let i = 0;
+
+      while (i < lines.length) {
+        const current = lines[i];
+        const line = (current || '').trim();
+
+        if (!line) {
+          i += 1;
+          continue;
+        }
+
+        // Tab-separated rows are converted into a table block.
+        if (line.includes('\t')) {
+          const tableLines = [];
+          while (i < lines.length && (lines[i] || '').trim().includes('\t')) {
+            tableLines.push((lines[i] || '').trim());
+            i += 1;
+          }
+          const tableHtml = convertTextTableToHtml(tableLines.join('\n'));
+          if (tableHtml) {
+            blocks.push(tableHtml);
+            continue;
+          }
+        }
+
+        const markdownHeading = line.match(/^(#{1,6})\s+(.+)$/);
+        if (markdownHeading) {
+          const level = Math.max(1, Math.min(6, markdownHeading[1].length));
+          blocks.push(`<h${level}>${escapeHtml(markdownHeading[2].trim())}</h${level}>`);
+          i += 1;
+          continue;
+        }
+
+        if (/^[-*•]\s+/.test(line)) {
+          const items = [];
+          while (i < lines.length && /^[-*•]\s+/.test((lines[i] || '').trim())) {
+            items.push((lines[i] || '').trim().replace(/^[-*•]\s+/, ''));
+            i += 1;
+          }
+          blocks.push(`<ul>${items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`);
+          continue;
+        }
+
+        if (/^\d+[.)]\s+/.test(line)) {
+          const items = [];
+          while (i < lines.length && /^\d+[.)]\s+/.test((lines[i] || '').trim())) {
+            items.push((lines[i] || '').trim().replace(/^\d+[.)]\s+/, ''));
+            i += 1;
+          }
+          blocks.push(`<ol>${items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ol>`);
+          continue;
+        }
+
+        const nextLine = ((lines[i + 1] || '').trim());
+        if (isLikelyHeadingLine(line, nextLine)) {
+          blocks.push(`<h3>${escapeHtml(line.replace(/:$/, ''))}</h3>`);
+          i += 1;
+          continue;
+        }
+
+        const paragraphLines = [line];
+        i += 1;
+        while (i < lines.length) {
+          const lookahead = (lines[i] || '').trim();
+          if (!lookahead) break;
+          if (lookahead.includes('\t')) break;
+          if (/^(#{1,6})\s+/.test(lookahead)) break;
+          if (/^[-*•]\s+/.test(lookahead)) break;
+          if (/^\d+[.)]\s+/.test(lookahead)) break;
+          paragraphLines.push(lookahead);
+          i += 1;
+        }
+        blocks.push(`<p>${escapeHtml(paragraphLines.join(' '))}</p>`);
+      }
+
+      return blocks.join('') || `<p>${escapeHtml(String(text || '').trim())}</p>`;
+    }
+
+    function insertImageIntoEditor(url) {
+      if (!url) return;
+      insertHtmlAtCursor(`<img src="${escapeHtml(url)}" alt="Blog image">`);
+    }
+
+    async function uploadBlogImage(file) {
+      const formData = new FormData();
+      formData.append('image', file);
+      const response = await fetch(`${API_BASE}/blog/upload-image`, {
+        method: 'POST',
+        headers: authHeaders(),
+        body: formData
+      });
+      const data = await response.json();
+      if (!response.ok || !data.url) {
+        throw new Error(data.error || 'Image upload failed');
+      }
+      return data.url;
+    }
+
+    function syncEditorValues() {
+      const excerpt = getEditor('excerpt-editor');
+      const editor = getEditor('blog-editor');
+      if (excerpt) excerpt.dataset.empty = excerpt.innerHTML.trim() === '';
+      if (editor) editor.dataset.empty = editor.innerHTML.trim() === '';
+      persistDraftSnapshot();
+    }
+
+    function collectDraftSnapshot() {
+      return {
+        title: document.getElementById('blog-title')?.value || '',
+        author: document.getElementById('blog-author')?.value || '',
+        postDate: document.getElementById('blog-post-date')?.value || '',
+        category: document.getElementById('blog-category')?.value || '',
+        tags: document.getElementById('blog-tags')?.value || '',
+        status: document.getElementById('blog-status')?.value || 'draft',
+        scheduledAt: document.getElementById('blog-scheduled-at')?.value || '',
+        isTrending: document.getElementById('blog-trending')?.checked || false,
+        excerptHtml: getEditorHtml('excerpt-editor'),
+        contentHtml: getEditorHtml('blog-editor'),
+        featuredImage: document.getElementById('blog-featured-image')?.value || '',
+        authorProfilePicture: document.getElementById('blog-author-profile-picture')?.value || ''
+      };
+    }
+
+    function persistDraftSnapshot() {
+      if (editingBlogId) return;
+      try {
+        localStorage.setItem(BLOG_DRAFT_KEY, JSON.stringify(collectDraftSnapshot()));
+      } catch (_) {
+        // Ignore localStorage write errors.
+      }
+    }
+
+    function clearDraftSnapshot() {
+      localStorage.removeItem(BLOG_DRAFT_KEY);
+    }
+
+    function restoreDraftSnapshot() {
+      if (editingBlogId) return;
+      const hasExistingTitle = (document.getElementById('blog-title')?.value || '').trim().length > 0;
+      if (hasExistingTitle) return;
+
+      const raw = localStorage.getItem(BLOG_DRAFT_KEY);
+      if (!raw) return;
+
+      try {
+        const draft = JSON.parse(raw);
+        document.getElementById('blog-title').value = draft.title || '';
+        document.getElementById('blog-author').value = draft.author || '';
+        document.getElementById('blog-post-date').value = draft.postDate || todayForDateInput();
+        document.getElementById('blog-category').value = draft.category || '';
+        document.getElementById('blog-tags').value = draft.tags || '';
+        document.getElementById('blog-status').value = draft.status || 'draft';
+        document.getElementById('blog-scheduled-at').value = draft.scheduledAt || '';
+        document.getElementById('blog-trending').checked = Boolean(draft.isTrending);
+        setEditorHtml('excerpt-editor', draft.excerptHtml || '');
+        setEditorHtml('blog-editor', draft.contentHtml || '');
+        setPreviewImage('blog-featured-image', 'featured-image-preview', draft.featuredImage || '');
+        setPreviewImage('blog-author-profile-picture', 'author-pic-preview', draft.authorProfilePicture || '');
+        syncEditorValues();
+      } catch (_) {
+        // Ignore invalid draft data.
+      }
+    }
+
+    function collectBlogPayload(status) {
+      const title = document.getElementById('blog-title').value.trim();
+      const author = document.getElementById('blog-author').value.trim();
+      const postDate = document.getElementById('blog-post-date').value;
+      const category = document.getElementById('blog-category').value.trim();
+      const tags = document.getElementById('blog-tags').value.trim();
+      const featuredImage = document.getElementById('blog-featured-image').value.trim();
+      const authorProfilePicture = document.getElementById('blog-author-profile-picture').value.trim();
+      const scheduledAt = document.getElementById('blog-scheduled-at').value;
+      const isTrending = document.getElementById('blog-trending').checked;
+      const excerpt = getEditorHtml('excerpt-editor');
+      const content = serializeBlogEditorContent();
+
+      if (!title || !author || !postDate || !excerpt || !content) {
+        throw new Error('Title, Author, Post Date, Excerpt, and Content are required.');
+      }
+
+      if (status === 'scheduled' && !scheduledAt) {
+        throw new Error('Choose a schedule date and time before scheduling.');
+      }
+
+      return {
+        title,
+        author,
+        post_date: postDate,
+        category,
+        tags,
+        featured_image: featuredImage,
+        author_profile_picture: authorProfilePicture,
+        excerpt,
+        content,
+        scheduled_at: scheduledAt,
+        is_trending: isTrending,
+        status
+      };
+    }
+
+    function openPreview() {
+      const payload = collectBlogPayload(document.getElementById('blog-status').value || 'draft');
+      const cover = payload.featured_image ? `<img class="preview-cover" src="${escapeHtml(payload.featured_image)}" alt="Featured image">` : '';
+      const authorPic = payload.author_profile_picture ? `<img src="${escapeHtml(payload.author_profile_picture)}" alt="Author" style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:1px solid var(--border);">` : '<div style="width:64px;height:64px;border-radius:50%;background:var(--bg-2);border:1px solid var(--border);"></div>';
+      document.getElementById('preview-content').innerHTML = `
+        <div class="preview-hero">
+          <div>
+            <div class="preview-meta">
+              <span>Category: ${escapeHtml(payload.category || 'General')}</span>
+              <span>Status: ${escapeHtml(payload.status)}</span>
+              <span>Trending: ${payload.is_trending ? 'Yes' : 'No'}</span>
+              <span>Date: ${escapeHtml(payload.post_date)}</span>
+            </div>
+            <h1 class="blog-post__title" style="margin-bottom:0.75rem;">${escapeHtml(payload.title)}</h1>
+            <div class="preview-meta" style="align-items:center;">
+              ${authorPic}
+              <div>
+                <strong>${escapeHtml(payload.author)}</strong><br>
+                <span>${escapeHtml(payload.scheduled_at || payload.post_date)}</span>
+              </div>
+            </div>
+          </div>
+          ${cover}
+        </div>
+        <div class="preview-meta" style="margin-top:1.25rem;">
+          ${payload.tags ? payload.tags.split(',').map(tag => `<span class="blog-card__category">${escapeHtml(tag.trim())}</span>`).join('') : ''}
+        </div>
+        <h2>Introduction</h2>
+        <div class="preview-content">${payload.excerpt}</div>
+        <h2 style="margin-top:1.5rem;">Body</h2>
+        <div class="preview-content">${payload.content}</div>
+      `;
+      document.getElementById('preview-modal').classList.add('open');
+      document.getElementById('preview-modal').setAttribute('aria-hidden', 'false');
+    }
+
+    function closePreview() {
+      document.getElementById('preview-modal').classList.remove('open');
+      document.getElementById('preview-modal').setAttribute('aria-hidden', 'true');
+    }
+
+    async function saveBlog(status) {
+      if (isSavingBlog) return;
+      isSavingBlog = true;
+      setBlogActionButtonsDisabled(true);
+
+      try {
+        document.getElementById('blog-status').value = status;
+        const payload = collectBlogPayload(status);
+
+        const method = editingBlogId ? 'PUT' : 'POST';
+        const url = editingBlogId ? `${API_BASE}/blog/${editingBlogId}` : `${API_BASE}/blog`;
+
+        const response = await fetch(url, {
+          method,
+          headers: authHeaders({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.error || 'Unknown error');
+        }
+
+        alert(status === 'published' ? 'Blog published successfully!' : status === 'scheduled' ? 'Blog scheduled successfully!' : 'Draft saved successfully!');
+        clearDraftSnapshot();
+        cancelEdit();
+        await loadBlogs();
+        updateStats();
+        switchTab('blogs');
+      } catch (error) {
+        persistDraftSnapshot();
+        alert('Error: ' + error.message);
+      } finally {
+        isSavingBlog = false;
+        setBlogActionButtonsDisabled(false);
+      }
+    }
+
+    // Check if logged in
+    function checkAuth() {
+      if (token) {
+        showAdminDashboard();
+      } else {
+        showLoginView();
+      }
+    }
+
+    // Handle Login
+    async function handleLogin(e) {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const endpoint = isSetupMode ? '/register-admin' : '/login';
+        const res = await fetch(`${API_BASE}/auth${endpoint}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await res.json();
+
+        if (data.success || data.token) {
+          token = data.token;
+          localStorage.setItem('admin_token', token);
+          showLoginMessage('success', isSetupMode ? 'Admin account created!' : 'Logged in successfully!');
+          setTimeout(() => {
+            isSetupMode = false;
+            checkAuth();
+          }, 1500);
+        } else {
+          showLoginMessage('error', data.error || 'Login failed');
+        }
+      } catch (error) {
+        showLoginMessage('error', 'Connection error: ' + error.message);
+      }
+    }
+
+    // Toggle Setup Mode
+    function toggleSetupMode() {
+      isSetupMode = !isSetupMode;
+      document.querySelector('.login-box__title').textContent = isSetupMode ? 'Create Admin Account' : 'Admin Panel';
+      document.querySelector('.login-box__subtitle').textContent = isSetupMode ? 'First time setup' : 'Blog & Content Management';
+      document.querySelector('button[type="submit"]').textContent = isSetupMode ? 'Create Account' : 'Login';
+      document.getElementById('login-message').innerHTML = '';
+    }
+
+    // Show Login Message
+    function showLoginMessage(type, message) {
+      const msgDiv = document.getElementById('login-message');
+      msgDiv.className = `login-message ${type}`;
+      msgDiv.textContent = message;
+    }
+
+    // Show Login View
+    function showLoginView() {
+      document.getElementById('login-view').style.display = 'flex';
+      document.getElementById('admin-view').style.display = 'none';
+    }
+
+    // Show Admin Dashboard
+    async function showAdminDashboard() {
+      document.getElementById('login-view').style.display = 'none';
+      document.getElementById('admin-view').style.display = 'block';
+      if (!document.getElementById('blog-post-date').value) {
+        document.getElementById('blog-post-date').value = todayForDateInput();
+      }
+      await loadBlogs();
+      updateStats();
+    }
+
+    // Load Blogs
+    async function loadBlogs() {
+      try {
+        const res = await fetch(`${API_BASE}/blog/admin/all`, {
+          headers: authHeaders()
+        });
+        allBlogs = await res.json();
+        renderBlogsTable();
+      } catch (e) {
+        console.error('Error loading blogs:', e);
+      }
+    }
+
+    // Render Blogs Table
+    function renderBlogsTable() {
+      const tbody = document.getElementById('blogs-table');
+      tbody.innerHTML = allBlogs.map(blog => `
+        <tr>
+          <td><strong>${blog.title}</strong></td>
+          <td>${blog.category || '-'}</td>
+          <td><span class="status-badge ${blog.status}">${blog.status}</span></td>
+          <td>${blog.views}</td>
+          <td>${blog.author}</td>
+          <td>
+            <div class="action-buttons">
+              <button class="action-btn edit" onclick="editBlog(${blog.id})">Edit</button>
+              <button class="action-btn delete" onclick="deleteBlog(${blog.id})">Delete</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // Update Stats
+    function updateStats() {
+      const published = allBlogs.filter(b => b.status === 'published').length;
+      const draft = allBlogs.filter(b => b.status === 'draft').length;
+      const views = allBlogs.reduce((sum, b) => sum + (b.views || 0), 0);
+
+      document.getElementById('stat-blogs').textContent = allBlogs.length;
+      document.getElementById('stat-published').textContent = published;
+      document.getElementById('stat-drafts').textContent = draft;
+      document.getElementById('stat-views').textContent = views;
+    }
+
+    // Edit Blog
+    async function editBlog(id) {
+      const blog = allBlogs.find(b => b.id === id);
+      if (!blog) return;
+
+      editingBlogId = id;
+      document.getElementById('blog-title').value = blog.title;
+      document.getElementById('blog-author').value = blog.author;
+      document.getElementById('blog-post-date').value = formatDateForInput(blog.post_date || blog.published_at);
+      document.getElementById('blog-author').value = blog.author;
+      document.getElementById('blog-category').value = blog.category;
+      document.getElementById('blog-tags').value = blog.tags;
+      document.getElementById('blog-status').value = blog.status;
+      document.getElementById('blog-scheduled-at').value = blog.scheduled_at ? String(blog.scheduled_at).replace(' ', 'T').slice(0, 16) : '';
+      document.getElementById('blog-trending').checked = Boolean(blog.is_trending);
+      setEditorHtml('blog-editor', blog.content || '');
+      setEditorHtml('excerpt-editor', blog.excerpt || '');
+      setPreviewImage('blog-featured-image', 'featured-image-preview', blog.featured_image || '');
+      setPreviewImage('blog-author-profile-picture', 'author-pic-preview', blog.author_profile_picture || '');
+      document.getElementById('form-title').textContent = 'Edit Blog';
+
+      switchTab('create-blog');
+    }
+
+    // Delete Blog
+    async function deleteBlog(id) {
+      if (!confirm('Delete this blog post?')) return;
+
+      try {
+        const res = await fetch(`${API_BASE}/blog/${id}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        const data = await res.json();
+        if (data.deleted) {
+          alert('Blog deleted!');
+          await loadBlogs();
+          updateStats();
+        }
+      } catch (e) {
+        alert('Error: ' + e.message);
+      }
+    }
+
+    // Cancel Edit
+    function cancelEdit() {
+      editingBlogId = null;
+      document.getElementById('form-title').textContent = 'Create New Post';
+      document.getElementById('blog-title').value = '';
+      document.getElementById('blog-author').value = '';
+      document.getElementById('blog-post-date').value = todayForDateInput();
+      document.getElementById('blog-category').value = '';
+      document.getElementById('blog-tags').value = '';
+      document.getElementById('blog-scheduled-at').value = '';
+      document.getElementById('blog-status').value = 'draft';
+      document.getElementById('blog-trending').checked = false;
+      setEditorHtml('blog-editor', '');
+      setEditorHtml('excerpt-editor', '');
+      setPreviewImage('blog-featured-image', 'featured-image-preview', '');
+      setPreviewImage('blog-author-profile-picture', 'author-pic-preview', '');
+      document.getElementById('font-size-select').value = '';
+      hideTableBuilder();
+      clearDraftSnapshot();
+    }
+
+    // Switch Tab
+    function switchTab(tab) {
+      document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+      document.getElementById(tab).classList.add('active');
+      
+      document.querySelectorAll('.admin-menu__item').forEach(item => item.classList.remove('active'));
+      const activeMenu = Array.from(document.querySelectorAll('.admin-menu__item')).find(item => item.getAttribute('onclick')?.includes(tab));
+      activeMenu?.classList.add('active');
+    }
+
+    // Logout
+    function logout() {
+      if (confirm('Logout?')) {
+        localStorage.removeItem('admin_token');
+        token = null;
+        cancelEdit();
+        showLoginView();
+      }
+    }
+
+    function setupEditors() {
+      const excerptEditor = getEditor('excerpt-editor');
+      const blogEditor = getEditor('blog-editor');
+      const bodyImageInput = document.getElementById('body-image-input');
+      const blogForm = document.getElementById('blog-form');
+      const trackedFieldIds = [
+        'blog-title',
+        'blog-author',
+        'blog-post-date',
+        'blog-category',
+        'blog-tags',
+        'blog-status',
+        'blog-scheduled-at',
+        'blog-trending'
+      ];
+
+      if (blogForm) {
+        blogForm.addEventListener('submit', event => {
+          event.preventDefault();
+        });
+      }
+
+      trackedFieldIds.forEach(id => {
+        const field = document.getElementById(id);
+        if (!field) return;
+        field.addEventListener('input', persistDraftSnapshot);
+        field.addEventListener('change', persistDraftSnapshot);
+      });
+
+      [excerptEditor, blogEditor].forEach(editor => {
+        if (!editor) return;
+        editor.addEventListener('input', syncEditorValues);
+      });
+
+      if (blogEditor) {
+        blogEditor.addEventListener('paste', event => {
+          const clipboard = event.clipboardData;
+          if (!clipboard) return;
+
+          const htmlPayload = clipboard.getData('text/html') || '';
+          const text = clipboard.getData('text/plain') || '';
+          if (!text.trim()) return;
+
+          // Preserve formatting if source already has structured HTML.
+          const hasStructuredHtml = /<(h[1-6]|p|ul|ol|li|table|tr|td|th|img|blockquote)\b/i.test(htmlPayload);
+          if (hasStructuredHtml) return;
+
+          event.preventDefault();
+
+          if (text.includes('\t') && text.split(/\r?\n/).length > 1) {
+            const tableHtml = convertTextTableToHtml(text);
+            if (tableHtml) {
+              insertHtmlAtCursor(tableHtml);
+              return;
+            }
+          }
+
+          const smartHtml = convertSmartPlainTextToHtml(text);
+          insertHtmlAtCursor(smartHtml);
+        });
+      }
+
+      document.getElementById('author-pic-input')?.addEventListener('change', async event => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        try {
+          persistDraftSnapshot();
+          const url = await uploadBlogImage(file);
+          setPreviewImage('blog-author-profile-picture', 'author-pic-preview', url);
+        } catch (error) {
+          alert(error.message);
+        } finally {
+          event.target.value = '';
+        }
+      });
+
+      document.getElementById('featured-image-input')?.addEventListener('change', async event => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        try {
+          persistDraftSnapshot();
+          const url = await uploadBlogImage(file);
+          setPreviewImage('blog-featured-image', 'featured-image-preview', url);
+        } catch (error) {
+          alert(error.message);
+        } finally {
+          event.target.value = '';
+        }
+      });
+
+      bodyImageInput?.addEventListener('change', async event => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        try {
+          persistDraftSnapshot();
+          const url = await uploadBlogImage(file);
+          insertImageIntoEditor(url);
+        } catch (error) {
+          alert(error.message);
+        } finally {
+          bodyImageInput.value = '';
+        }
+      });
+
+      restoreDraftSnapshot();
+    }
+
+    // Initialize
+    setupEditors();
+    checkAuth();
+  </script>
+</body>
+</html>

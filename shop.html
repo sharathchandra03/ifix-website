@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Buy quality refurbished phones and laptops from iFix Academy. Used iPhone, Samsung, MacBook certified devices.">
+  <title>Shop - iFix Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
+
+  <style>
+    /* PAGE HERO */
+    .page-hero { background: var(--bg); padding: 8.5rem 0 3rem; border-bottom: 1px solid var(--border); }
+    .page-hero__inner { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
+    .page-hero__heading { font-weight: 800; font-size: clamp(2.5rem, 5vw, 4rem); line-height: 0.94; letter-spacing: -0.04em; color: var(--text); margin-bottom: 1rem; }
+    .page-hero__heading span { color: var(--accent); }
+    .page-hero__sub { font-size: 1rem; line-height: 1.75; color: var(--text-2); max-width: 600px; }
+
+    /* PRODUCTS SECTION */
+    .products-section { padding: 4rem 0; }
+    .section__inner { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
+
+    /* FILTERS & CART */
+    .products-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; flex-wrap: wrap; gap: 1.5rem; }
+    .products-filter { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    .filter-btn { padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: var(--r-lg); font-size: 0.85rem; font-weight: 500; color: var(--text-2); cursor: pointer; transition: all 0.25s; }
+    .filter-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+    .cart-badge { background: var(--accent); color: white; border-radius: 999px; padding: 0.4rem 0.9rem; font-size: 0.8rem; font-weight: 600; }
+
+    /* PRODUCTS GRID */
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
+    
+    .product-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; transition: all 0.35s var(--ease-expo); box-shadow: var(--shadow-sm); }
+    .product-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); border-color: rgba(52,120,246,0.2); }
+    
+    .product-card__image { width: 100%; aspect-ratio: 1; background: var(--bg-2); display: flex; align-items: center; justify-content: center; font-size: 3rem; overflow: hidden; }
+    .product-card__body { padding: 1.5rem; }
+    
+    .product-card__category { font-size: 0.7rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+    .product-card__name { font-weight: 600; font-size: 0.95rem; color: var(--text); line-height: 1.3; margin-bottom: 0.5rem; }
+    .product-card__description { font-size: 0.8rem; color: var(--text-2); margin-bottom: 1rem; line-height: 1.5; }
+    
+    .product-card__footer { display: flex; justify-content: space-between; align-items: center; }
+    .product-card__price { font-weight: 700; font-size: 1.1rem; color: var(--accent); }
+    .product-card__btn { padding: 0.5rem 0.9rem; background: var(--accent); color: white; border: none; border-radius: var(--r-md); font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: background 0.25s; }
+    .product-card__btn:hover { background: var(--accent-h); }
+
+    /* CART SIDEBAR */
+    .cart-sidebar { position: fixed; right: 0; top: 0; bottom: 0; width: min(400px, 90vw); background: white; box-shadow: -8px 0 32px rgba(0,0,0,0.15); transform: translateX(100%); transition: transform 0.4s var(--ease-expo); z-index: 150; display: flex; flex-direction: column; }
+    .cart-sidebar.open { transform: translateX(0); }
+    .cart-sidebar__header { padding: 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .cart-sidebar__header h2 { font-size: 1.2rem; font-weight: 700; }
+    .cart-close { font-size: 1.5rem; cursor: pointer; color: var(--text-2); transition: color 0.2s; }
+    .cart-close:hover { color: var(--text); }
+    .cart-items { flex: 1; overflow-y: auto; padding: 1.5rem; }
+    .cart-item { display: flex; gap: 1rem; padding: 1rem; background: var(--bg-2); border-radius: var(--r-md); margin-bottom: 1rem; position: relative; }
+    .cart-item__name { font-weight: 600; font-size: 0.9rem; color: var(--text); }
+    .cart-item__price { font-weight: 700; color: var(--accent); }
+    .cart-item__remove { position: absolute; top: 0.5rem; right: 0.5rem; cursor: pointer; color: var(--text-3); font-weight: 700; }
+    .cart-empty { text-align: center; padding: 2rem; color: var(--text-2); }
+    .cart-footer { padding: 1.5rem; border-top: 1px solid var(--border); }
+    .cart-total { display: flex; justify-content: space-between; font-weight: 700; font-size: 1.1rem; margin-bottom: 1rem; }
+    .checkout-btn { width: 100%; padding: 1rem; background: var(--accent); color: white; border: none; border-radius: var(--r-lg); font-weight: 600; font-size: 1rem; cursor: pointer; transition: background 0.25s; }
+    .checkout-btn:hover { background: var(--accent-h); }
+
+    /* YOUTUBE SECTION */
+    .youtube-section { background: var(--bg-2); padding: 4rem 0; border-top: 1px solid var(--border); }
+    .youtube-section__head { text-align: center; margin-bottom: 3rem; }
+    .youtube-section__title { font-weight: 800; font-size: clamp(2rem, 4vw, 3rem); color: var(--text); margin-bottom: 1rem; }
+    .youtube-section__title span { color: var(--accent); }
+    .youtube-player-shell {
+      border: 1px solid var(--border);
+      border-radius: var(--r-2xl);
+      overflow: hidden;
+      background: var(--bg);
+      box-shadow: var(--shadow-md);
+      margin-bottom: 1.5rem;
+    }
+    .youtube-player-shell iframe { width: 100%; aspect-ratio: 16 / 9; border: 0; display: block; }
+    .youtube-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+    .youtube-card { position: relative; border-radius: var(--r-lg); overflow: hidden; cursor: pointer; transition: transform 0.35s var(--ease-expo); border: 1px solid var(--border); background: var(--bg); }
+    .youtube-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+    .youtube-card__thumbnail { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
+    .youtube-card__play { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.3); color: white; font-size: 3rem; }
+    .youtube-card__title { padding: 1rem; background: white; font-weight: 600; font-size: 0.9rem; color: var(--text); line-height: 1.4; }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .products-grid { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 1rem; }
+      .cart-sidebar { width: 100vw; }
+      .products-header { flex-direction: column; align-items: stretch; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <div id="navbar-container"></div>
+
+  <!-- PAGE HERO -->
+  <section class="page-hero">
+    <div class="page-hero__inner">
+      <h1 class="page-hero__heading">Shop Quality <span>Devices</span></h1>
+      <p class="page-hero__sub">Buy certified refurbished iPhones, MacBooks, Samsung devices and more. All items tested and certified by our expert technicians.</p>
+    </div>
+  </section>
+
+  <!-- PRODUCTS SECTION -->
+  <section class="products-section">
+    <div class="section__inner">
+      <div class="products-header">
+        <div class="products-filter" id="filters"></div>
+        <button class="btn btn--primary" onclick="openCart()">
+          🛒 View Cart <span class="cart-badge" id="cart-count" style="display:none;">0</span>
+        </button>
+      </div>
+      <div class="products-grid" id="products-grid"></div>
+      <div id="products-status" style="display:none; text-align:center; color: var(--text-2); margin-top: 1rem;"></div>
+    </div>
+  </section>
+
+  <!-- YOUTUBE SECTION -->
+  <section class="youtube-section">
+    <div class="section__inner">
+      <div class="youtube-section__head">
+        <h2 class="youtube-section__title">Learn from Our <span>YouTube</span></h2>
+        <p style="color: var(--text-2); font-size: 1rem; max-width: 600px; margin: 0 auto;">Watch our latest repair tutorials and tech reviews from the IFIX Academy channel.</p>
+      </div>
+      <div class="youtube-player-shell">
+        <iframe id="youtubeShopPlayer" src="https://www.youtube.com/embed/videoseries?list=UUEFbnYCVxll7Q3OPKb1B6jQ&rel=0" title="IFIX Academy YouTube videos" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+      </div>
+      <div class="youtube-grid" id="youtube-grid"></div>
+      <div style="text-align: center; margin-top: 2.5rem;">
+        <a href="https://www.youtube.com/channel/UCEFbnYCVxll7Q3OPKb1B6jQ" target="_blank" class="btn btn--outline">
+          Subscribe to Our Channel →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CART SIDEBAR -->
+  <div class="cart-sidebar" id="cart-sidebar">
+    <div class="cart-sidebar__header">
+      <h2>Shopping Cart</h2>
+      <span class="cart-close" onclick="closeCart()">✕</span>
+    </div>
+    <div class="cart-items" id="cart-items">
+      <div class="cart-empty">Cart is empty</div>
+    </div>
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>Total:</span>
+        <span id="cart-total">₹0</span>
+      </div>
+      <button class="checkout-btn" onclick="proceedToCheckout()" id="checkout-btn">Proceed to Checkout</button>
+    </div>
+  </div>
+
+  <!-- CART OVERLAY -->
+  <div id="cart-overlay" onclick="closeCart()" style="position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 140; display: none; transition: opacity 0.3s;"></div>
+
+  <!-- Footer -->
+  <div id="footer-container"></div>
+
+  <script>
+    const API_BASE = (
+      localStorage.getItem('ifix_api_base') ||
+      (window.location.protocol === 'file:' ? 'http://localhost:5000/api' : '/api')
+    ).replace(/\/$/, '');
+    const PRODUCTS_CACHE_KEY = 'ifix_products_cache_v1';
+    const YOUTUBE_DEFAULT_PLAYLIST = 'UUEFbnYCVxll7Q3OPKb1B6jQ';
+    let products = [];
+    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    let youtubeVideos = [];
+
+    // Load components
+    fetch('components.js')
+      .then(r => r.text())
+      .then(code => eval(code))
+      .catch(e => console.error('Error loading components:', e));
+
+    // Fetch products
+    function saveProductsCache(list) {
+      if (!Array.isArray(list)) return;
+      localStorage.setItem(PRODUCTS_CACHE_KEY, JSON.stringify(list));
+    }
+
+    function readProductsCache() {
+      try {
+        const cached = JSON.parse(localStorage.getItem(PRODUCTS_CACHE_KEY) || '[]');
+        return Array.isArray(cached) ? cached : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function renderProductsStatus(message) {
+      const statusEl = document.getElementById('products-status');
+      statusEl.textContent = message || '';
+      statusEl.style.display = message ? 'block' : 'none';
+    }
+
+    async function loadProducts() {
+      try {
+        const res = await fetch(`${API_BASE}/products`);
+        if (!res.ok) {
+          throw new Error(`Products request failed (${res.status})`);
+        }
+        products = await res.json();
+        if (!Array.isArray(products)) {
+          throw new Error('Invalid products payload');
+        }
+        if (products.length > 0) {
+          saveProductsCache(products);
+        }
+        renderProducts();
+        loadFilters();
+        renderProductsStatus('');
+      } catch (e) {
+        console.error('Error loading products:', e);
+        const cached = readProductsCache();
+        if (cached.length > 0) {
+          products = cached;
+          renderProducts();
+          loadFilters();
+          renderProductsStatus('Live products are temporarily unavailable. Showing your last saved product list.');
+          return;
+        }
+        renderProductsStatus('Failed to load products. Start backend API on http://localhost:5000 and check DB connection.');
+      }
+    }
+
+    // Fetch YouTube videos
+    async function loadYouTubeVideos() {
+      try {
+        const res = await fetch(`${API_BASE}/youtube/videos`);
+        youtubeVideos = await res.json();
+        renderYouTubeVideos();
+      } catch (e) {
+        console.error('Error loading YouTube videos:', e);
+        renderYouTubeFallback();
+      }
+    }
+
+    // Render products
+    function renderProducts(category = 'all') {
+      const filtered = category === 'all' ? products : products.filter(p => p.category === category);
+      document.getElementById('products-grid').innerHTML = filtered.map(p => `
+        <div class="product-card">
+          <div class="product-card__image">${getCategoryEmoji(p.category)}</div>
+          <div class="product-card__body">
+            <div class="product-card__category">${p.category}</div>
+            <div class="product-card__name">${p.name}</div>
+            <div class="product-card__description">${(p.description || '').substring(0, 60)}...</div>
+            <div class="product-card__footer">
+              <div class="product-card__price">₹${p.price.toLocaleString()}</div>
+              <button class="product-card__btn" onclick="addToCart({id: ${p.id}, name: '${p.name}', price: ${p.price}})">Add</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function getCategoryEmoji(category) {
+      const emojis = {
+        'phones': '📱',
+        'laptops': '💻',
+        'tablets': '📱',
+        'accessories': '🔌',
+        'default': '📦'
+      };
+      return emojis[category?.toLowerCase()] || emojis['default'];
+    }
+
+    // Load filters
+    function loadFilters() {
+      const categories = ['all', ...new Set(products.map(p => p.category))];
+      document.getElementById('filters').innerHTML = categories.map(cat => `
+        <button class="filter-btn ${cat === 'all' ? 'active' : ''}" onclick="filterByCategory('${cat}')">
+          ${cat.charAt(0).toUpperCase() + cat.slice(1)}
+        </button>
+      `).join('');
+    }
+
+    function filterByCategory(category) {
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      renderProducts(category);
+    }
+
+    // YouTube rendering
+    function renderYouTubeVideos() {
+      if (youtubeVideos.length === 0) {
+        renderYouTubeFallback();
+        return;
+      }
+      document.getElementById('youtube-grid').innerHTML = youtubeVideos.slice(0, 6).map(video => `
+        <div class="youtube-card" onclick="playShopVideo('${video.id}', '${escapeHtml(video.title)}')">
+          <img src="${video.thumbnail}" alt="${video.title}" class="youtube-card__thumbnail">
+          <div class="youtube-card__play">▶</div>
+          <div class="youtube-card__title">${video.title}</div>
+        </div>
+      `).join('');
+
+      if (youtubeVideos[0]?.id) {
+        playShopVideo(youtubeVideos[0].id, youtubeVideos[0].title);
+      }
+    }
+
+    function renderYouTubeFallback() {
+      document.getElementById('youtube-grid').innerHTML = `
+        <div class="youtube-card" onclick="playShopVideo('', '')">
+          <img src="https://i.ytimg.com/vi/9bZkp7q19f0/hqdefault.jpg" alt="IFIX Academy YouTube" class="youtube-card__thumbnail">
+          <div class="youtube-card__play">▶</div>
+          <div class="youtube-card__title">Embedded playlist available above</div>
+        </div>
+      `;
+      const player = document.getElementById('youtubeShopPlayer');
+      if (player) {
+        player.src = `https://www.youtube.com/embed/videoseries?list=${YOUTUBE_DEFAULT_PLAYLIST}&rel=0`;
+      }
+    }
+
+    function playShopVideo(videoId) {
+      const player = document.getElementById('youtubeShopPlayer');
+      if (!player || !videoId) return;
+      player.src = `https://www.youtube.com/embed/${videoId}?rel=0&autoplay=1`;
+    }
+
+    function escapeHtml(value) {
+      return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    // Cart functions
+    function addToCart(product) {
+      const existing = cart.find(item => item.id === product.id);
+      if (existing) {
+        existing.quantity++;
+      } else {
+        cart.push({ ...product, quantity: 1 });
+      }
+      saveCart();
+      updateCartUI();
+      alert('Added to cart!');
+    }
+
+    function removeFromCart(id) {
+      cart = cart.filter(item => item.id !== id);
+      saveCart();
+      updateCartUI();
+    }
+
+    function saveCart() {
+      localStorage.setItem('cart', JSON.stringify(cart));
+    }
+
+    function updateCartUI() {
+      const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+      document.getElementById('cart-count').style.display = count > 0 ? 'inline-flex' : 'none';
+      document.getElementById('cart-count').textContent = count;
+
+      if (cart.length === 0) {
+        document.getElementById('cart-items').innerHTML = '<div class="cart-empty">Cart is empty</div>';
+        return;
+      }
+
+      const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      document.getElementById('cart-total').textContent = '₹' + total.toLocaleString();
+
+      document.getElementById('cart-items').innerHTML = cart.map(item => `
+        <div class="cart-item">
+          <div>
+            <div class="cart-item__name">${item.name}</div>
+            <div class="cart-item__price">₹${item.price.toLocaleString()} x ${item.quantity}</div>
+          </div>
+          <span class="cart-item__remove" onclick="removeFromCart(${item.id})">✕</span>
+        </div>
+      `).join('');
+    }
+
+    function openCart() {
+      document.getElementById('cart-sidebar').classList.add('open');
+      document.getElementById('cart-overlay').style.display = 'block';
+    }
+
+    function closeCart() {
+      document.getElementById('cart-sidebar').classList.remove('open');
+      document.getElementById('cart-overlay').style.display = 'none';
+    }
+
+    async function proceedToCheckout() {
+      if (cart.length === 0) {
+        alert('Add items to cart first!');
+        return;
+      }
+
+      const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const checkoutButton = document.getElementById('checkout-btn');
+      if (checkoutButton) {
+        checkoutButton.disabled = true;
+        checkoutButton.textContent = 'Opening payment...';
+      }
+
+      try {
+        // Create order
+        const orderRes = await fetch(`${API_BASE}/payment/create-order`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            amount: total,
+            customer_name: '',
+            customer_email: '',
+            customer_phone: '',
+            items: cart
+          })
+        });
+
+        const orderData = await orderRes.json();
+
+        if (!orderData.success) {
+          alert('Failed to create order');
+          return;
+        }
+
+        // Initialize Razorpay
+        const options = {
+          key: orderData.order.key,
+          amount: orderData.order.amount,
+          currency: orderData.order.currency,
+          order_id: orderData.order.id,
+          handler: function(response) {
+            verifyPayment(response);
+          }
+        };
+
+        const razorpay = new Razorpay(options);
+        razorpay.on('payment.failed', function() {
+          if (checkoutButton) {
+            checkoutButton.disabled = false;
+            checkoutButton.textContent = 'Proceed to Checkout';
+          }
+        });
+        razorpay.open();
+      } catch (e) {
+        alert('Error: ' + e.message);
+        if (checkoutButton) {
+          checkoutButton.disabled = false;
+          checkoutButton.textContent = 'Proceed to Checkout';
+        }
+      }
+    }
+
+    async function verifyPayment(response) {
+      try {
+        const verifyRes = await fetch(`${API_BASE}/payment/verify-payment`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature
+          })
+        });
+
+        const result = await verifyRes.json();
+
+        if (result.success) {
+          alert('Payment successful! Thank you for your order.');
+          cart = [];
+          saveCart();
+          updateCartUI();
+          closeCart();
+          const checkoutButton = document.getElementById('checkout-btn');
+          if (checkoutButton) {
+            checkoutButton.disabled = false;
+            checkoutButton.textContent = 'Proceed to Checkout';
+          }
+        } else {
+          alert('Payment verification failed');
+          const checkoutButton = document.getElementById('checkout-btn');
+          if (checkoutButton) {
+            checkoutButton.disabled = false;
+            checkoutButton.textContent = 'Proceed to Checkout';
+          }
+        }
+      } catch (e) {
+        alert('Error: ' + e.message);
+        const checkoutButton = document.getElementById('checkout-btn');
+        if (checkoutButton) {
+          checkoutButton.disabled = false;
+          checkoutButton.textContent = 'Proceed to Checkout';
+        }
+      }
+    }
+
+    // Initialize
+    loadProducts();
+    loadYouTubeVideos();
+    updateCartUI();
+  </script>
+
+  <!-- Razorpay Script -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</body>
+</html>

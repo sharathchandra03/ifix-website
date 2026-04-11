@@ -1,0 +1,421 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="iFix Academy Courses - Professional repairing courses in Mobile, Laptop, Display, iPhone and more. Online & offline, Delhi & Patna.">
+  <title>Courses - iFix Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
+
+  <style>
+    /* ── PAGE HERO ── */
+    .page-hero {
+      background: var(--bg);
+      min-height: 100vh;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      padding: 7.5rem 0 5rem;
+    }
+    .page-hero::before {
+      content: ''; position: absolute; top: -150px; right: -80px;
+      width: 550px; height: 550px;
+      background: radial-gradient(circle, rgba(52,120,246,0.07) 0%, transparent 65%);
+      border-radius: 50%; pointer-events: none;
+    }
+    .page-hero__inner { max-width: 1280px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 2; }
+    .page-hero__heading { font-weight: 800; font-size: clamp(2.5rem,6vw,5.5rem); line-height: 0.94; letter-spacing: -0.04em; color: var(--text); margin-bottom: 1.25rem; }
+    .page-hero__heading span { color: var(--accent); }
+    .page-hero .section-label { color: #0f4fbf; opacity: 1; }
+    .page-hero__sub { font-size: 1.05rem; line-height: 1.75; color: #111111; opacity: 0.92; max-width: 560px; }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background: linear-gradient(180deg, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0.45) 35%, rgba(255,255,255,0.78) 100%);
+    }
+
+    /* ── TABS NAV ── */
+    .tabs-nav { background: rgba(255,255,255,0.9); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); position: sticky; top: 58px; z-index: 100; }
+    .tabs-nav__inner { max-width: 1280px; margin: 0 auto; padding: 0 2rem; display: flex; overflow-x: auto; scrollbar-width: none; }
+    .tabs-nav__inner::-webkit-scrollbar { display: none; }
+    .tab-btn { flex-shrink: 0; padding: 1rem 1.4rem; font-size: 0.875rem; font-weight: 600; color: var(--text-2); border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; font-family: var(--ff); cursor: pointer; background: none; border-top: none; border-left: none; border-right: none; }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+    /* ── COURSE SECTION ── */
+    .course-section { padding: 5.5rem 0; border-bottom: 1px solid var(--border); }
+    .course-section:nth-child(even) { background: var(--bg-2); }
+    .course-detail { display: grid; grid-template-columns: 1.15fr 1fr; gap: 5rem; align-items: start; }
+    .course-detail--rev { direction: rtl; }
+    .course-detail--rev > * { direction: ltr; }
+
+    .course-badge-lg {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 5px 12px; border-radius: 999px; width: fit-content; margin-bottom: 1.25rem;
+    }
+    .bg-popular { background: rgba(52,120,246,0.1);  color: var(--accent); }
+    .bg-demand  { background: rgba(255,59,48,0.1);   color: var(--red); }
+    .bg-new     { background: rgba(52,199,89,0.1);   color: var(--green); }
+    .bg-premium { background: rgba(88,86,214,0.1);   color: #5856D6; }
+
+    .course-info__title { font-weight: 800; font-size: clamp(1.75rem,3vw,2.75rem); letter-spacing: -0.035em; color: var(--text); line-height: 1.0; margin-bottom: 1.25rem; }
+    .course-info__desc { font-size: 1rem; line-height: 1.8; color: var(--text-2); margin-bottom: 1.75rem; }
+
+    .course-chips { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.75rem; }
+    .chip { font-size: 0.75rem; padding: 5px 13px; border-radius: 999px; border: 1px solid var(--border); color: var(--text-2); background: var(--bg); }
+
+    .skills-title { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3); margin-bottom: 1rem; }
+    .skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 2rem; }
+    .skill-item { display: flex; align-items: center; gap: 0.6rem; font-size: 0.875rem; color: var(--text-2); }
+    .skill-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+
+    .course-outcome {
+      background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--r-lg);
+      padding: 1.25rem 1.5rem; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem;
+    }
+    .course-outcome__icon { font-size: 1.5rem; }
+    .course-outcome__lbl { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3); }
+    .course-outcome__val { font-weight: 700; font-size: 0.95rem; color: var(--text); margin-top: 2px; }
+
+    .course-ctas { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    /* ── VISUAL CARD (right side) ── */
+    .ccv {
+      background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-2xl);
+      padding: 2.25rem; box-shadow: var(--shadow-md); position: relative; overflow: hidden;
+    }
+    .ccv::before {
+      content: ''; position: absolute; top: -60px; right: -60px;
+      width: 220px; height: 220px;
+      background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+      opacity: 0.06; border-radius: 50%; pointer-events: none;
+    }
+    .ccv__emoji { font-size: 3rem; display: block; margin-bottom: 1.25rem; }
+    .ccv__title { font-weight: 800; font-size: 1.4rem; letter-spacing: -0.02em; color: var(--text); margin-bottom: 0.3rem; }
+    .ccv__cat { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 2rem; display: block; }
+    .ccv__stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.75rem; }
+    .ccv__stat { background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--r-md); padding: 1rem; }
+    .ccv__stat-num { font-weight: 800; font-size: 1.4rem; color: var(--accent); letter-spacing: -0.02em; display: block; }
+    .ccv__stat-lbl { font-size: 0.68rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; }
+    .ccv__divider { height: 1px; background: var(--border); margin-bottom: 1.5rem; }
+    .ccv__inc-title { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3); margin-bottom: 0.875rem; }
+    .ccv__inc-item { display: flex; align-items: center; gap: 0.6rem; font-size: 0.875rem; color: var(--text-2); margin-bottom: 0.5rem; }
+    .chk { color: var(--accent); font-size: 0.85rem; font-weight: 700; }
+
+    /* ── ONLINE SECTION ── */
+    .online-section { background: var(--bg-2); padding: 6rem 0; border-top: 1px solid var(--border); }
+    .online-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem; margin-top: 3rem; }
+    .online-feat { background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-xl); padding: 1.75rem; box-shadow: var(--shadow-sm); transition: transform 0.3s var(--ease-expo), box-shadow 0.3s; }
+    .online-feat:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+    .online-feat__icon { font-size: 1.75rem; margin-bottom: 1rem; }
+    .online-feat__title { font-weight: 700; font-size: 1rem; color: var(--text); margin-bottom: 0.4rem; }
+    .online-feat__desc { font-size: 0.875rem; color: var(--text-2); line-height: 1.6; }
+
+    /* ── CTA ROW ── */
+    .enroll-cta { background: var(--accent); padding: 5rem 0; }
+    .enroll-cta__inner { display: flex; align-items: center; justify-content: space-between; gap: 3rem; flex-wrap: wrap; }
+    .enroll-cta__heading { font-weight: 800; font-size: clamp(1.75rem,3vw,2.5rem); letter-spacing: -0.03em; color: #fff; line-height: 1.1; }
+    .enroll-cta__sub { font-size: 1rem; color: rgba(255,255,255,0.78); margin-top: 0.5rem; max-width: 380px; }
+    .btn--w { background:#fff; color:var(--accent); border-radius:var(--r-xl); padding:0.85rem 2rem; font-size:1rem; font-weight:600; transition:background 0.25s; }
+    .btn--w:hover { background:rgba(255,255,255,0.88); }
+    .btn--wo { border:1.5px solid rgba(255,255,255,0.5); color:#fff; border-radius:var(--r-xl); padding:0.85rem 2rem; font-size:1rem; font-weight:600; transition:background 0.2s, border-color 0.2s; }
+    .btn--wo:hover { background:rgba(255,255,255,0.1); border-color:#fff; }
+
+    @media (max-width: 960px) {
+      .course-detail { grid-template-columns: 1fr; gap: 2.5rem; }
+      .course-detail--rev { direction: ltr; }
+      .online-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .online-grid { grid-template-columns: 1fr; }
+      .skills-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="nav-root"></div>
+
+  <section class="page-hero">
+    <video class="hero-bg" autoplay muted loop playsinline>
+      <source src="Assets/Chip Solder video 1.mp4" type="video/mp4">
+    </video>
+    <div class="hero-overlay"></div>
+    <div class="page-hero__inner">
+      <span class="section-label">iFix Academy · Programmes</span>
+      <h1 class="page-hero__heading">Professional<br><span>Repairing</span> Courses</h1>
+      <p class="page-hero__sub">Every course is built around real-world repair scenarios. Hands-on from Day 1 - taught by instructors who've spent years in the field. Online and offline options available across India.</p>
+    </div>
+  </section>
+
+  <nav class="tabs-nav" id="tabsNav">
+    <div class="tabs-nav__inner">
+      <button class="tab-btn active" data-target="mobile">Mobile Repairing</button>
+      <button class="tab-btn" data-target="laptop">Laptop Repairing</button>
+      <button class="tab-btn" data-target="display">Display Repairing</button>
+      <button class="tab-btn" data-target="iphone">iPhone Repairing</button>
+      <button class="tab-btn" data-target="online">Online Learning</button>
+    </div>
+  </nav>
+
+  <!-- MOBILE -->
+  <section class="course-section" id="mobile">
+    <div class="container">
+      <div class="course-detail reveal">
+        <div>
+          <span class="course-badge-lg bg-popular">⭐ Most Popular</span>
+          <h2 class="course-info__title">Mobile Repairing Course</h2>
+          <p class="course-info__desc">The foundation of every repair technician's career. Learn complete hardware &amp; software troubleshooting for all Android and feature phone brands - from screen replacements to PCB-level diagnostics. Immediate employment or self-employment ready.</p>
+          <div class="course-chips"><span class="chip">⏱ 6 Weeks</span><span class="chip">📍 Delhi · Patna · Online</span><span class="chip">🌐 Hindi &amp; English</span><span class="chip">📜 Certificate</span></div>
+          <div class="skills-title">What You'll Learn</div>
+          <div class="skills-grid">
+            <div class="skill-item"><span class="skill-dot"></span>Screen Replacement (All Brands)</div>
+            <div class="skill-item"><span class="skill-dot"></span>Battery &amp; Charging Port Repair</div>
+            <div class="skill-item"><span class="skill-dot"></span>PCB-Level Diagnosis</div>
+            <div class="skill-item"><span class="skill-dot"></span>Software Flashing &amp; Unlocking</div>
+            <div class="skill-item"><span class="skill-dot"></span>Water Damage Recovery</div>
+            <div class="skill-item"><span class="skill-dot"></span>Camera &amp; Speaker Module Fix</div>
+            <div class="skill-item"><span class="skill-dot"></span>Micro-Soldering Basics</div>
+            <div class="skill-item"><span class="skill-dot"></span>Business Setup Guidance</div>
+          </div>
+          <div class="course-outcome"><div class="course-outcome__icon">🎓</div><div><div class="course-outcome__lbl">You'll Earn</div><div class="course-outcome__val">Certified Mobile Repair Technician</div></div></div>
+          <div class="course-ctas"><a href="contact.html#contact-form" class="btn btn--primary">Enroll Now</a><a href="contact.html" class="btn btn--ghost">Ask a Question</a></div>
+        </div>
+        <div class="ccv">
+          <span class="ccv__emoji">📱</span>
+          <div class="ccv__title">Mobile Repairing</div>
+          <span class="ccv__cat">Android Ecosystem</span>
+          <div class="ccv__stats">
+            <div class="ccv__stat"><span class="ccv__stat-num">6</span><span class="ccv__stat-lbl">Weeks</span></div>
+            <div class="ccv__stat"><span class="ccv__stat-num">50+</span><span class="ccv__stat-lbl">Device Brands</span></div>
+            <div class="ccv__stat"><span class="ccv__stat-num">100%</span><span class="ccv__stat-lbl">Practical</span></div>
+            <div class="ccv__stat"><span class="ccv__stat-num">94%</span><span class="ccv__stat-lbl">Placed</span></div>
+          </div>
+          <div class="ccv__divider"></div>
+          <div class="ccv__inc-title">Course Includes</div>
+          <div class="ccv__inc-item"><span class="chk">✓</span>Live demo on 20+ real devices</div>
+          <div class="ccv__inc-item"><span class="chk">✓</span>Professional tool kit access</div>
+          <div class="ccv__inc-item"><span class="chk">✓</span>HD recorded video library</div>
+          <div class="ccv__inc-item"><span class="chk">✓</span>Industry-recognised certificate</div>
+          <div class="ccv__inc-item"><span class="chk">✓</span>Job assistance &amp; placement</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LAPTOP -->
+  <section class="course-section" id="laptop">
+    <div class="container">
+      <div class="course-detail course-detail--rev reveal">
+        <div>
+          <span class="course-badge-lg bg-demand">🔥 High Demand</span>
+          <h2 class="course-info__title">Laptop Repairing Course</h2>
+          <p class="course-info__desc">Windows laptops are everywhere - in homes, offices, colleges. From basic diagnostics to advanced chip-level motherboard repair. GPU re-balling alone earns ₹2,000+ per device. Master the skill that keeps businesses running.</p>
+          <div class="course-chips"><span class="chip">⏱ 7 Weeks</span><span class="chip">📍 Delhi · Patna · Online</span><span class="chip">🌐 Hindi &amp; English</span><span class="chip">📜 Certificate</span></div>
+          <div class="skills-title">What You'll Learn</div>
+          <div class="skills-grid">
+            <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Motherboard Diagnosis &amp; Repair</div>
+            <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>GPU Re-balling &amp; Rebonding</div>
+            <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Hinge &amp; Chassis Replacement</div>
+            <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Thermal Paste &amp; Cooling</div>
+            <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>BIOS Recovery &amp; Reflashing</div>
+            <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>RAM &amp; SSD Upgrades</div>
+            <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Display Panel Replacement</div>
+            <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Keyboard &amp; Trackpad Fix</div>
+          </div>
+          <div class="course-outcome"><div class="course-outcome__icon">🎓</div><div><div class="course-outcome__lbl">You'll Earn</div><div class="course-outcome__val">Certified Laptop Technician</div></div></div>
+          <div class="course-ctas"><a href="contact.html#contact-form" class="btn btn--primary">Enroll Now</a><a href="contact.html" class="btn btn--ghost">Ask a Question</a></div>
+        </div>
+        <div class="ccv">
+          <span class="ccv__emoji">💻</span>
+          <div class="ccv__title">Laptop Repairing</div>
+          <span class="ccv__cat">PC Repair · Windows Ecosystem</span>
+          <div class="ccv__stats">
+            <div class="ccv__stat"><span class="ccv__stat-num">7</span><span class="ccv__stat-lbl">Weeks</span></div>
+            <div class="ccv__stat"><span class="ccv__stat-num">15+</span><span class="ccv__stat-lbl">Laptop Brands</span></div>
+            <div class="ccv__stat"><span class="ccv__stat-num">₹2K+</span><span class="ccv__stat-lbl">Earn/Device</span></div>
+            <div class="ccv__stat"><span class="ccv__stat-num">Expert</span><span class="ccv__stat-lbl">Faculty</span></div>
+          </div>
+          <div class="ccv__divider"></div>
+          <div class="ccv__inc-title">Course Includes</div>
+          <div class="ccv__inc-item"><span class="chk">✓</span>Chip-level board repair training</div>
+          <div class="ccv__inc-item"><span class="chk">✓</span>BGA rework &amp; soldering station</div>
+          <div class="ccv__inc-item"><span class="chk">✓</span>Schematic &amp; circuit diagram reading</div>
+          <div class="ccv__inc-item"><span class="chk">✓</span>Industry-recognised certificate</div>
+          <div class="ccv__inc-item"><span class="chk">✓</span>Job &amp; business support</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DISPLAY -->
+  <section class="course-section" id="display">
+    <div class="container">
+      <div class="course-detail reveal">
+        <div>
+          <span class="course-badge-lg bg-new">🆕 New Course</span>
+          <h2 class="course-info__title">Display Repairing Course</h2>
+          <p class="course-info__desc">LCD and AMOLED displays are the most expensive components in any smartphone. Mastering OCA lamination, bonding, and refurbishment means you can restore cracked screens to factory condition. High value, high demand, high earning potential.</p>
+          <div class="course-chips"><span class="chip">⏱ 5 Weeks</span><span class="chip">📍 Delhi · Patna · Online</span><span class="chip">🌐 Hindi &amp; English</span><span class="chip">📜 Certificate</span></div>
+          <div class="skills-title">What You'll Learn</div>
+          <div class="skills-grid">
+            <div class="skill-item"><span class="skill-dot" style="background:var(--green);"></span>LCD &amp; AMOLED Display Bonding</div>
+            <div class="skill-item"><span class="skill-dot" style="background:var(--green);"></span>OCA Lamination Process</div>
+            <div class="skill-item"><span class="skill-dot" style="background:var(--green);"></span>Digitizer Separation</div>
+            <div class="skill-item"><span class="skill-dot" style="background:var(--green);"></span>UV Curing Techniques</div>
+            <div class="skill-item"><span class="skill-dot" style="background:var(--green);"></span>Glass Refurbishment</div>
+            <div class="skill-item"><span class="skill-dot" style="background:var(--green);"></span>AMOLED Burn-in Fixes</div>
+            <div class="skill-item"><span class="skill-dot" style="background:var(--green);"></span>Touch Calibration</div>
+            <div class="skill-item"><span class="skill-dot" style="background:var(--green);"></span>Display Testing &amp; QC</div>
+          </div>
+          <div class="course-outcome"><div class="course-outcome__icon">🎓</div><div><div class="course-outcome__lbl">You'll Earn</div><div class="course-outcome__val">Display Repair Specialist</div></div></div>
+          <div class="course-ctas"><a href="contact.html#contact-form" class="btn btn--primary">Enroll Now</a><a href="contact.html" class="btn btn--ghost">Ask a Question</a></div>
+        </div>
+        <div class="ccv">
+          <span class="ccv__emoji">🖥️</span>
+          <div class="ccv__title">Display Repairing</div>
+          <span class="ccv__cat">LCD / AMOLED Specialist</span>
+          <div class="ccv__stats">
+            <div class="ccv__stat"><span class="ccv__stat-num">5</span><span class="ccv__stat-lbl">Weeks</span></div>
+            <div class="ccv__stat"><span class="ccv__stat-num">New</span><span class="ccv__stat-lbl">Launch</span></div>
+            <div class="ccv__stat"><span class="ccv__stat-num">High</span><span class="ccv__stat-lbl">Demand</span></div>
+            <div class="ccv__stat"><span class="ccv__stat-num">100%</span><span class="ccv__stat-lbl">Practical</span></div>
+          </div>
+          <div class="ccv__divider"></div>
+          <div class="ccv__inc-title">Course Includes</div>
+          <div class="ccv__inc-item"><span class="chk">✓</span>OCA lamination machine training</div>
+          <div class="ccv__inc-item"><span class="chk">✓</span>UV curing &amp; bubble removal</div>
+          <div class="ccv__inc-item"><span class="chk">✓</span>AMOLED &amp; LCD bonding practice</div>
+          <div class="ccv__inc-item"><span class="chk">✓</span>Industry-recognised certificate</div>
+          <div class="ccv__inc-item"><span class="chk">✓</span>Job &amp; business support</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- IPHONE -->
+  <section class="course-section" id="iphone">
+    <div class="container">
+      <div class="course-detail course-detail--rev reveal">
+        <div>
+          <span class="course-badge-lg bg-premium">💎 Premium</span>
+          <h2 class="course-info__title">iPhone Repairing Course</h2>
+          <p class="course-info__desc">The most premium skill in the mobile repair industry. iPhone technicians who can work on chip-level Apple hardware earn the most in the field. Learn Face ID repair, Apple-specific IC diagnosis, and deep motherboard work very few shops in India can offer.</p>
+          <div class="course-chips"><span class="chip">⏱ 8 Weeks</span><span class="chip">📍 Delhi · Patna · Online</span><span class="chip">🌐 Hindi &amp; English</span><span class="chip">📜 Certificate</span></div>
+          <div class="skills-title">What You'll Learn</div>
+          <div class="skills-grid">
+            <div class="skill-item"><span class="skill-dot" style="background:#5856D6;"></span>Screen &amp; Battery Replacement</div>
+            <div class="skill-item"><span class="skill-dot" style="background:#5856D6;"></span>Face ID Module Repair</div>
+            <div class="skill-item"><span class="skill-dot" style="background:#5856D6;"></span>Motherboard Diagnosis</div>
+            <div class="skill-item"><span class="skill-dot" style="background:#5856D6;"></span>Water Damage Recovery</div>
+            <div class="skill-item"><span class="skill-dot" style="background:#5856D6;"></span>Apple-Specific IC Work</div>
+            <div class="skill-item"><span class="skill-dot" style="background:#5856D6;"></span>Charging Port &amp; Camera Fix</div>
+            <div class="skill-item"><span class="skill-dot" style="background:#5856D6;"></span>True Tone &amp; DFU Restore</div>
+            <div class="skill-item"><span class="skill-dot" style="background:#5856D6;"></span>Micro-Soldering on Apple PCB</div>
+          </div>
+          <div class="course-outcome"><div class="course-outcome__icon">🎓</div><div><div class="course-outcome__lbl">You'll Earn</div><div class="course-outcome__val">Certified iPhone Repair Technician</div></div></div>
+          <div class="course-ctas"><a href="contact.html#contact-form" class="btn btn--primary">Enroll Now</a><a href="contact.html" class="btn btn--ghost">Ask a Question</a></div>
+        </div>
+        <div class="ccv">
+          <span class="ccv__emoji">📱</span>
+          <div class="ccv__title">iPhone Repairing</div>
+          <span class="ccv__cat">Apple Ecosystem · Premium</span>
+          <div class="ccv__stats">
+            <div class="ccv__stat"><span class="ccv__stat-num">8</span><span class="ccv__stat-lbl">Weeks</span></div>
+            <div class="ccv__stat"><span class="ccv__stat-num">All</span><span class="ccv__stat-lbl">iPhone Models</span></div>
+            <div class="ccv__stat"><span class="ccv__stat-num">₹50K+</span><span class="ccv__stat-lbl">Monthly</span></div>
+            <div class="ccv__stat"><span class="ccv__stat-num">Expert</span><span class="ccv__stat-lbl">Instructors</span></div>
+          </div>
+          <div class="ccv__divider"></div>
+          <div class="ccv__inc-title">Course Includes</div>
+          <div class="ccv__inc-item"><span class="chk">✓</span>Real iPhone hardware lab sessions</div>
+          <div class="ccv__inc-item"><span class="chk">✓</span>Face ID &amp; True Tone module training</div>
+          <div class="ccv__inc-item"><span class="chk">✓</span>Apple schematic reading</div>
+          <div class="ccv__inc-item"><span class="chk">✓</span>Industry-recognised certificate</div>
+          <div class="ccv__inc-item"><span class="chk">✓</span>Job &amp; business support</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ONLINE -->
+  <section class="online-section" id="online">
+    <div class="container">
+      <span class="section-label reveal">Online Learning</span>
+      <h2 class="section-heading reveal d1" style="margin-bottom:1rem;">Learn Mobile Repairing<br>- From Home</h2>
+      <p class="section-sub reveal d2" style="max-width:580px;">Can't visit our Delhi or Patna training centre? Our structured online course delivers the same industry-level curriculum right to your screen - accessible from every state in India.</p>
+      <div class="online-grid">
+        <div class="online-feat reveal"><div class="online-feat__icon">🎥</div><div class="online-feat__title">Live &amp; Recorded HD Lectures</div><div class="online-feat__desc">Available in Hindi and English. Rewatch any class as many times as you need.</div></div>
+        <div class="online-feat reveal d1"><div class="online-feat__icon">🧰</div><div class="online-feat__title">Repair Tool Kit at Home</div><div class="online-feat__desc">Professional-grade toolkit shipped to your address. Start practicing from Day 1.</div></div>
+        <div class="online-feat reveal d2"><div class="online-feat__icon">💬</div><div class="online-feat__title">WhatsApp &amp; Telegram Support</div><div class="online-feat__desc">Doubt-clearing sessions every day. Experts respond within hours.</div></div>
+        <div class="online-feat reveal"><div class="online-feat__icon">📜</div><div class="online-feat__title">Industry-Recognised Certificate</div><div class="online-feat__desc">ISO-certified diploma accepted by employers across India.</div></div>
+        <div class="online-feat reveal d1"><div class="online-feat__icon">♾️</div><div class="online-feat__title">Lifetime Access to Updates</div><div class="online-feat__desc">New smartphones, new repair techniques - your course stays current. Forever.</div></div>
+        <div class="online-feat reveal d2"><div class="online-feat__icon">🚀</div><div class="online-feat__title">Business Setup Guidance</div><div class="online-feat__desc">Learn how to set up your own repair shop: tools, pricing, marketing &amp; suppliers.</div></div>
+      </div>
+      <div style="margin-top:3rem;display:flex;gap:1rem;flex-wrap:wrap;" class="reveal">
+        <a href="contact.html" class="btn btn--primary" style="padding:0.85rem 2rem;">Enroll Online</a>
+        <a href="contact.html" class="btn btn--ghost"   style="padding:0.85rem 2rem;">Ask a Question</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="enroll-cta">
+    <div class="container">
+      <div class="enroll-cta__inner">
+        <div>
+          <h2 class="enroll-cta__heading">Ready to start?</h2>
+          <p class="enroll-cta__sub">Join 2,400+ graduates who chose hands-on training. Enroll today or visit our nearest centre.</p>
+        </div>
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+          <a href="contact.html" class="btn btn--w">Find a Centre</a>
+          <a href="contact.html" class="btn btn--wo">Contact Us</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div id="footer-root"></div>
+  <script src="components.js"></script>
+  <script>
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if(e.isIntersecting){e.target.classList.add('in-view');obs.unobserve(e.target);} });
+    }, { threshold:0.1, rootMargin:'0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el => obs.observe(el));
+
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const sections = ['mobile','laptop','display','iphone','online'].map(id => document.getElementById(id));
+    const NAV_H = 58 + 44;
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const t = document.getElementById(btn.dataset.target);
+        if (t) window.scrollTo({ top: t.offsetTop - NAV_H, behavior: 'smooth' });
+      });
+    });
+    window.addEventListener('scroll', () => {
+      let cur = '';
+      sections.forEach(s => { if(s && window.scrollY >= s.offsetTop - NAV_H - 10) cur = s.id; });
+      tabBtns.forEach(b => b.classList.toggle('active', b.dataset.target === cur));
+    }, { passive: true });
+  </script>
+</body>
+</html>
+

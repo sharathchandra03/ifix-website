@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="iFix Academy Blog - Latest repair tips, device reviews, and tech guides.">
+  <title>Blog - iFix Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
+
+  <style>
+    /* PAGE HERO */
+    .page-hero { background: linear-gradient(135deg, var(--bg) 0%, var(--bg-2) 100%); padding: 8.5rem 0 3rem; border-bottom: 1px solid var(--border); }
+    .page-hero__inner { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
+    .page-hero__heading { font-weight: 800; font-size: clamp(2.5rem, 5vw, 4rem); line-height: 0.94; letter-spacing: -0.04em; color: var(--text); margin-bottom: 1rem; }
+    .page-hero__heading span { color: var(--accent); }
+    .page-hero__sub { font-size: 1rem; line-height: 1.75; color: var(--text-2); max-width: 600px; }
+
+    /* BLOG SECTION */
+    .blog-section { padding: 4rem 0; }
+    .section__inner { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
+
+    /* SEARCH & FILTER */
+    .blog-controls { display: flex; gap: 1.5rem; margin-bottom: 2.5rem; flex-wrap: wrap; }
+    .search-box { flex: 1; min-width: 250px; display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1.25rem; background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--r-lg); }
+    .search-box input { flex: 1; background: none; border: none; outline: none; font-family: var(--ff); font-size: 0.95rem; color: var(--text); }
+    .search-box input::placeholder { color: var(--text-3); }
+    .blog-filters { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    .filter-tag { padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: 999px; font-size: 0.85rem; background: white; cursor: pointer; transition: all 0.25s; }
+    .filter-tag.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+    /* BLOG GRID */
+    .blog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem; margin-bottom: 3rem; }
+    
+    .blog-card { background: white; border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; display: flex; flex-direction: column; transition: all 0.35s var(--ease-expo); box-shadow: var(--shadow-sm); }
+    .blog-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); border-color: rgba(52,120,246,0.2); }
+    
+    .blog-card__image { width: 100%; height: 200px; background: linear-gradient(135deg, var(--bg-2) 0%, var(--bg-3) 100%); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; overflow: hidden; }
+    .blog-card__body { padding: 1.75rem; flex: 1; display: flex; flex-direction: column; }
+    
+    .blog-card__category { display: inline-block; font-size: 0.65rem; color: var(--accent); background: var(--accent-dim); padding: 4px 10px; border-radius: 999px; width: fit-content; margin-bottom: 0.75rem; }
+    .blog-card__title { font-weight: 700; font-size: 1.1rem; color: var(--text); line-height: 1.3; margin-bottom: 0.75rem; }
+    .blog-card__excerpt { font-size: 0.9rem; color: var(--text-2); line-height: 1.6; margin-bottom: auto; }
+    
+    .blog-card__footer { display: flex; justify-content: space-between; align-items: center; margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--border); }
+    .blog-card__meta { font-size: 0.8rem; color: var(--text-3); }
+    .blog-card__link { color: var(--accent); font-weight: 600; font-size: 0.9rem; transition: color 0.25s; }
+    .blog-card__link:hover { color: var(--accent-h); }
+
+    /* EMPTY STATE */
+    .empty-state { text-align: center; padding: 4rem 2rem; color: var(--text-2); }
+    .empty-state__icon { font-size: 3rem; margin-bottom: 1rem; }
+
+    /* BLOG POST PAGE (detail view) */
+    .blog-post { padding: 4rem 0; max-width: 900px; margin: 0 auto; }
+    .blog-post__header { margin-bottom: 3rem; }
+    .blog-post__title { font-weight: 800; font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.1; letter-spacing: -0.03em; color: var(--text); margin-bottom: 1rem; }
+    .blog-post__meta { display: flex; gap: 1.5rem; flex-wrap: wrap; font-size: 0.9rem; color: var(--text-2); margin-bottom: 2rem; }
+    .blog-post__meta-item { display: flex; align-items: center; gap: 0.5rem; }
+    .blog-post__image { width: 100%; max-height: 500px; border-radius: var(--r-xl); object-fit: cover; margin-bottom: 3rem; }
+    .blog-post__content { font-size: 1.05rem; line-height: 1.8; color: var(--text-2); }
+    .blog-post__content h2 { font-weight: 700; font-size: 1.5rem; color: var(--text); margin: 2rem 0 1rem; }
+    .blog-post__content p { margin-bottom: 1.5rem; }
+    .blog-post__content ul, .blog-post__content ol { margin-bottom: 1.5rem; padding-left: 1.5rem; }
+    .blog-post__content li { margin-bottom: 0.75rem; }
+
+    /* BACK BUTTON */
+    .back-link { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--accent); font-weight: 600; margin-bottom: 2rem; }
+    .back-link:hover { text-decoration: underline; }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .blog-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+      .blog-controls { flex-direction: column; }
+      .search-box { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <div id="navbar-container"></div>
+
+  <!-- PAGE HERO -->
+  <section class="page-hero">
+    <div class="page-hero__inner">
+      <h1 class="page-hero__heading">Our <span>Blog</span></h1>
+      <p class="page-hero__sub">Latest tips, tutorials, and insights about device repair, maintenance, and technology trends.</p>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <main style="min-height: 60vh;">
+    <section class="blog-section" id="blog-list-view">
+      <div class="section__inner">
+        <!-- Search & Filters -->
+        <div class="blog-controls">
+          <div class="search-box">
+            <span>🔍</span>
+            <input type="text" id="search-input" placeholder="Search blogs..." onkeyup="searchBlogs()">
+          </div>
+        </div>
+
+        <!-- Blog Grid -->
+        <div class="blog-grid" id="blog-grid"></div>
+        <div class="empty-state" id="empty-state" style="display: none;">
+          <div class="empty-state__icon">📝</div>
+          <p>No blogs found. Check back soon!</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Blog Post Detail View -->
+    <section class="blog-section" id="post-detail-view" style="display: none;">
+      <div class="section__inner">
+        <a href="#" class="back-link" onclick="showBlogList(); return false;">← Back to Blogs</a>
+        <article class="blog-post" id="post-content"></article>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <div id="footer-container"></div>
+
+  <script>
+    const API_BASE = (
+      localStorage.getItem('ifix_api_base') ||
+      (window.location.protocol === 'file:' ? 'http://localhost:5000/api' : '/api')
+    ).replace(/\/$/, '');
+    const BLOG_CACHE_KEY = 'ifix_blog_cache_v1';
+    let blogs = [];
+    let filteredBlogs = [];
+
+    // Load components
+    fetch('components.js')
+      .then(r => r.text())
+      .then(code => eval(code))
+      .catch(e => console.error('Error loading components:', e));
+
+    // Fetch blogs
+    function saveBlogCache(list) {
+      if (!Array.isArray(list)) return;
+      localStorage.setItem(BLOG_CACHE_KEY, JSON.stringify(list));
+    }
+
+    function readBlogCache() {
+      try {
+        const cached = JSON.parse(localStorage.getItem(BLOG_CACHE_KEY) || '[]');
+        return Array.isArray(cached) ? cached : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function showLoadError(message) {
+      const empty = document.getElementById('empty-state');
+      empty.style.display = 'block';
+      empty.innerHTML = `<div class="empty-state__icon">⚠️</div><p>${message}</p>`;
+    }
+
+    async function loadBlogs() {
+      try {
+        const res = await fetch(`${API_BASE}/blog`);
+        if (!res.ok) {
+          throw new Error(`Blog request failed (${res.status})`);
+        }
+        blogs = await res.json();
+        if (!Array.isArray(blogs)) {
+          throw new Error('Invalid blog payload');
+        }
+        if (blogs.length > 0) {
+          saveBlogCache(blogs);
+        }
+        filteredBlogs = blogs;
+        renderBlogGrid();
+      } catch (e) {
+        console.error('Error loading blogs:', e);
+        const cached = readBlogCache();
+        if (cached.length > 0) {
+          blogs = cached;
+          filteredBlogs = cached;
+          renderBlogGrid();
+          showLoadError('Live blogs are temporarily unavailable. Showing your last saved blogs.');
+          return;
+        }
+        showLoadError('Unable to load blogs. Start backend API on http://localhost:5000 and verify DB settings.');
+      }
+    }
+
+    // Render blog grid
+    function renderBlogGrid() {
+      const grid = document.getElementById('blog-grid');
+      const empty = document.getElementById('empty-state');
+
+      if (filteredBlogs.length === 0) {
+        grid.innerHTML = '';
+        empty.style.display = 'block';
+        return;
+      }
+
+      empty.style.display = 'none';
+      grid.innerHTML = filteredBlogs.map(blog => `
+        <div class="blog-card" onclick="showBlogDetail('${blog.slug}')">
+          <div class="blog-card__image">${getCategoryEmoji(blog.category)}</div>
+          <div class="blog-card__body">
+            <div class="blog-card__category">${blog.category || 'General'}</div>
+            <h3 class="blog-card__title">${blog.title}</h3>
+            <p class="blog-card__excerpt">${escapeHtml(stripHtml(blog.excerpt || blog.content).substring(0, 140))}...</p>
+            <div class="blog-card__footer">
+              <span class="blog-card__meta">By ${blog.author} • ${formatDateForDisplay(blog.post_date || blog.published_at || blog.created_at)}</span>
+              <span class="blog-card__link">Read →</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function getCategoryEmoji(category) {
+      const emojis = {
+        'repair': '🔧',
+        'tutorial': '📚',
+        'review': '⭐',
+        'tips': '💡',
+        'news': '📰',
+        'default': '📝'
+      };
+      return emojis[category?.toLowerCase()] || emojis['default'];
+    }
+
+    function stripHtml(html) {
+      const div = document.createElement('div');
+      div.innerHTML = html || '';
+      return div.textContent || div.innerText || '';
+    }
+
+    function escapeHtml(value) {
+      return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function formatDateForDisplay(value) {
+      if (!value) return '';
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return '';
+      return date.toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' });
+    }
+
+    // Search blogs
+    function searchBlogs() {
+      const query = document.getElementById('search-input').value.toLowerCase();
+      filteredBlogs = blogs.filter(blog => 
+        blog.title.toLowerCase().includes(query) || 
+        stripHtml(blog.excerpt || blog.content).toLowerCase().includes(query)
+      );
+      renderBlogGrid();
+    }
+
+    // Show blog detail
+    async function showBlogDetail(slug) {
+      const blog = blogs.find(b => b.slug === slug);
+      if (!blog) return;
+
+      document.getElementById('blog-list-view').style.display = 'none';
+      document.getElementById('post-detail-view').style.display = 'block';
+      
+      const content = `
+        <header class="blog-post__header">
+          <h1 class="blog-post__title">${blog.title}</h1>
+          <div class="blog-post__meta">
+            <span class="blog-post__meta-item">✍️ ${blog.author}</span>
+            <span class="blog-post__meta-item">📅 ${formatDateForDisplay(blog.post_date || blog.published_at || blog.created_at)}</span>
+            <span class="blog-post__meta-item">👁️ ${blog.views} views</span>
+            ${blog.category ? `<span class="blog-post__meta-item">🏷️ ${blog.category}</span>` : ''}
+          </div>
+        </header>
+        ${blog.author_profile_picture ? `<img src="${blog.author_profile_picture}" alt="${escapeHtml(blog.author)}" class="blog-post__image" style="max-height:220px;object-fit:cover;">` : ''}
+        ${blog.featured_image ? `<img src="${blog.featured_image}" alt="${blog.title}" class="blog-post__image">` : ''}
+        <div class="blog-post__content">${blog.content}</div>
+      `;
+
+      document.getElementById('post-content').innerHTML = content;
+      window.scrollTo(0, 0);
+    }
+
+    // Show blog list
+    function showBlogList() {
+      document.getElementById('blog-list-view').style.display = 'block';
+      document.getElementById('post-detail-view').style.display = 'none';
+      window.scrollTo(0, 0);
+    }
+
+    // Empty state
+    function showEmptyState() {
+      document.getElementById('blog-grid').innerHTML = '';
+      document.getElementById('empty-state').style.display = 'block';
+    }
+
+    // Initialize
+    loadBlogs();
+  </script>
+</body>
+</html>

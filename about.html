@@ -1,0 +1,358 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="About iFix Academy - India's most hands-on repair training institute. Learn our story, mission, and training approach.">
+  <title>About Us | iFix Academy</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
+
+  <style>
+    /* ── PAGE HERO ── */
+    .page-hero {
+      background: var(--bg); min-height: 100vh;
+      border-bottom: 1px solid var(--border);
+      position: relative; overflow: hidden;
+      display: flex; align-items: center;
+      padding: 7.5rem 0 5rem;
+    }
+    .page-hero::before {
+      content: ''; position: absolute; top: -160px; right: -120px;
+      width: 560px; height: 560px;
+      background: radial-gradient(circle, rgba(52,120,246,0.07) 0%, transparent 65%);
+      border-radius: 50%; pointer-events: none;
+    }
+    .page-hero__inner {
+      position: relative;
+      z-index: 2;
+      max-width: 980px;
+      margin: 0 auto;
+    }
+    .page-hero__inner > div {
+      width: 100%;
+    }
+    .page-hero__heading {
+      font-weight: 800; font-size: clamp(2.6rem, 5.6vw, 4.8rem);
+      line-height: 0.94; letter-spacing: -0.04em; color: var(--text);
+      margin-bottom: 1.25rem;
+    }
+    .page-hero__heading span { color: var(--accent); }
+    .page-hero__sub {
+      font-size: 1.05rem; line-height: 1.75; color: #111111;
+      opacity: 0.72;
+      max-width: 560px; margin-bottom: 2rem;
+    }
+    .page-hero__actions { display: flex; gap: 0.9rem; flex-wrap: wrap; margin-bottom: 1.75rem; }
+    .hero-chips { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+    .hero-chip {
+      font-size: 0.75rem; font-weight: 600; color: var(--text-2);
+      border: 1px solid var(--border); border-radius: 999px;
+      padding: 5px 12px; background: var(--bg-2);
+    }
+
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .hero-overlay {
+      position: absolute; inset: 0; z-index: 1; pointer-events: none;
+      background: linear-gradient(180deg, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0.45) 35%, rgba(255,255,255,0.78) 100%);
+    }
+    .hero-stats { display: grid; grid-template-columns: repeat(4, minmax(140px, 1fr)); gap: 0.75rem; margin-top: 2rem; }
+    .hero-stat {
+      background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-lg);
+      padding: 1rem; text-align: left; box-shadow: var(--shadow-sm);
+    }
+    .hero-stat__num { display: block; font-weight: 800; font-size: 1.4rem; color: var(--accent); letter-spacing: -0.02em; }
+    .hero-stat__lbl { font-size: 0.7rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; display: block; }
+
+    /* ── MISSION ── */
+    .mission { background: var(--bg-2); padding: 6rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .mission__inner { display: grid; grid-template-columns: 1fr 1.1fr; gap: 4rem; align-items: start; }
+    .mission__grid { display: grid; gap: 1rem; }
+    .mission-card {
+      background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-xl);
+      padding: 1.5rem; box-shadow: var(--shadow-sm); transition: transform 0.3s var(--ease-expo), box-shadow 0.3s;
+    }
+    .mission-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+    .mission-card__title { font-weight: 700; font-size: 1rem; color: var(--text); margin-bottom: 0.4rem; }
+    .mission-card__desc { font-size: 0.9rem; line-height: 1.65; color: var(--text-2); }
+
+    /* ── STORY ── */
+    .story { background: var(--bg); padding: 6.5rem 0; }
+    .story__inner { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 4rem; align-items: start; }
+    .story__body { display: grid; gap: 1rem; }
+    .story__stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.9rem; }
+    .story__stat {
+      background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--r-lg);
+      padding: 1.25rem; text-align: center;
+    }
+    .story__stat-num { display: block; font-weight: 800; font-size: 1.7rem; color: var(--accent); letter-spacing: -0.02em; }
+    .story__stat-lbl { font-size: 0.7rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; display: block; }
+    .story__locations {
+      margin-top: 1rem; background: var(--bg-2); border: 1px solid var(--border);
+      border-radius: var(--r-xl); padding: 1.5rem;
+    }
+    .story__loc-title { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3); margin-bottom: 0.9rem; }
+    .story__loc-list { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+    .loc-chip { font-size: 0.78rem; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--border); color: var(--text-2); }
+
+    /* ── TRAINING FLOW ── */
+    .process { background: var(--bg-2); padding: 6.5rem 0; border-top: 1px solid var(--border); }
+    .process__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 3rem; }
+    .process-card {
+      background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-xl);
+      padding: 1.5rem; box-shadow: var(--shadow-sm); transition: transform 0.3s var(--ease-expo), box-shadow 0.3s;
+    }
+    .process-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+    .process-step {
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--accent); display: block; margin-bottom: 0.75rem;
+    }
+    .process-title { font-weight: 700; font-size: 1rem; color: var(--text); margin-bottom: 0.35rem; }
+    .process-desc { font-size: 0.88rem; color: var(--text-2); line-height: 1.6; }
+
+    /* ── EXPERIENCE ── */
+    .experience { background: var(--bg); padding: 6.5rem 0; border-top: 1px solid var(--border); }
+    .experience__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 3rem; }
+    .exp-card {
+      background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--r-xl);
+      padding: 1.5rem; transition: transform 0.3s var(--ease-expo), box-shadow 0.3s;
+    }
+    .exp-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+    .exp-card__title { font-weight: 700; font-size: 1rem; color: var(--text); margin-bottom: 0.4rem; }
+    .exp-card__desc { font-size: 0.88rem; color: var(--text-2); line-height: 1.6; }
+
+    /* ── CTA ── */
+    .cta-banner { background: var(--accent); padding: 6rem 0; }
+    .cta-banner__inner { display: flex; align-items: center; justify-content: space-between; gap: 3rem; flex-wrap: wrap; }
+    .cta-banner__heading { font-weight: 800; font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -0.03em; color: #fff; line-height: 1.05; }
+    .cta-banner__sub { font-size: 1rem; color: rgba(255,255,255,0.8); margin-top: 0.75rem; max-width: 440px; }
+    .btn--white { background: #fff; color: var(--accent); border-radius: var(--r-xl); padding: 0.85rem 2rem; font-size: 1rem; }
+    .btn--white:hover { background: rgba(255,255,255,0.92); }
+    .btn--white-outline { border: 1.5px solid rgba(255,255,255,0.5); color: #fff; border-radius: var(--r-xl); padding: 0.85rem 2rem; font-size: 1rem; }
+    .btn--white-outline:hover { background: rgba(255,255,255,0.12); border-color: #fff; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 980px) {
+      .mission__inner, .story__inner { grid-template-columns: 1fr; }
+      .process__grid, .experience__grid { grid-template-columns: repeat(2, 1fr); }
+      .hero-stats { grid-template-columns: repeat(2, minmax(140px, 1fr)); }
+    }
+    @media (max-width: 600px) {
+      .hero-stats { grid-template-columns: 1fr; }
+      .story__stats { grid-template-columns: 1fr 1fr; }
+      .process__grid, .experience__grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="nav-root"></div>
+
+  <section class="page-hero">
+    <video class="hero-bg" autoplay muted loop playsinline>
+      <source src="Assets/Chip repair video (1).mp4" type="video/mp4">
+    </video>
+    <div class="hero-overlay"></div>
+    <div class="container page-hero__inner">
+      <div>
+        <span class="section-label">iFix Academy · About Us </span>
+        <h1 class="page-hero__heading">Built to train <span>repair pros</span> who fix the impossible.</h1>
+        <p class="page-hero__sub">
+          iFix Academy is the training arm of iFix India. We teach modern repair skills with real devices,
+          real tools, and real instructors who do this work every day. The goal is simple: help you build
+          a career that is practical, respected, and future-proof.
+        </p>
+        <div class="page-hero__actions">
+          <a href="courses.html" class="btn btn--primary" style="padding:0.8rem 1.9rem;">Explore Courses</a>
+          <a href="contact.html" class="btn btn--ghost" style="padding:0.8rem 1.9rem;">Talk to Us</a>
+        </div>
+        <div class="hero-chips">
+          <span class="hero-chip">Est. 2009</span>
+          <span class="hero-chip">Delhi · Patna</span>
+          <span class="hero-chip">Online &amp; Offline</span>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <span class="hero-stat__num">2,400+</span>
+            <span class="hero-stat__lbl">Students trained</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat__num">94%</span>
+            <span class="hero-stat__lbl">Placement rate</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat__num">14+</span>
+            <span class="hero-stat__lbl">Courses offered</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat__num">15+</span>
+            <span class="hero-stat__lbl">Years of expertise</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mission">
+    <div class="container">
+      <div class="mission__inner">
+        <div class="reveal-l">
+          <span class="section-label">Our Mission</span>
+          <h2 class="section-heading">Training that is practical, current, and career-ready.</h2>
+          <p class="section-sub" style="margin-top:0.9rem;max-width:520px;">
+            The repair industry evolves fast. We keep our curriculum aligned with real shop workflows,
+            chip-level diagnostics, and the exact tools you will use in the field.
+          </p>
+        </div>
+        <div class="mission__grid">
+          <div class="mission-card reveal">
+            <div class="mission-card__title">Hands-on from day one</div>
+            <div class="mission-card__desc">Every module includes live devices, guided practice, and supervised lab time so you learn by doing.</div>
+          </div>
+          <div class="mission-card reveal d1">
+            <div class="mission-card__title">Industry-tested methods</div>
+            <div class="mission-card__desc">Our instructors work in active service centers, so your skills stay aligned with real repair demands.</div>
+          </div>
+          <div class="mission-card reveal d2">
+            <div class="mission-card__title">Career launch support</div>
+            <div class="mission-card__desc">Certification, interview prep, and business guidance help you get hired or start your own shop.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="story" id="story">
+    <div class="container">
+      <div class="story__inner">
+        <div>
+          <span class="section-label reveal">Our Story</span>
+          <h2 class="section-heading reveal d1">From repair benches to a national academy.</h2>
+          <div class="story__body">
+           <p class="section-sub" style="margin-top:0.9rem;max-width:520px;">
+              Founded in 2009, iFix India began with a mission to make high-quality repair affordable and reliable.
+              As our service centers grew, we saw the industry shortage: skilled technicians.
+          </p>
+            <p class="section-sub reveal d3">
+              iFix Academy was created to close that gap. We train students with the same tools, procedures,
+              and standards used in professional repair environments. The result is graduates who are ready for real work.
+            </p>
+          </div>
+        </div>
+        <div>
+          <div class="story__stats reveal-r">
+            <div class="story__stat"><span class="story__stat-num">2009</span><span class="story__stat-lbl">Founded</span></div>
+            <div class="story__stat"><span class="story__stat-num">15+</span><span class="story__stat-lbl">Years</span></div>
+            <div class="story__stat"><span class="story__stat-num">2,400+</span><span class="story__stat-lbl">Graduates</span></div>
+            <div class="story__stat"><span class="story__stat-num">94%</span><span class="story__stat-lbl">Placement</span></div>
+          </div>
+          <div class="story__locations reveal-r d2">
+            <div class="story__loc-title">Training Centers</div>
+            <div class="story__loc-list">
+              <span class="loc-chip">Delhi</span>
+              <span class="loc-chip">Patna</span>
+              <span class="loc-chip">Online</span>
+              <span class="loc-chip">Bangalore Service Network</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="process">
+    <div class="container">
+      <span class="section-label reveal">How We Train</span>
+      <h2 class="section-heading reveal d1">A structured path from beginner to job-ready.</h2>
+      <p class="section-sub reveal d2" style="max-width:560px;margin-top:0.8rem;">
+        Every course follows a clear progression so you build confidence fast and graduate with
+        practical, employable skills.
+      </p>
+      <div class="process__grid">
+        <div class="process-card reveal">
+          <span class="process-step">Step 1</span>
+          <div class="process-title">Core foundations</div>
+          <div class="process-desc">Understand device architecture, tools, and safety before touching a board.</div>
+        </div>
+        <div class="process-card reveal d1">
+          <span class="process-step">Step 2</span>
+          <div class="process-title">Diagnosis and repair</div>
+          <div class="process-desc">Practice fault finding, replacement, and chip-level techniques on real devices.</div>
+        </div>
+        <div class="process-card reveal d2">
+          <span class="process-step">Step 3</span>
+          <div class="process-title">Certification</div>
+          <div class="process-desc">Complete skill assessments, projects, and receive industry-recognized certification.</div>
+        </div>
+        <div class="process-card reveal d3">
+          <span class="process-step">Step 4</span>
+          <div class="process-title">Career launch</div>
+          <div class="process-desc">Get placement support, interview prep, and guidance for starting a shop.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="experience">
+    <div class="container">
+      <span class="section-label reveal">Student Experience</span>
+      <h2 class="section-heading reveal d1">Everything you need to learn, practice, and succeed.</h2>
+      <p class="section-sub reveal d2" style="max-width:560px;margin-top:0.8rem;">
+        We keep batches focused, training personal, and lab access generous so every student gets meaningful time on the bench.
+      </p>
+      <div class="experience__grid">
+        <div class="exp-card reveal">
+          <div class="exp-card__title">Small batch learning</div>
+          <div class="exp-card__desc">More instructor attention and better hands-on time for every student.</div>
+        </div>
+        <div class="exp-card reveal d1">
+          <div class="exp-card__title">Real devices, real tools</div>
+          <div class="exp-card__desc">Train on the same equipment and devices used in professional service centers.</div>
+        </div>
+        <div class="exp-card reveal d2">
+          <div class="exp-card__title">Tool kit access</div>
+          <div class="exp-card__desc">Use professional-grade tools during training with guidance from experts.</div>
+        </div>
+        <div class="exp-card reveal d3">
+          <div class="exp-card__title">Placement guidance</div>
+          <div class="exp-card__desc">We help connect you with opportunities and show you how to build your own path.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-banner">
+    <div class="container">
+      <div class="cta-banner__inner">
+        <div>
+          <h2 class="cta-banner__heading">Ready to train with the best?</h2>
+          <p class="cta-banner__sub">Join 2,400+ graduates who chose hands-on learning and real career outcomes.</p>
+        </div>
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+          <a href="courses.html" class="btn btn--white">View Courses</a>
+          <a href="contact.html" class="btn btn--white-outline">Contact Us</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div id="footer-root"></div>
+
+  <script src="components.js"></script>
+  <script>
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('in-view'); obs.unobserve(e.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el => obs.observe(el));
+  </script>
+</body>
+</html>
+
