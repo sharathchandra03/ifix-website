@@ -204,9 +204,12 @@
       grid.innerHTML = filteredBlogs.map(blog => `
         <div class="blog-card" onclick="showBlogDetail('${blog.slug}')">
           <div class="blog-card__image">
-            ${blog.featured_image
-              ? `<img src="${escapeHtml(blog.featured_image)}" alt="${escapeHtml(blog.title)}" loading="lazy" referrerpolicy="no-referrer">`
-              : getCategoryEmoji(blog.category)}
+            ${(() => {
+              const imageSrc = blog.featured_image || getFirstImageSrc(blog.content);
+              return imageSrc
+                ? `<img src="${escapeHtml(imageSrc)}" alt="${escapeHtml(blog.title)}" loading="lazy" referrerpolicy="no-referrer">`
+                : getCategoryEmoji(blog.category);
+            })()}
           </div>
           <div class="blog-card__body">
             <div class="blog-card__category">${blog.category || 'General'}</div>
@@ -237,6 +240,13 @@
       const div = document.createElement('div');
       div.innerHTML = html || '';
       return div.textContent || div.innerText || '';
+    }
+
+    function getFirstImageSrc(html) {
+      if (!html) return '';
+      const doc = new DOMParser().parseFromString(String(html), 'text/html');
+      const img = doc.querySelector('img');
+      return img?.getAttribute('src') || '';
     }
 
     function escapeHtml(value) {
