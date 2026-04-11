@@ -9,6 +9,39 @@ const path = require('path');
 const app = express();
 const frontendRoot = path.join(__dirname, '..');
 
+function buildMysqlConfig() {
+  const connectionUrl = process.env.DATABASE_URL || process.env.MYSQL_URL;
+
+  if (connectionUrl) {
+    const parsed = new URL(connectionUrl);
+    const sslEnabled = process.env.DB_SSL === 'true' || parsed.protocol === 'mysqls:';
+
+    return {
+      host: parsed.hostname,
+      user: decodeURIComponent(parsed.username || process.env.DB_USER || 'root'),
+      password: decodeURIComponent(parsed.password || process.env.DB_PASSWORD || ''),
+      database: parsed.pathname.replace(/^\//, '') || process.env.DB_NAME || 'ifix_db',
+      port: parsed.port ? Number(parsed.port) : 3306,
+      ssl: sslEnabled ? { rejectUnauthorized: false } : undefined,
+      waitForConnections: true,
+      connectionLimit: 10,
+      queueLimit: 0
+    };
+  }
+
+  return {
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || '',
+    database: process.env.DB_NAME || 'ifix_db',
+    port: process.env.DB_PORT || 3306,
+    ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : undefined,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
+  };
+}
+
 // Middleware
 const allowedOrigins = [process.env.FRONTEND_URL].filter(Boolean);
 app.use(cors({
@@ -27,16 +60,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.static(frontendRoot));
 
 // MySQL Pool Configuration
-const pool = mysql.createPool({
-  host: process.env.DB_HOST || 'localhost',
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'ifix_db',
-  port: process.env.DB_PORT || 3306,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
-});
+const pool = mysql.createPool(buildMysqlConfig());
 
 // Make pool globally accessible
 global.db = pool;
@@ -47,7 +71,7 @@ app.use('/api/blog', require('./routes/blog'));
 app.use('/api/youtube', require('./routes/youtube'));
 app.use('/api/contact', require('./routes/contact'));
 app.use('/api/auth', require('./routes/auth'));
-app.use('/api/payment', require('./routes/payment'));
+// app.use('/api/payment', require('./routes/payment'));
 
 // Health Check
 app.get('/api/health', (req, res) => {

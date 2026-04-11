@@ -52,6 +52,17 @@ Server will run on `http://localhost:5000`
 - `DB_PASSWORD`: MySQL password
 - `DB_NAME`: Database name (default: ifix_db)
 - `DB_PORT`: MySQL port (default: 3306)
+- `DATABASE_URL` or `MYSQL_URL`: optional hosted MySQL connection string, e.g. `mysql://user:pass@host:3306/dbname`
+- `DB_SSL`: set to `true` for providers that require SSL
+
+### Fastest Live Database Option
+
+Use a hosted MySQL provider such as Railway or Aiven, then set either:
+
+- a single `DATABASE_URL` / `MYSQL_URL`, or
+- the separate `DB_HOST`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `DB_PORT` values
+
+After setting the credentials, run `node database/init.js` once against the live database to create the tables.
 
 ### Payment Gateway (Razorpay)
 

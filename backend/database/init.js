@@ -1,6 +1,33 @@
 require('dotenv').config();
 const mysql = require('mysql2/promise');
 
+function buildMysqlConfig() {
+  const connectionUrl = process.env.DATABASE_URL || process.env.MYSQL_URL;
+
+  if (connectionUrl) {
+    const parsed = new URL(connectionUrl);
+    const sslEnabled = process.env.DB_SSL === 'true' || parsed.protocol === 'mysqls:';
+
+    return {
+      host: parsed.hostname,
+      user: decodeURIComponent(parsed.username || process.env.DB_USER || 'root'),
+      password: decodeURIComponent(parsed.password || process.env.DB_PASSWORD || ''),
+      database: parsed.pathname.replace(/^\//, '') || process.env.DB_NAME || 'ifix_db',
+      port: parsed.port ? Number(parsed.port) : 3306,
+      ssl: sslEnabled ? { rejectUnauthorized: false } : undefined
+    };
+  }
+
+  return {
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || '',
+    database: process.env.DB_NAME || 'ifix_db',
+    port: process.env.DB_PORT || 3306,
+    ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : undefined
+  };
+}
+
 async function columnExists(connection, tableName, columnName) {
   const [rows] = await connection.query(
     `SELECT COUNT(*) AS count
@@ -21,10 +48,7 @@ async function ensureColumn(connection, tableName, columnName, definition) {
 
 async function initializeDatabase() {
   const connection = await mysql.createConnection({
-    host: process.env.DB_HOST || 'localhost',
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || '',
-    database: process.env.DB_NAME || 'ifix_db'
+    ...buildMysqlConfig()
   });
 
   try {
