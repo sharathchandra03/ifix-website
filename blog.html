@@ -38,6 +38,7 @@
     .blog-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); border-color: rgba(52,120,246,0.2); }
     
     .blog-card__image { width: 100%; height: 200px; background: linear-gradient(135deg, var(--bg-2) 0%, var(--bg-3) 100%); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; overflow: hidden; }
+    .blog-card__image img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .blog-card__body { padding: 1.75rem; flex: 1; display: flex; flex-direction: column; }
     
     .blog-card__category { display: inline-block; font-size: 0.65rem; color: var(--accent); background: var(--accent-dim); padding: 4px 10px; border-radius: 999px; width: fit-content; margin-bottom: 0.75rem; }
@@ -202,7 +203,11 @@
       empty.style.display = 'none';
       grid.innerHTML = filteredBlogs.map(blog => `
         <div class="blog-card" onclick="showBlogDetail('${blog.slug}')">
-          <div class="blog-card__image">${getCategoryEmoji(blog.category)}</div>
+          <div class="blog-card__image">
+            ${blog.featured_image
+              ? `<img src="${escapeHtml(blog.featured_image)}" alt="${escapeHtml(blog.title)}" loading="lazy" referrerpolicy="no-referrer">`
+              : getCategoryEmoji(blog.category)}
+          </div>
           <div class="blog-card__body">
             <div class="blog-card__category">${blog.category || 'General'}</div>
             <h3 class="blog-card__title">${blog.title}</h3>
