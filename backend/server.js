@@ -42,6 +42,8 @@ function buildMysqlConfig() {
   };
 }
 
+const mysqlConfig = buildMysqlConfig();
+
 // Middleware
 const allowedOrigins = [process.env.FRONTEND_URL].filter(Boolean);
 app.use(cors({
@@ -60,7 +62,21 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.static(frontendRoot));
 
 // MySQL Pool Configuration
-const pool = mysql.createPool(buildMysqlConfig());
+const pool = mysql.createPool(mysqlConfig);
+
+async function logDatabaseStatus() {
+  let connection;
+  try {
+    connection = await pool.getConnection();
+    await connection.ping();
+    console.log(`✅ Database connected`);
+  } catch (error) {
+    const details = error?.stack || error?.message || String(error);
+    console.error('❌ Database connection failed:', details);
+  } finally {
+    if (connection) connection.release();
+  }
+}
 
 // Make pool globally accessible
 global.db = pool;
@@ -145,9 +161,14 @@ app.use((req, res) => {
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 IFIX Backend running on http://localhost:${PORT}`);
-  console.log(`📊 Database: ${process.env.DB_NAME}`);
+  console.log(`📊 Database: ${mysqlConfig.database || process.env.DB_NAME || 'unknown'}`);
+  logDatabaseStatus().catch(error => {
+    const details = error?.stack || error?.message || String(error);
+    console.error('⚠️ Database status check failed:', details);
+  });
   ensureDefaultAdmin().catch(error => {
-    console.error('⚠️ Failed to ensure default admin user:', error.message);
+    const details = error?.stack || error?.message || String(error);
+    console.error('⚠️ Failed to ensure default admin user:', details);
   });
 });
 
