@@ -2,7 +2,10 @@ require('dotenv').config();
 const mysql = require('mysql2/promise');
 
 function buildMysqlConfig() {
-  const connectionUrl = process.env.DATABASE_URL || process.env.MYSQL_URL;
+  const connectionUrl =
+    process.env.DATABASE_URL ||
+    process.env.MYSQL_URL ||
+    process.env.MYSQL_PUBLIC_URL;
 
   if (connectionUrl) {
     const parsed = new URL(connectionUrl);
