@@ -934,11 +934,25 @@
       .why-pulse--2 { right: 22%; top: 130px; }
       .why-pulse--3 { right: 8%; bottom: 40px; }
       .stats-row { grid-template-columns: 1fr; }
-      .features-laptop { min-height: 135vh; }
+      .features-laptop { min-height: 145vh; }
+      .features-laptop__scene { min-height: 980px; }
+      .features-laptop__header { top: 1.5rem; width: min(92vw, 760px); }
       .features-laptop__heading { font-size: 1.75rem; }
       .features-laptop__sub { font-size: 0.9rem; }
-      .features-laptop__mockup { width: 96vw; top: 57%; }
-      .mockup-float { display: none; }
+      .features-laptop__mockup { width: min(94vw, 420px); top: 49%; }
+      .mockup-float {
+        display: inline-flex;
+        font-size: 0.72rem;
+        padding: 0.56rem 0.8rem;
+      }
+      .mockup-float__dot { width: 1.25rem; height: 1.25rem; font-size: 0.54rem; }
+      .mf-1 { left: 2%; top: 28%; }
+      .mf-2 { right: 2%; top: 30%; }
+      .mf-3 { left: 1%; top: 48%; }
+      .mf-4 { right: 2%; top: 52%; }
+      .mf-5 { left: 5%; top: 78%; }
+      .mf-6 { right: 5%; top: 80%; }
+      .mf-7, .mf-8, .mf-9, .mf-10 { display: none; }
       .mockup-laptop__inside { font-size: 0.75rem; padding: 0.58rem 0.7rem; }
       .inside-2 { right: 5%; }
       .inside-4 { right: 10%; }
@@ -1338,6 +1352,39 @@
 
         const featureWrap = document.querySelector('[feature-wrap]');
         if (featureWrap) {
+          const featureIsMobile = window.matchMedia('(max-width: 760px)').matches;
+          const featureMotion = featureIsMobile ? {
+            left1: { x: '-7rem', y: '-1.5rem', rotate: '-7deg' },
+            left2: { x: '-8rem', y: '0.5rem', rotate: '-6deg' },
+            left3: { x: '-6.5rem', y: '1.5rem', rotate: '-5deg' },
+            left4: { x: '-7rem', y: '0rem', rotate: '-6deg' },
+            left5: { x: '-6rem', y: '2rem', rotate: '-4deg' },
+            right1: { x: '7rem', y: '-1.5rem', rotate: '7deg' },
+            right2: { x: '8rem', y: '0.5rem', rotate: '6deg' },
+            right3: { x: '6.5rem', y: '1.5rem', rotate: '5deg' },
+            right4: { x: '7rem', y: '0rem', rotate: '6deg' },
+            right5: { x: '6rem', y: '2rem', rotate: '4deg' },
+            in1: { y: '5rem', x: '-1rem', rotate: '-6deg' },
+            in2: { y: '-4rem', x: '1rem', rotate: '5deg' },
+            in3: { y: '4rem', x: '-0.5rem', rotate: '-5deg' },
+            in4: { y: '4rem', x: '0.5rem', rotate: '4deg' }
+          } : {
+            left1: { x: '-26rem', y: '-4rem', rotate: '-10deg' },
+            left2: { x: '-28rem', y: '2rem', rotate: '-8deg' },
+            left3: { x: '-22rem', y: '4rem', rotate: '-7deg' },
+            left4: { x: '-24rem', y: '-1rem', rotate: '-9deg' },
+            left5: { x: '-20rem', y: '5rem', rotate: '-6deg' },
+            right1: { x: '26rem', y: '-4rem', rotate: '10deg' },
+            right2: { x: '28rem', y: '2rem', rotate: '8deg' },
+            right3: { x: '22rem', y: '4rem', rotate: '7deg' },
+            right4: { x: '24rem', y: '0rem', rotate: '9deg' },
+            right5: { x: '20rem', y: '5rem', rotate: '6deg' },
+            in1: { y: '12rem', x: '-3rem', rotate: '-10deg' },
+            in2: { y: '-10rem', x: '3rem', rotate: '9deg' },
+            in3: { y: '10rem', x: '-2rem', rotate: '-8deg' },
+            in4: { y: '8rem', x: '2rem', rotate: '7deg' }
+          };
+
           const featureTl = gsap.timeline({
             scrollTrigger: {
               trigger: featureWrap,
@@ -1349,20 +1396,20 @@
 
           featureTl
             .from('[feature-heading], [feature-sub]', { y: '3rem', opacity: 0, stagger: 0.12, duration: 0.65, ease: 'power2.out' }, 0)
-            .from('[mockup-item-left-1]', { x: '-26rem', y: '-4rem', rotate: '-10deg', duration: 0.9 }, 0)
-            .from('[mockup-item-left-2]', { x: '-28rem', y: '2rem', rotate: '-8deg', duration: 0.9 }, '<')
-            .from('[mockup-item-left-3]', { x: '-22rem', y: '4rem', rotate: '-7deg', duration: 0.9 }, '<')
-            .from('[mockup-item-left-4]', { x: '-24rem', y: '-1rem', rotate: '-9deg', duration: 0.9 }, '<')
-            .from('[mockup-item-left-5]', { x: '-20rem', y: '5rem', rotate: '-6deg', duration: 0.9 }, '<')
-            .from('[mockup-item-right-1]', { x: '26rem', y: '-4rem', rotate: '10deg', duration: 0.9 }, 0)
-            .from('[mockup-item-right-2]', { x: '28rem', y: '2rem', rotate: '8deg', duration: 0.9 }, '<')
-            .from('[mockup-item-right-3]', { x: '22rem', y: '4rem', rotate: '7deg', duration: 0.9 }, '<')
-            .from('[mockup-item-right-4]', { x: '24rem', y: '0rem', rotate: '9deg', duration: 0.9 }, '<')
-            .from('[mockup-item-right-5]', { x: '20rem', y: '5rem', rotate: '6deg', duration: 0.9 }, '<')
-            .from('[mockup-in-1]', { y: '12rem', x: '-3rem', rotate: '-10deg', duration: 0.85 }, 0.08)
-            .from('[mockup-in-2]', { y: '-10rem', x: '3rem', rotate: '9deg', duration: 0.85 }, 0.08)
-            .from('[mockup-in-3]', { y: '10rem', x: '-2rem', rotate: '-8deg', duration: 0.85 }, 0.08)
-            .from('[mockup-in-4]', { y: '8rem', x: '2rem', rotate: '7deg', duration: 0.85 }, 0.08)
+            .from('[mockup-item-left-1]', { x: featureMotion.left1.x, y: featureMotion.left1.y, rotate: featureMotion.left1.rotate, duration: 0.9 }, 0)
+            .from('[mockup-item-left-2]', { x: featureMotion.left2.x, y: featureMotion.left2.y, rotate: featureMotion.left2.rotate, duration: 0.9 }, '<')
+            .from('[mockup-item-left-3]', { x: featureMotion.left3.x, y: featureMotion.left3.y, rotate: featureMotion.left3.rotate, duration: 0.9 }, '<')
+            .from('[mockup-item-left-4]', { x: featureMotion.left4.x, y: featureMotion.left4.y, rotate: featureMotion.left4.rotate, duration: 0.9 }, '<')
+            .from('[mockup-item-left-5]', { x: featureMotion.left5.x, y: featureMotion.left5.y, rotate: featureMotion.left5.rotate, duration: 0.9 }, '<')
+            .from('[mockup-item-right-1]', { x: featureMotion.right1.x, y: featureMotion.right1.y, rotate: featureMotion.right1.rotate, duration: 0.9 }, 0)
+            .from('[mockup-item-right-2]', { x: featureMotion.right2.x, y: featureMotion.right2.y, rotate: featureMotion.right2.rotate, duration: 0.9 }, '<')
+            .from('[mockup-item-right-3]', { x: featureMotion.right3.x, y: featureMotion.right3.y, rotate: featureMotion.right3.rotate, duration: 0.9 }, '<')
+            .from('[mockup-item-right-4]', { x: featureMotion.right4.x, y: featureMotion.right4.y, rotate: featureMotion.right4.rotate, duration: 0.9 }, '<')
+            .from('[mockup-item-right-5]', { x: featureMotion.right5.x, y: featureMotion.right5.y, rotate: featureMotion.right5.rotate, duration: 0.9 }, '<')
+            .from('[mockup-in-1]', { y: featureMotion.in1.y, x: featureMotion.in1.x, rotate: featureMotion.in1.rotate, duration: 0.85 }, 0.08)
+            .from('[mockup-in-2]', { y: featureMotion.in2.y, x: featureMotion.in2.x, rotate: featureMotion.in2.rotate, duration: 0.85 }, 0.08)
+            .from('[mockup-in-3]', { y: featureMotion.in3.y, x: featureMotion.in3.x, rotate: featureMotion.in3.rotate, duration: 0.85 }, 0.08)
+            .from('[mockup-in-4]', { y: featureMotion.in4.y, x: featureMotion.in4.x, rotate: featureMotion.in4.rotate, duration: 0.85 }, 0.08)
             .from('[mockup-bg-1], [mockup-bg-2], [mockup-bg-3]', { y: '18rem', opacity: 0.2, stagger: 0.06, duration: 0.75 }, 0)
             .fromTo('[feature-mockup]', { scale: 0.82, rotateX: 16, rotateY: -10 }, { scale: 1.02, rotateX: 2, rotateY: 0, duration: 1, ease: 'power2.out' }, 0.04);
 

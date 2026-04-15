@@ -778,6 +778,7 @@
     var glowEl    = document.getElementById('phoneGlow');
     var items     = document.querySelectorAll('.course-scroll-item');
     var curIdx    = -1;
+    var mobileRaf  = 0;
 
     function activate(idx) {
       if (idx === curIdx) return;
@@ -808,7 +809,7 @@
           activate(parseInt(entry.target.dataset.courseIdx, 10));
         }
       });
-    }, { threshold: 0.35, rootMargin: '-8% 0px -8% 0px' });
+    }, { threshold: 0.2, rootMargin: '-12% 0px -18% 0px' });
 
     /* IntersectionObserver: fade-in card content */
     var cardObs = new IntersectionObserver(function(entries) {
@@ -824,6 +825,44 @@
       phoneObs.observe(item);
       cardObs.observe(item);
     });
+
+    function updateMobileActiveCourse() {
+      if (window.innerWidth > 960) return;
+
+      var focusY = window.innerHeight * 0.42;
+      var bestIdx = 0;
+      var bestDistance = Infinity;
+
+      items.forEach(function(item, index) {
+        var rect = item.getBoundingClientRect();
+        var centerY = rect.top + (rect.height / 2);
+        var distance = Math.abs(centerY - focusY);
+
+        if (rect.top <= focusY && rect.bottom >= focusY) {
+          bestIdx = index;
+          bestDistance = 0;
+          return;
+        }
+
+        if (distance < bestDistance) {
+          bestDistance = distance;
+          bestIdx = index;
+        }
+      });
+
+      activate(bestIdx);
+    }
+
+    function scheduleMobileActiveCourse() {
+      if (mobileRaf) cancelAnimationFrame(mobileRaf);
+      mobileRaf = requestAnimationFrame(updateMobileActiveCourse);
+    }
+
+    if (window.innerWidth <= 960) {
+      window.addEventListener('scroll', scheduleMobileActiveCourse, { passive: true });
+      window.addEventListener('resize', scheduleMobileActiveCourse, { passive: true });
+      scheduleMobileActiveCourse();
+    }
 
     /* Init first */
     activate(0);
