@@ -160,11 +160,19 @@
     .fsub { width:100%; padding:0.9rem; font-size:1rem; margin-top:0.5rem; border-radius:var(--r-xl); }
 
     @media (max-width:900px) {
+      .page-hero { padding: 6.75rem 0 4rem; }
       .page-hero__inner { grid-template-columns:1fr; gap:2.5rem; }
       .contact-form-inner { grid-template-columns:1fr; gap:2.5rem; }
       .centres__grid { grid-template-columns:1fr; }
     }
-    @media (max-width:560px) { .frow { grid-template-columns:1fr; } }
+    @media (max-width:560px) {
+      .page-hero { padding: 6rem 0 3.25rem; }
+      .qchip { padding: 0.85rem 1rem; }
+      .centre-card { padding: 1.5rem; }
+      .centre-foot { align-items: flex-start; }
+      .cform { padding: 1.4rem; }
+      .frow { grid-template-columns:1fr; }
+    }
   </style>
 </head>
 <body>

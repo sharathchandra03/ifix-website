@@ -162,12 +162,21 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
 /* ═══ RESPONSIVE SHARED ═════════════════════════════════════ */
 @media (max-width: 900px) {
+  .container { padding: 0 1.25rem; }
+  .navbar__inner { padding: 0.8rem 1.1rem; }
   .navbar__links { display: none; }
+  .navbar__actions .btn--enroll { display: none; }
   .hamburger { display: flex; }
   .footer__inner { grid-template-columns: 1fr 1fr; }
   .footer__brand { grid-column: 1 / -1; }
 }
 @media (max-width: 560px) {
+  .container { padding: 0 1rem; }
+  .navbar__inner { padding: 0.75rem 0.95rem; }
+  .navbar__logo-img { height: 32px; }
+  .mobile-menu { width: 100vw; border-left: none; }
+  .btn { width: 100%; justify-content: center; }
   .footer__inner { grid-template-columns: 1fr; }
+  .footer__bottom { padding: 1rem; }
 }
 

@@ -88,9 +88,23 @@
 
     /* RESPONSIVE */
     @media (max-width: 768px) {
+      .page-hero { padding: 6.75rem 0 2.5rem; }
       .products-grid { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 1rem; }
       .cart-sidebar { width: 100vw; }
       .products-header { flex-direction: column; align-items: stretch; }
+    }
+    @media (max-width: 560px) {
+      .page-hero { padding: 6rem 0 2.25rem; }
+      .products-filter { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 0.2rem; }
+      .filter-btn { white-space: nowrap; }
+      .products-grid { grid-template-columns: 1fr; }
+      .product-card__body { padding: 1.15rem; }
+      .product-card__footer { gap: 0.8rem; }
+      .product-card__btn { padding: 0.55rem 0.8rem; }
+      .cart-sidebar__header,
+      .cart-items,
+      .cart-footer { padding: 1rem; }
+      .youtube-grid { grid-template-columns: 1fr; gap: 1rem; }
     }
   </style>
 </head>

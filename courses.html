@@ -201,11 +201,18 @@
     .btn--wo:hover { background:rgba(255,255,255,0.1); border-color:#fff; }
 
     @media (max-width: 960px) {
+      .page-hero { min-height: auto; padding: 6.75rem 0 4rem; }
+      .tabs-nav { top: 54px; }
       .course-detail { grid-template-columns: 1fr; gap: 2.5rem; }
       .course-detail--rev { direction: ltr; }
       .online-grid { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 600px) {
+      .page-hero { padding: 6rem 0 3.25rem; }
+      .tabs-nav__inner { padding: 0 1rem; }
+      .tab-btn { padding: 0.82rem 0.95rem; font-size: 0.8rem; }
+      .course-outcome { align-items: flex-start; }
+      .course-ctas .btn { width: 100%; justify-content: center; }
       .online-grid { grid-template-columns: 1fr; }
       .skills-grid { grid-template-columns: 1fr; }
     }
@@ -444,10 +451,13 @@
     /* ── Responsive ──────────────────────────────────────── */
     @media(max-width:960px){
       .scroll-showcase { grid-template-columns:1fr; }
-      .ss-left { position:relative; top:0; height:auto; padding:3rem 1.5rem 2rem; }
-      .course-scroll-item { min-height:auto; padding:3.5rem 1.5rem; }
+      .ss-left { position:relative; top:0; height:auto; padding:2.6rem 1.25rem 1.5rem; }
+      .course-scroll-item { min-height:auto; padding:3.25rem 1.25rem; }
+      .csi__inner { max-width: 100%; }
     }
     @media(max-width:600px){
+      .ss-left { padding: 2rem 1rem 1.25rem; }
+      .course-scroll-item { padding: 2.75rem 1rem; }
       .phone-device { width:186px; height:382px; }
     }
   </style>

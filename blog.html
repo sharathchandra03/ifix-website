@@ -78,9 +78,21 @@
 
     /* RESPONSIVE */
     @media (max-width: 768px) {
+      .page-hero { padding: 6.75rem 0 2.75rem; }
       .blog-grid { grid-template-columns: 1fr; gap: 1.5rem; }
       .blog-controls { flex-direction: column; }
       .search-box { width: 100%; }
+    }
+    @media (max-width: 560px) {
+      .page-hero { padding: 6rem 0 2.5rem; }
+      .blog-card__body { padding: 1.25rem; }
+      .blog-card__footer { align-items: flex-start; gap: 0.6rem; flex-direction: column; }
+      .blog-post { padding: 2.5rem 0; }
+      .blog-post__meta { flex-direction: column; gap: 0.55rem; }
+      .blog-author-row { align-items: flex-start; }
+      .blog-author-row__avatar,
+      .blog-author-row__fallback { width: 56px; height: 56px; }
+      .blog-post__content { font-size: 1rem; line-height: 1.75; }
     }
   </style>
 </head>
