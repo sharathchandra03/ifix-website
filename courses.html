@@ -124,14 +124,74 @@
     /* ── ONLINE SECTION ── */
     .online-section { background: var(--bg-2); padding: 6rem 0; border-top: 1px solid var(--border); }
     .online-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem; margin-top: 3rem; }
-    .online-feat { background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-xl); padding: 1.75rem; box-shadow: var(--shadow-sm); transition: transform 0.3s var(--ease-expo), box-shadow 0.3s; }
-    .online-feat:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+    .online-feat {
+      --mx: 50%;
+      --my: 50%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      padding: 1.75rem;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.3s var(--ease-expo), box-shadow 0.3s, border-color 0.25s;
+      position: relative;
+      overflow: hidden;
+      transform-style: preserve-3d;
+    }
+    .online-feat::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      pointer-events: none;
+      background: radial-gradient(180px circle at var(--mx) var(--my), rgba(52,120,246,0.18) 0%, rgba(52,120,246,0.06) 30%, rgba(52,120,246,0) 72%);
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+    .online-feat:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-md);
+      border-color: rgba(52,120,246,0.28);
+    }
+    .online-feat:hover::before { opacity: 1; }
     .online-feat__icon { font-size: 1.75rem; margin-bottom: 1rem; }
     .online-feat__title { font-weight: 700; font-size: 1rem; color: var(--text); margin-bottom: 0.4rem; }
     .online-feat__desc { font-size: 0.875rem; color: var(--text-2); line-height: 1.6; }
 
     /* ── CTA ROW ── */
-    .enroll-cta { background: var(--accent); padding: 5rem 0; }
+    .enroll-cta {
+      --cta-shift: 0px;
+      --cta-glow: 0;
+      background: var(--accent);
+      padding: 5rem 0;
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+    }
+    .enroll-cta::before,
+    .enroll-cta::after {
+      content: '';
+      position: absolute;
+      border-radius: 999px;
+      pointer-events: none;
+      opacity: calc(0.16 + (var(--cta-glow) * 0.2));
+      z-index: 0;
+    }
+    .enroll-cta::before {
+      width: 300px;
+      height: 300px;
+      right: -50px;
+      top: -120px;
+      background: radial-gradient(circle, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0) 72%);
+      transform: translateY(calc(var(--cta-shift) * -0.24));
+    }
+    .enroll-cta::after {
+      width: 240px;
+      height: 240px;
+      left: -70px;
+      bottom: -120px;
+      background: radial-gradient(circle, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0) 68%);
+      transform: translateY(calc(var(--cta-shift) * 0.22));
+    }
+    .enroll-cta > .container { position: relative; z-index: 1; }
     .enroll-cta__inner { display: flex; align-items: center; justify-content: space-between; gap: 3rem; flex-wrap: wrap; }
     .enroll-cta__heading { font-weight: 800; font-size: clamp(1.75rem,3vw,2.5rem); letter-spacing: -0.03em; color: #fff; line-height: 1.1; }
     .enroll-cta__sub { font-size: 1rem; color: rgba(255,255,255,0.78); margin-top: 0.5rem; max-width: 380px; }
@@ -177,15 +237,389 @@
     </div>
   </nav>
 
-  <!-- MOBILE -->
-  <section class="course-section" id="mobile">
-    <div class="container">
-      <div class="course-detail reveal">
-        <div>
+  <!-- ═══════════════════════════════════════════════════════════
+       SCROLL SHOWCASE — Premium split-screen course explorer
+  ════════════════════════════════════════════════════════════ -->
+  <style>
+    /* ── Scroll Showcase Wrapper ─────────────────────────── */
+    .scroll-showcase {
+      display: grid;
+      grid-template-columns: 42% 58%;
+      position: relative;
+      background: #f8f9fb;
+    }
+
+    /* ── LEFT: Sticky Panel ──────────────────────────────── */
+    .ss-left {
+      position: sticky;
+      top: 116px;
+      height: calc(100vh - 116px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.5rem 2.5rem;
+      overflow: hidden;
+      z-index: 2;
+    }
+    .ss-left::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 50% 35%, rgba(52,120,246,0.09) 0%, transparent 62%),
+        radial-gradient(circle at 20% 80%, rgba(52,120,246,0.04) 0%, transparent 45%);
+      pointer-events: none;
+    }
+    /* Subtle dot grid */
+    .ss-left::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(52,120,246,0.12) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: radial-gradient(ellipse at 50% 50%, black 30%, transparent 75%);
+      -webkit-mask-image: radial-gradient(ellipse at 50% 50%, black 30%, transparent 75%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Phone device shell ──────────────────────────────── */
+    .phone-device {
+      width: 224px;
+      height: 460px;
+      background: #0c0c0c;
+      border-radius: 40px;
+      padding: 8px;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.10),
+        0 40px 100px rgba(0,0,0,0.42),
+        0 14px 38px rgba(0,0,0,0.28),
+        inset 0 0 0 1px rgba(255,255,255,0.05);
+      position: relative;
+      transform: translateY(0px);
+      animation: phoneFloat 4s ease-in-out infinite;
+      transition: box-shadow 0.4s var(--ease-expo);
+      flex-shrink: 0;
+    }
+    .phone-device:hover {
+      animation-play-state: paused;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.14),
+        0 50px 120px rgba(0,0,0,0.50),
+        0 20px 50px rgba(0,0,0,0.32),
+        inset 0 0 0 1px rgba(255,255,255,0.07);
+    }
+    @keyframes phoneFloat {
+      0%,100% { transform: translateY(0px);    }
+      50%      { transform: translateY(-10px);  }
+    }
+    .phone-island {
+      position: absolute;
+      top: 13px; left: 50%; transform: translateX(-50%);
+      width: 76px; height: 22px;
+      background: #000; border-radius: 30px; z-index: 30;
+    }
+    .phone-screen-wrap {
+      width: 100%; height: 100%;
+      border-radius: 34px; overflow: hidden; position: relative;
+    }
+
+    /* ── Individual phone screens ────────────────────────── */
+    .p-screen {
+      position: absolute; inset: 0;
+      padding: 44px 14px 14px;
+      display: flex; flex-direction: column;
+      opacity: 0; transform: translateY(16px);
+      transition: opacity 0.42s var(--ease-expo), transform 0.42s var(--ease-expo);
+      pointer-events: none;
+    }
+    .p-screen.active { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .p-screen--mobile  { background: linear-gradient(158deg,#3478F6 0%,#1450C8 100%); }
+    .p-screen--laptop  { background: linear-gradient(158deg,#FF6B47 0%,#C8360F 100%); }
+    .p-screen--display { background: linear-gradient(158deg,#00C896 0%,#007A5E 100%); }
+    .p-screen--iphone  { background: linear-gradient(158deg,#8B8FEE 0%,#5856D6 100%); }
+
+    .p-hdr  { font-size:.52rem; font-weight:600; color:rgba(255,255,255,.6); text-transform:uppercase; letter-spacing:.1em; margin-bottom:3px; }
+    .p-title{ font-size:1.08rem; font-weight:800; color:#fff; letter-spacing:-.025em; line-height:1.1; margin-bottom:11px; }
+    .p-profile{
+      display:flex; align-items:center; justify-content:space-between;
+      background:rgba(255,255,255,.16); backdrop-filter:blur(6px);
+      border-radius:18px; padding:8px 10px; margin-bottom:11px;
+    }
+    .p-profile__left { display:flex; align-items:center; gap:7px; }
+    .p-avatar{
+      width:30px; height:30px; background:rgba(255,255,255,.28); border-radius:50%;
+      display:flex; align-items:center; justify-content:center; font-size:.88rem;
+    }
+    .p-pname { font-size:.62rem; font-weight:700; color:#fff; }
+    .p-psub  { font-size:.48rem; color:rgba(255,255,255,.65); }
+    .p-badge { background:#0a0a0a; border-radius:10px; padding:5px 7px; text-align:center; }
+    .p-badge__lbl { font-size:.38rem; color:rgba(255,255,255,.55); letter-spacing:.05em; text-transform:uppercase; display:block; }
+    .p-badge__val { font-size:.75rem; font-weight:800; color:#fff; display:block; }
+    .p-actions-row { display:flex; justify-content:space-around; margin-bottom:11px; }
+    .p-act { display:flex; flex-direction:column; align-items:center; gap:3px; }
+    .p-act__icon{
+      width:30px; height:30px; background:rgba(255,255,255,.2); border-radius:50%;
+      display:flex; align-items:center; justify-content:center; font-size:.76rem;
+    }
+    .p-act__lbl { font-size:.43rem; color:rgba(255,255,255,.72); font-weight:600; }
+    .p-stats-row { font-size:.48rem; color:rgba(255,255,255,.6); margin-bottom:2px; letter-spacing:.04em; }
+    .p-stats-val { font-size:.85rem; font-weight:800; color:#fff; letter-spacing:-.01em; margin-bottom:9px; }
+    .p-visa-row{
+      display:flex; align-items:center; justify-content:space-between;
+      background:rgba(255,255,255,.13); border-radius:8px; padding:6px 8px; margin-bottom:9px;
+    }
+    .p-visa-nfc   { font-size:.6rem; color:rgba(255,255,255,.45); }
+    .p-visa-brand { font-size:.52rem; font-weight:800; color:rgba(255,255,255,.8); letter-spacing:.1em; }
+    .p-bottom{
+      display:grid; grid-template-columns:1fr 1fr; gap:6px;
+      background:rgba(255,255,255,.93); border-radius:13px 13px 0 0;
+      margin:0 -14px -14px; padding:10px 14px 8px;
+    }
+    .p-bl { font-size:.43rem; color:#888; text-transform:uppercase; letter-spacing:.06em; }
+    .p-bv { font-size:.8rem;  font-weight:800; color:#1D1D1F; letter-spacing:-.015em; }
+
+    /* ── Glow + dots ─────────────────────────────────────── */
+    .phone-glow{
+      width:160px; height:52px; border-radius:50%;
+      opacity:.22; filter:blur(32px); margin:0 auto;
+      transition: background .5s ease, opacity .5s ease, width .5s ease;
+      animation: glowPulse 4s ease-in-out infinite;
+    }
+    @keyframes glowPulse {
+      0%,100% { opacity:.22; width:160px; }
+      50%      { opacity:.32; width:200px; }
+    }
+    .ph-dots { display:flex; gap:8px; justify-content:center; margin-top:18px; }
+    .ph-dot{
+      width:8px; height:8px; border-radius:50%;
+      background:rgba(52,120,246,.2); cursor:pointer; flex-shrink:0;
+      transition:width .35s var(--ease-expo), border-radius .35s, background .35s;
+    }
+    .ph-dot.active { width:26px; border-radius:4px; background:var(--accent); }
+
+    /* ── Course label above phone ────────────────────────── */
+    /* Keep all content above the dot-grid pseudo-element */
+    .ss-course-label, .phone-device, .phone-glow, .ph-dots { position: relative; z-index: 1; }
+    .ss-course-label { text-align:center; margin-bottom:18px; }
+    .ss-course-label__pill{
+      display:inline-block; font-size:.63rem; font-weight:700;
+      text-transform:uppercase; letter-spacing:.1em;
+      padding:4px 14px; border-radius:999px; margin-bottom:6px;
+      transition:all .4s var(--ease-expo);
+    }
+    .ss-course-label__name{
+      font-size:.92rem; font-weight:800; color:var(--text);
+      letter-spacing:-.02em; transition:all .4s var(--ease-expo);
+    }
+
+    /* ── RIGHT: Scroll cards ─────────────────────────────── */
+    .ss-right { background:var(--bg); }
+    .course-scroll-item{
+      min-height:100vh;
+      display:flex; align-items:center;
+      padding:6rem 3.5rem 6rem 4.5rem;
+      border-bottom:1px solid var(--border);
+      position:relative;
+    }
+    .course-scroll-item:nth-child(even) { background:#fafbfd; }
+    .csi__inner{
+      width:100%; max-width:580px;
+      opacity:0; transform:translateY(38px);
+      transition:opacity .72s var(--ease-expo), transform .72s var(--ease-expo);
+    }
+    .csi__inner.visible { opacity:1; transform:translateY(0); }
+    .csi__step{
+      font-size:.66rem; font-weight:700; text-transform:uppercase;
+      letter-spacing:.12em; color:var(--text-3);
+      margin-bottom:1.4rem;
+      display:flex; align-items:center; gap:.7rem;
+    }
+    .csi__step::before{
+      content:''; display:block; width:22px; height:2px;
+      background:var(--accent); border-radius:999px; flex-shrink:0;
+    }
+
+    /* ── Responsive ──────────────────────────────────────── */
+    @media(max-width:960px){
+      .scroll-showcase { grid-template-columns:1fr; }
+      .ss-left { position:relative; top:0; height:auto; padding:3rem 1.5rem 2rem; }
+      .course-scroll-item { min-height:auto; padding:3.5rem 1.5rem; }
+    }
+    @media(max-width:600px){
+      .phone-device { width:186px; height:382px; }
+    }
+  </style>
+
+  <div class="scroll-showcase" id="courseShowcase">
+
+    <!-- ════════════════ LEFT: STICKY PHONE VISUAL ════════ -->
+    <div class="ss-left" id="ssLeft">
+
+      <div class="ss-course-label">
+        <div class="ss-course-label__pill bg-popular" id="ssPill">⭐ Most Popular</div>
+        <div class="ss-course-label__name" id="ssName">Mobile Repairing</div>
+      </div>
+
+      <div class="phone-device" id="phoneDevice">
+        <div class="phone-island"></div>
+        <div class="phone-screen-wrap">
+
+          <!-- Screen 0 – Mobile -->
+          <div class="p-screen p-screen--mobile active" id="pScreen0">
+            <div class="p-hdr">iFix Academy · Course</div>
+            <div class="p-title">Android &amp; Mobile<br>Repair Expert</div>
+            <div class="p-profile">
+              <div class="p-profile__left">
+                <div class="p-avatar">📱</div>
+                <div><div class="p-pname">Mobile Tech</div><div class="p-psub">Android Ecosystem</div></div>
+              </div>
+              <div class="p-badge">
+                <span class="p-badge__lbl">Placement</span>
+                <span class="p-badge__val">94%</span>
+              </div>
+            </div>
+            <div class="p-actions-row">
+              <div class="p-act"><div class="p-act__icon">🔧</div><div class="p-act__lbl">Repair</div></div>
+              <div class="p-act"><div class="p-act__icon">📚</div><div class="p-act__lbl">Learn</div></div>
+              <div class="p-act"><div class="p-act__icon">📜</div><div class="p-act__lbl">Certify</div></div>
+            </div>
+            <div class="p-stats-row">Course Duration &amp; Coverage</div>
+            <div class="p-stats-val">6 Weeks · 50+ Brands</div>
+            <div class="p-visa-row">
+              <span class="p-visa-nfc">◎))</span>
+              <span class="p-visa-brand">CERTIFIED</span>
+            </div>
+            <div class="p-bottom">
+              <div><div class="p-bl">Skills</div><div class="p-bv">8 Modules</div></div>
+              <div><div class="p-bl">Avg. Monthly</div><div class="p-bv">₹25,000</div></div>
+            </div>
+          </div>
+
+          <!-- Screen 1 – Laptop -->
+          <div class="p-screen p-screen--laptop" id="pScreen1">
+            <div class="p-hdr">iFix Academy · Course</div>
+            <div class="p-title">Laptop &amp; PC<br>Repair Specialist</div>
+            <div class="p-profile">
+              <div class="p-profile__left">
+                <div class="p-avatar">💻</div>
+                <div><div class="p-pname">Laptop Pro</div><div class="p-psub">PC Repair Ecosystem</div></div>
+              </div>
+              <div class="p-badge">
+                <span class="p-badge__lbl">Demand</span>
+                <span class="p-badge__val">High</span>
+              </div>
+            </div>
+            <div class="p-actions-row">
+              <div class="p-act"><div class="p-act__icon">⚡</div><div class="p-act__lbl">Diagnose</div></div>
+              <div class="p-act"><div class="p-act__icon">🛠️</div><div class="p-act__lbl">Repair</div></div>
+              <div class="p-act"><div class="p-act__icon">📜</div><div class="p-act__lbl">Certify</div></div>
+            </div>
+            <div class="p-stats-row">Course Duration &amp; Coverage</div>
+            <div class="p-stats-val">7 Weeks · 15+ Brands</div>
+            <div class="p-visa-row">
+              <span class="p-visa-nfc">◎))</span>
+              <span class="p-visa-brand">CERTIFIED</span>
+            </div>
+            <div class="p-bottom">
+              <div><div class="p-bl">Skills</div><div class="p-bv">8 Modules</div></div>
+              <div><div class="p-bl">Earn/Device</div><div class="p-bv">₹2,000+</div></div>
+            </div>
+          </div>
+
+          <!-- Screen 2 – Display -->
+          <div class="p-screen p-screen--display" id="pScreen2">
+            <div class="p-hdr">iFix Academy · Course</div>
+            <div class="p-title">LCD &amp; AMOLED<br>Display Expert</div>
+            <div class="p-profile">
+              <div class="p-profile__left">
+                <div class="p-avatar">🖥️</div>
+                <div><div class="p-pname">Display Spec.</div><div class="p-psub">LCD / AMOLED Tech</div></div>
+              </div>
+              <div class="p-badge">
+                <span class="p-badge__lbl">Launch</span>
+                <span class="p-badge__val">New</span>
+              </div>
+            </div>
+            <div class="p-actions-row">
+              <div class="p-act"><div class="p-act__icon">🔬</div><div class="p-act__lbl">Inspect</div></div>
+              <div class="p-act"><div class="p-act__icon">💧</div><div class="p-act__lbl">Bond</div></div>
+              <div class="p-act"><div class="p-act__icon">📜</div><div class="p-act__lbl">Certify</div></div>
+            </div>
+            <div class="p-stats-row">Course Duration &amp; Coverage</div>
+            <div class="p-stats-val">5 Weeks · OCA + UV</div>
+            <div class="p-visa-row">
+              <span class="p-visa-nfc">◎))</span>
+              <span class="p-visa-brand">CERTIFIED</span>
+            </div>
+            <div class="p-bottom">
+              <div><div class="p-bl">Skills</div><div class="p-bv">8 Modules</div></div>
+              <div><div class="p-bl">Market</div><div class="p-bv">High Value</div></div>
+            </div>
+          </div>
+
+          <!-- Screen 3 – iPhone -->
+          <div class="p-screen p-screen--iphone" id="pScreen3">
+            <div class="p-hdr">iFix Academy · Course</div>
+            <div class="p-title">Apple iPhone<br>Repair Premium</div>
+            <div class="p-profile">
+              <div class="p-profile__left">
+                <div class="p-avatar">🍎</div>
+                <div><div class="p-pname">iPhone Expert</div><div class="p-psub">Apple Ecosystem</div></div>
+              </div>
+              <div class="p-badge">
+                <span class="p-badge__lbl">Tier</span>
+                <span class="p-badge__val">💎</span>
+              </div>
+            </div>
+            <div class="p-actions-row">
+              <div class="p-act"><div class="p-act__icon">⚙️</div><div class="p-act__lbl">Chip</div></div>
+              <div class="p-act"><div class="p-act__icon">🔍</div><div class="p-act__lbl">Diagnose</div></div>
+              <div class="p-act"><div class="p-act__icon">📜</div><div class="p-act__lbl">Certify</div></div>
+            </div>
+            <div class="p-stats-row">Course Duration &amp; Coverage</div>
+            <div class="p-stats-val">8 Weeks · All iPhones</div>
+            <div class="p-visa-row">
+              <span class="p-visa-nfc">◎))</span>
+              <span class="p-visa-brand">CERTIFIED</span>
+            </div>
+            <div class="p-bottom">
+              <div><div class="p-bl">Skills</div><div class="p-bv">8 Modules</div></div>
+              <div><div class="p-bl">Avg. Monthly</div><div class="p-bv">₹50,000</div></div>
+            </div>
+          </div>
+
+        </div><!-- /.phone-screen-wrap -->
+      </div><!-- /.phone-device -->
+
+      <div class="phone-glow" id="phoneGlow" style="background:#3478F6;"></div>
+
+      <div class="ph-dots" id="phDots">
+        <span class="ph-dot active" data-idx="0" title="Mobile Repairing"></span>
+        <span class="ph-dot" data-idx="1" title="Laptop Repairing"></span>
+        <span class="ph-dot" data-idx="2" title="Display Repairing"></span>
+        <span class="ph-dot" data-idx="3" title="iPhone Repairing"></span>
+      </div>
+
+    </div><!-- /.ss-left -->
+
+    <!-- ════════════════ RIGHT: SCROLL CARDS ═════════════ -->
+    <div class="ss-right" id="ssRight">
+
+      <!-- ── MOBILE ── -->
+      <section class="course-scroll-item" id="mobile" data-course-idx="0">
+        <div class="csi__inner">
+          <div class="csi__step">Course 01 · Mobile Repairing</div>
           <span class="course-badge-lg bg-popular">⭐ Most Popular</span>
           <h2 class="course-info__title">Mobile Repairing Course</h2>
-          <p class="course-info__desc">The foundation of every repair technician's career. Learn complete hardware &amp; software troubleshooting for all Android and feature phone brands - from screen replacements to PCB-level diagnostics. Immediate employment or self-employment ready.</p>
-          <div class="course-chips"><span class="chip">⏱ 6 Weeks</span><span class="chip">📍 Delhi · Patna · Online</span><span class="chip">🌐 Hindi &amp; English</span><span class="chip">📜 Certificate</span></div>
+          <p class="course-info__desc">The foundation of every repair technician's career. Learn complete hardware &amp; software troubleshooting for all Android and feature phone brands — from screen replacements to PCB-level diagnostics. Immediate employment or self-employment ready.</p>
+          <div class="course-chips">
+            <span class="chip">⏱ 6 Weeks</span>
+            <span class="chip">📍 Delhi · Patna · Online</span>
+            <span class="chip">🌐 Hindi &amp; English</span>
+            <span class="chip">📜 Certificate</span>
+          </div>
           <div class="skills-title">What You'll Learn</div>
           <div class="skills-grid">
             <div class="skill-item"><span class="skill-dot"></span>Screen Replacement (All Brands)</div>
@@ -197,40 +631,30 @@
             <div class="skill-item"><span class="skill-dot"></span>Micro-Soldering Basics</div>
             <div class="skill-item"><span class="skill-dot"></span>Business Setup Guidance</div>
           </div>
-          <div class="course-outcome"><div class="course-outcome__icon">🎓</div><div><div class="course-outcome__lbl">You'll Earn</div><div class="course-outcome__val">Certified Mobile Repair Technician</div></div></div>
-          <div class="course-ctas"><a href="contact.html#contact-form" class="btn btn--primary">Enroll Now</a><a href="contact.html" class="btn btn--ghost">Ask a Question</a></div>
-        </div>
-        <div class="ccv">
-          <span class="ccv__emoji">📱</span>
-          <div class="ccv__title">Mobile Repairing</div>
-          <span class="ccv__cat">Android Ecosystem</span>
-          <div class="ccv__stats">
-            <div class="ccv__stat"><span class="ccv__stat-num">6</span><span class="ccv__stat-lbl">Weeks</span></div>
-            <div class="ccv__stat"><span class="ccv__stat-num">50+</span><span class="ccv__stat-lbl">Device Brands</span></div>
-            <div class="ccv__stat"><span class="ccv__stat-num">100%</span><span class="ccv__stat-lbl">Practical</span></div>
-            <div class="ccv__stat"><span class="ccv__stat-num">94%</span><span class="ccv__stat-lbl">Placed</span></div>
+          <div class="course-outcome">
+            <div class="course-outcome__icon">🎓</div>
+            <div><div class="course-outcome__lbl">You'll Earn</div><div class="course-outcome__val">Certified Mobile Repair Technician</div></div>
           </div>
-          <div class="ccv__divider"></div>
-          <div class="ccv__inc-title">Course Includes</div>
-          <div class="ccv__inc-item"><span class="chk">✓</span>Live demo on 20+ real devices</div>
-          <div class="ccv__inc-item"><span class="chk">✓</span>Professional tool kit access</div>
-          <div class="ccv__inc-item"><span class="chk">✓</span>HD recorded video library</div>
-          <div class="ccv__inc-item"><span class="chk">✓</span>Industry-recognised certificate</div>
-          <div class="ccv__inc-item"><span class="chk">✓</span>Job assistance &amp; placement</div>
+          <div class="course-ctas">
+            <a href="contact.html#contact-form" class="btn btn--primary">Enroll Now</a>
+            <a href="contact.html" class="btn btn--ghost">Ask a Question</a>
+          </div>
         </div>
-      </div>
-    </div>
-  </section>
+      </section>
 
-  <!-- LAPTOP -->
-  <section class="course-section" id="laptop">
-    <div class="container">
-      <div class="course-detail course-detail--rev reveal">
-        <div>
+      <!-- ── LAPTOP ── -->
+      <section class="course-scroll-item" id="laptop" data-course-idx="1">
+        <div class="csi__inner">
+          <div class="csi__step">Course 02 · Laptop Repairing</div>
           <span class="course-badge-lg bg-demand">🔥 High Demand</span>
           <h2 class="course-info__title">Laptop Repairing Course</h2>
-          <p class="course-info__desc">Windows laptops are everywhere - in homes, offices, colleges. From basic diagnostics to advanced chip-level motherboard repair. GPU re-balling alone earns ₹2,000+ per device. Master the skill that keeps businesses running.</p>
-          <div class="course-chips"><span class="chip">⏱ 7 Weeks</span><span class="chip">📍 Delhi · Patna · Online</span><span class="chip">🌐 Hindi &amp; English</span><span class="chip">📜 Certificate</span></div>
+          <p class="course-info__desc">Windows laptops are everywhere — in homes, offices, colleges. From basic diagnostics to advanced chip-level motherboard repair. GPU re-balling alone earns ₹2,000+ per device. Master the skill that keeps businesses running.</p>
+          <div class="course-chips">
+            <span class="chip">⏱ 7 Weeks</span>
+            <span class="chip">📍 Delhi · Patna · Online</span>
+            <span class="chip">🌐 Hindi &amp; English</span>
+            <span class="chip">📜 Certificate</span>
+          </div>
           <div class="skills-title">What You'll Learn</div>
           <div class="skills-grid">
             <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Motherboard Diagnosis &amp; Repair</div>
@@ -242,40 +666,30 @@
             <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Display Panel Replacement</div>
             <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Keyboard &amp; Trackpad Fix</div>
           </div>
-          <div class="course-outcome"><div class="course-outcome__icon">🎓</div><div><div class="course-outcome__lbl">You'll Earn</div><div class="course-outcome__val">Certified Laptop Technician</div></div></div>
-          <div class="course-ctas"><a href="contact.html#contact-form" class="btn btn--primary">Enroll Now</a><a href="contact.html" class="btn btn--ghost">Ask a Question</a></div>
-        </div>
-        <div class="ccv">
-          <span class="ccv__emoji">💻</span>
-          <div class="ccv__title">Laptop Repairing</div>
-          <span class="ccv__cat">PC Repair · Windows Ecosystem</span>
-          <div class="ccv__stats">
-            <div class="ccv__stat"><span class="ccv__stat-num">7</span><span class="ccv__stat-lbl">Weeks</span></div>
-            <div class="ccv__stat"><span class="ccv__stat-num">15+</span><span class="ccv__stat-lbl">Laptop Brands</span></div>
-            <div class="ccv__stat"><span class="ccv__stat-num">₹2K+</span><span class="ccv__stat-lbl">Earn/Device</span></div>
-            <div class="ccv__stat"><span class="ccv__stat-num">Expert</span><span class="ccv__stat-lbl">Faculty</span></div>
+          <div class="course-outcome">
+            <div class="course-outcome__icon">🎓</div>
+            <div><div class="course-outcome__lbl">You'll Earn</div><div class="course-outcome__val">Certified Laptop Technician</div></div>
           </div>
-          <div class="ccv__divider"></div>
-          <div class="ccv__inc-title">Course Includes</div>
-          <div class="ccv__inc-item"><span class="chk">✓</span>Chip-level board repair training</div>
-          <div class="ccv__inc-item"><span class="chk">✓</span>BGA rework &amp; soldering station</div>
-          <div class="ccv__inc-item"><span class="chk">✓</span>Schematic &amp; circuit diagram reading</div>
-          <div class="ccv__inc-item"><span class="chk">✓</span>Industry-recognised certificate</div>
-          <div class="ccv__inc-item"><span class="chk">✓</span>Job &amp; business support</div>
+          <div class="course-ctas">
+            <a href="contact.html#contact-form" class="btn btn--primary">Enroll Now</a>
+            <a href="contact.html" class="btn btn--ghost">Ask a Question</a>
+          </div>
         </div>
-      </div>
-    </div>
-  </section>
+      </section>
 
-  <!-- DISPLAY -->
-  <section class="course-section" id="display">
-    <div class="container">
-      <div class="course-detail reveal">
-        <div>
+      <!-- ── DISPLAY ── -->
+      <section class="course-scroll-item" id="display" data-course-idx="2">
+        <div class="csi__inner">
+          <div class="csi__step">Course 03 · Display Repairing</div>
           <span class="course-badge-lg bg-new">🆕 New Course</span>
           <h2 class="course-info__title">Display Repairing Course</h2>
           <p class="course-info__desc">LCD and AMOLED displays are the most expensive components in any smartphone. Mastering OCA lamination, bonding, and refurbishment means you can restore cracked screens to factory condition. High value, high demand, high earning potential.</p>
-          <div class="course-chips"><span class="chip">⏱ 5 Weeks</span><span class="chip">📍 Delhi · Patna · Online</span><span class="chip">🌐 Hindi &amp; English</span><span class="chip">📜 Certificate</span></div>
+          <div class="course-chips">
+            <span class="chip">⏱ 5 Weeks</span>
+            <span class="chip">📍 Delhi · Patna · Online</span>
+            <span class="chip">🌐 Hindi &amp; English</span>
+            <span class="chip">📜 Certificate</span>
+          </div>
           <div class="skills-title">What You'll Learn</div>
           <div class="skills-grid">
             <div class="skill-item"><span class="skill-dot" style="background:var(--green);"></span>LCD &amp; AMOLED Display Bonding</div>
@@ -287,40 +701,30 @@
             <div class="skill-item"><span class="skill-dot" style="background:var(--green);"></span>Touch Calibration</div>
             <div class="skill-item"><span class="skill-dot" style="background:var(--green);"></span>Display Testing &amp; QC</div>
           </div>
-          <div class="course-outcome"><div class="course-outcome__icon">🎓</div><div><div class="course-outcome__lbl">You'll Earn</div><div class="course-outcome__val">Display Repair Specialist</div></div></div>
-          <div class="course-ctas"><a href="contact.html#contact-form" class="btn btn--primary">Enroll Now</a><a href="contact.html" class="btn btn--ghost">Ask a Question</a></div>
-        </div>
-        <div class="ccv">
-          <span class="ccv__emoji">🖥️</span>
-          <div class="ccv__title">Display Repairing</div>
-          <span class="ccv__cat">LCD / AMOLED Specialist</span>
-          <div class="ccv__stats">
-            <div class="ccv__stat"><span class="ccv__stat-num">5</span><span class="ccv__stat-lbl">Weeks</span></div>
-            <div class="ccv__stat"><span class="ccv__stat-num">New</span><span class="ccv__stat-lbl">Launch</span></div>
-            <div class="ccv__stat"><span class="ccv__stat-num">High</span><span class="ccv__stat-lbl">Demand</span></div>
-            <div class="ccv__stat"><span class="ccv__stat-num">100%</span><span class="ccv__stat-lbl">Practical</span></div>
+          <div class="course-outcome">
+            <div class="course-outcome__icon">🎓</div>
+            <div><div class="course-outcome__lbl">You'll Earn</div><div class="course-outcome__val">Display Repair Specialist</div></div>
           </div>
-          <div class="ccv__divider"></div>
-          <div class="ccv__inc-title">Course Includes</div>
-          <div class="ccv__inc-item"><span class="chk">✓</span>OCA lamination machine training</div>
-          <div class="ccv__inc-item"><span class="chk">✓</span>UV curing &amp; bubble removal</div>
-          <div class="ccv__inc-item"><span class="chk">✓</span>AMOLED &amp; LCD bonding practice</div>
-          <div class="ccv__inc-item"><span class="chk">✓</span>Industry-recognised certificate</div>
-          <div class="ccv__inc-item"><span class="chk">✓</span>Job &amp; business support</div>
+          <div class="course-ctas">
+            <a href="contact.html#contact-form" class="btn btn--primary">Enroll Now</a>
+            <a href="contact.html" class="btn btn--ghost">Ask a Question</a>
+          </div>
         </div>
-      </div>
-    </div>
-  </section>
+      </section>
 
-  <!-- IPHONE -->
-  <section class="course-section" id="iphone">
-    <div class="container">
-      <div class="course-detail course-detail--rev reveal">
-        <div>
+      <!-- ── IPHONE ── -->
+      <section class="course-scroll-item" id="iphone" data-course-idx="3">
+        <div class="csi__inner">
+          <div class="csi__step">Course 04 · iPhone Repairing</div>
           <span class="course-badge-lg bg-premium">💎 Premium</span>
           <h2 class="course-info__title">iPhone Repairing Course</h2>
           <p class="course-info__desc">The most premium skill in the mobile repair industry. iPhone technicians who can work on chip-level Apple hardware earn the most in the field. Learn Face ID repair, Apple-specific IC diagnosis, and deep motherboard work very few shops in India can offer.</p>
-          <div class="course-chips"><span class="chip">⏱ 8 Weeks</span><span class="chip">📍 Delhi · Patna · Online</span><span class="chip">🌐 Hindi &amp; English</span><span class="chip">📜 Certificate</span></div>
+          <div class="course-chips">
+            <span class="chip">⏱ 8 Weeks</span>
+            <span class="chip">📍 Delhi · Patna · Online</span>
+            <span class="chip">🌐 Hindi &amp; English</span>
+            <span class="chip">📜 Certificate</span>
+          </div>
           <div class="skills-title">What You'll Learn</div>
           <div class="skills-grid">
             <div class="skill-item"><span class="skill-dot" style="background:#5856D6;"></span>Screen &amp; Battery Replacement</div>
@@ -332,30 +736,92 @@
             <div class="skill-item"><span class="skill-dot" style="background:#5856D6;"></span>True Tone &amp; DFU Restore</div>
             <div class="skill-item"><span class="skill-dot" style="background:#5856D6;"></span>Micro-Soldering on Apple PCB</div>
           </div>
-          <div class="course-outcome"><div class="course-outcome__icon">🎓</div><div><div class="course-outcome__lbl">You'll Earn</div><div class="course-outcome__val">Certified iPhone Repair Technician</div></div></div>
-          <div class="course-ctas"><a href="contact.html#contact-form" class="btn btn--primary">Enroll Now</a><a href="contact.html" class="btn btn--ghost">Ask a Question</a></div>
-        </div>
-        <div class="ccv">
-          <span class="ccv__emoji">📱</span>
-          <div class="ccv__title">iPhone Repairing</div>
-          <span class="ccv__cat">Apple Ecosystem · Premium</span>
-          <div class="ccv__stats">
-            <div class="ccv__stat"><span class="ccv__stat-num">8</span><span class="ccv__stat-lbl">Weeks</span></div>
-            <div class="ccv__stat"><span class="ccv__stat-num">All</span><span class="ccv__stat-lbl">iPhone Models</span></div>
-            <div class="ccv__stat"><span class="ccv__stat-num">₹50K+</span><span class="ccv__stat-lbl">Monthly</span></div>
-            <div class="ccv__stat"><span class="ccv__stat-num">Expert</span><span class="ccv__stat-lbl">Instructors</span></div>
+          <div class="course-outcome">
+            <div class="course-outcome__icon">🎓</div>
+            <div><div class="course-outcome__lbl">You'll Earn</div><div class="course-outcome__val">Certified iPhone Repair Technician</div></div>
           </div>
-          <div class="ccv__divider"></div>
-          <div class="ccv__inc-title">Course Includes</div>
-          <div class="ccv__inc-item"><span class="chk">✓</span>Real iPhone hardware lab sessions</div>
-          <div class="ccv__inc-item"><span class="chk">✓</span>Face ID &amp; True Tone module training</div>
-          <div class="ccv__inc-item"><span class="chk">✓</span>Apple schematic reading</div>
-          <div class="ccv__inc-item"><span class="chk">✓</span>Industry-recognised certificate</div>
-          <div class="ccv__inc-item"><span class="chk">✓</span>Job &amp; business support</div>
+          <div class="course-ctas">
+            <a href="contact.html#contact-form" class="btn btn--primary">Enroll Now</a>
+            <a href="contact.html" class="btn btn--ghost">Ask a Question</a>
+          </div>
         </div>
-      </div>
-    </div>
-  </section>
+      </section>
+
+    </div><!-- /.ss-right -->
+  </div><!-- /.scroll-showcase -->
+
+  <script>
+  (function () {
+    'use strict';
+
+    var COURSES = [
+      { label:'⭐ Most Popular', labelCls:'bg-popular', name:'Mobile Repairing',  glow:'#3478F6' },
+      { label:'🔥 High Demand',  labelCls:'bg-demand',  name:'Laptop Repairing',  glow:'#FF6B47' },
+      { label:'🆕 New Course',   labelCls:'bg-new',     name:'Display Repairing', glow:'#00C896' },
+      { label:'💎 Premium',      labelCls:'bg-premium', name:'iPhone Repairing',  glow:'#5856D6' }
+    ];
+
+    var screens   = document.querySelectorAll('.p-screen');
+    var dots      = document.querySelectorAll('.ph-dot');
+    var pill      = document.getElementById('ssPill');
+    var nameEl    = document.getElementById('ssName');
+    var glowEl    = document.getElementById('phoneGlow');
+    var items     = document.querySelectorAll('.course-scroll-item');
+    var curIdx    = -1;
+
+    function activate(idx) {
+      if (idx === curIdx) return;
+      curIdx = idx;
+      var c = COURSES[idx];
+      screens.forEach(function(s, i){ s.classList.toggle('active', i === idx); });
+      dots.forEach(function(d, i){ d.classList.toggle('active', i === idx); });
+      pill.className = 'ss-course-label__pill ' + c.labelCls;
+      pill.textContent = c.label;
+      nameEl.textContent = c.name;
+      glowEl.style.background = c.glow;
+    }
+
+    /* Dot click → scroll + activate */
+    dots.forEach(function(dot) {
+      dot.addEventListener('click', function() {
+        var idx = parseInt(dot.dataset.idx, 10);
+        activate(idx);
+        items[idx].scrollIntoView({ behavior:'smooth', block:'center' });
+      });
+    });
+
+    /* IntersectionObserver: update phone when section enters view */
+    var NAV_H = 116; // navbar + tabs-nav
+    var phoneObs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          activate(parseInt(entry.target.dataset.courseIdx, 10));
+        }
+      });
+    }, { threshold: 0.35, rootMargin: '-8% 0px -8% 0px' });
+
+    /* IntersectionObserver: fade-in card content */
+    var cardObs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          var inner = entry.target.querySelector('.csi__inner');
+          if (inner) inner.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.12 });
+
+    items.forEach(function(item) {
+      phoneObs.observe(item);
+      cardObs.observe(item);
+    });
+
+    /* Init first */
+    activate(0);
+    /* Immediately make first card visible if already in viewport */
+    var firstInner = items[0] && items[0].querySelector('.csi__inner');
+    if (firstInner) firstInner.classList.add('visible');
+  })();
+  </script>
 
   <!-- ONLINE -->
   <section class="online-section" id="online">
@@ -378,7 +844,7 @@
     </div>
   </section>
 
-  <section class="enroll-cta">
+  <section class="enroll-cta blue-cta-motion">
     <div class="container">
       <div class="enroll-cta__inner">
         <div>
@@ -415,6 +881,80 @@
       sections.forEach(s => { if(s && window.scrollY >= s.offsetTop - NAV_H - 10) cur = s.id; });
       tabBtns.forEach(b => b.classList.toggle('active', b.dataset.target === cur));
     }, { passive: true });
+
+    document.querySelectorAll('.online-feat').forEach((card) => {
+      card.addEventListener('mousemove', (event) => {
+        const rect = card.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        card.style.setProperty('--mx', `${x}px`);
+        card.style.setProperty('--my', `${y}px`);
+
+        const rx = ((y / rect.height) - 0.5) * -4;
+        const ry = ((x / rect.width) - 0.5) * 5;
+        card.style.transform = `perspective(860px) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg) translateY(-6px)`;
+      });
+
+      card.addEventListener('mouseleave', () => {
+        card.style.removeProperty('--mx');
+        card.style.removeProperty('--my');
+        card.style.transform = '';
+      });
+    });
+
+    function initBlueCtaMotion() {
+      const ctas = document.querySelectorAll('.blue-cta-motion');
+      if (!ctas.length) return;
+
+      if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+        gsap.registerPlugin(ScrollTrigger);
+        gsap.utils.toArray('.blue-cta-motion').forEach((section) => {
+          gsap.fromTo(section,
+            { '--cta-shift': '-40px', '--cta-glow': 0, y: 26, opacity: 0.9 },
+            {
+              '--cta-shift': '40px',
+              '--cta-glow': 1,
+              y: 0,
+              opacity: 1,
+              ease: 'power2.out',
+              scrollTrigger: {
+                trigger: section,
+                start: 'top 82%',
+                end: 'bottom 30%',
+                scrub: 1
+              }
+            }
+          );
+        });
+        return;
+      }
+
+      const updateCtaMotion = () => {
+        document.querySelectorAll('.blue-cta-motion.is-in-view').forEach((cta) => {
+          const rect = cta.getBoundingClientRect();
+          const progress = Math.min(1, Math.max(0, (window.innerHeight - rect.top) / (window.innerHeight + rect.height)));
+          const shift = (progress - 0.5) * 80;
+          cta.style.setProperty('--cta-shift', `${shift.toFixed(1)}px`);
+          cta.style.setProperty('--cta-glow', Math.min(1, progress * 1.35).toFixed(2));
+        });
+      };
+
+      const ctaObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('is-in-view');
+          updateCtaMotion();
+          ctaObserver.unobserve(entry.target);
+        });
+      }, { threshold: 0.25 });
+
+      ctas.forEach((cta) => ctaObserver.observe(cta));
+      updateCtaMotion();
+      window.addEventListener('scroll', updateCtaMotion, { passive: true });
+      window.addEventListener('resize', updateCtaMotion);
+    }
+
+    window.addEventListener('load', initBlueCtaMotion, { once: true });
   </script>
 </body>
 </html>

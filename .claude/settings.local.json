@@ -1,0 +1,10 @@
+{
+  "enabledPlugins": {
+    "github@claude-plugins-official": false
+  },
+  "permissions": {
+    "allow": [
+      "Bash(unzip -l \"c:/Users/LENOVO/Downloads/skills-main.zip\")"
+    ]
+  }
+}
