@@ -9,6 +9,9 @@ const path = require('path');
 const app = express();
 const frontendRoot = path.join(__dirname, '..');
 
+// Ensure req.protocol respects reverse-proxy headers on Render.
+app.set('trust proxy', 1);
+
 function buildMysqlConfig() {
   const connectionUrl =
     process.env.DATABASE_URL ||

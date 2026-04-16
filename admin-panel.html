@@ -474,6 +474,8 @@
                     <button type="button" class="tool-btn" onclick="formatExcerpt('italic')"><i>I</i></button>
                     <button type="button" class="tool-btn" onclick="formatExcerpt('insertUnorderedList')">•</button>
                     <button type="button" class="tool-btn" onclick="formatExcerpt('insertOrderedList')">1.</button>
+                    <button type="button" class="tool-btn" onclick="insertLinkIntoEditor('excerpt-editor')">Link</button>
+                    <button type="button" class="tool-btn" onclick="insertLinkIntoEditor('excerpt-editor', true)">CTA</button>
                   </div>
                   <div id="excerpt-editor" class="editor-canvas" contenteditable="true" data-placeholder="Enter introduction text... Use **text** for bold, *text* for italic, - for bullets, 1. for numbered lists"></div>
                 </div>
@@ -497,6 +499,8 @@
                     <button type="button" class="tool-btn" onclick="formatBody('italic')"><i>I</i></button>
                     <button type="button" class="tool-btn" onclick="formatBody('insertUnorderedList')">• List</button>
                     <button type="button" class="tool-btn" onclick="formatBody('insertOrderedList')">1. List</button>
+                    <button type="button" class="tool-btn" onclick="insertLinkIntoEditor('blog-editor')">Link</button>
+                    <button type="button" class="tool-btn" onclick="insertLinkIntoEditor('blog-editor', true)">CTA</button>
                     <select class="tool-select" id="font-size-select" onchange="applyFontSize(this.value)">
                       <option value="">Font Size</option>
                       <option value="12px">Small</option>
@@ -873,6 +877,78 @@
       const newRange = document.createRange();
       newRange.selectNodeContents(span);
       selection.addRange(newRange);
+      syncEditorValues();
+    }
+
+    function normalizeEditorLinkHref(rawUrl) {
+      const url = String(rawUrl || '').trim();
+      if (!url) return '';
+
+      if (/^(https?:\/\/|mailto:|tel:|\/|#)/i.test(url)) {
+        return url;
+      }
+
+      return `https://${url}`;
+    }
+
+    function isExternalLink(href) {
+      return /^https?:\/\//i.test(String(href || ''));
+    }
+
+    function insertLinkIntoEditor(editorId = 'blog-editor', asCta = false) {
+      const editor = getEditor(editorId);
+      if (!editor) return;
+
+      const rawUrl = window.prompt('Enter URL (https://example.com, /blog/slug, mailto:, tel:)');
+      if (rawUrl === null) return;
+
+      const href = normalizeEditorLinkHref(rawUrl);
+      if (!href) {
+        alert('URL is required.');
+        return;
+      }
+
+      editor.focus();
+      const selection = window.getSelection();
+      const hasSelection = Boolean(
+        selection &&
+        selection.rangeCount > 0 &&
+        !selection.isCollapsed &&
+        editor.contains(selection.anchorNode) &&
+        editor.contains(selection.focusNode)
+      );
+
+      let linkLabel = hasSelection ? selection.toString().trim() : '';
+      if (!linkLabel) {
+        const prompted = window.prompt('Enter link text (anchor/CTA label):', asCta ? 'Read More' : 'Link text');
+        if (prompted === null) return;
+        linkLabel = prompted.trim() || href;
+      }
+
+      const anchor = document.createElement('a');
+      anchor.href = href;
+      anchor.textContent = linkLabel;
+      if (asCta) {
+        anchor.className = 'blog-cta-link';
+      }
+      if (isExternalLink(href)) {
+        anchor.target = '_blank';
+        anchor.rel = 'noopener noreferrer';
+      }
+
+      if (hasSelection) {
+        const range = selection.getRangeAt(0);
+        range.deleteContents();
+        range.insertNode(anchor);
+        range.setStartAfter(anchor);
+        range.setEndAfter(anchor);
+        selection.removeAllRanges();
+        selection.addRange(range);
+      } else {
+        insertHtmlAtCursor(anchor.outerHTML);
+        return;
+      }
+
       syncEditorValues();
     }
 

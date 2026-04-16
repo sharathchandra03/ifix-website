@@ -84,7 +84,7 @@ async function saveImageToDatabase(req, file) {
       [file.originalname || '', file.mimetype || 'image/jpeg', file.size || (file.buffer ? file.buffer.length : 0), file.buffer]
     );
 
-    const baseUrl = `${req.protocol}://${req.get('host')}`;
+    const baseUrl = getPublicBaseUrl(req);
     return {
       url: `${baseUrl}/api/blog/media/${result.insertId}`,
       storage: 'database'
@@ -118,11 +118,17 @@ function normalizeSlugInput(slugInput) {
     .replace(/^-|-$/g, '');
 }
 
+function getPublicBaseUrl(req) {
+  const forwardedProto = String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim();
+  const protocol = forwardedProto || req.protocol || 'https';
+  return `${protocol}://${req.get('host')}`;
+}
+
 function normalizeUrlForHost(rawUrl, req) {
   const value = String(rawUrl || '').trim();
   if (!value) return '';
 
-  const hostBase = `${req.protocol}://${req.get('host')}`;
+  const hostBase = getPublicBaseUrl(req);
 
   if (value.startsWith('/')) {
     return `${hostBase}${value}`;
