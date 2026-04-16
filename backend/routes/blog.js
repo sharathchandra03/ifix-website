@@ -31,9 +31,7 @@ if (useCloudinary) {
 }
 
 const uploadDir = path.join(__dirname, '..', 'uploads', 'blogs');
-if (!useCloudinary) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
+fs.mkdirSync(uploadDir, { recursive: true });
 
 const MAX_UPLOAD_SIZE = 5 * 1024 * 1024;
 
@@ -70,6 +68,22 @@ async function uploadToCloudinary(fileBuffer, mimeType) {
     resource_type: 'image',
     overwrite: false
   });
+}
+
+function buildLocalImageUrl(req, fileName) {
+  const baseUrl = `${req.protocol}://${req.get('host')}`;
+  return `${baseUrl}/uploads/blogs/${fileName}`;
+}
+
+async function saveBufferToLocal(req, file) {
+  const extension = path.extname(file.originalname || '') || '.jpg';
+  const fileName = `${Date.now()}-${Math.round(Math.random() * 1e9)}${extension}`;
+  const filePath = path.join(uploadDir, fileName);
+  await fs.promises.writeFile(filePath, file.buffer);
+  return {
+    url: buildLocalImageUrl(req, fileName),
+    storage: 'local'
+  };
 }
 
 function effectiveDateColumn() {
@@ -168,6 +182,10 @@ router.post('/', verifyToken, async (req, res) => {
   const status = req.body.status || 'draft';
   let connection;
 
+  if (status === 'scheduled' && !scheduled_at) {
+    return res.status(400).json({ error: 'scheduled_at is required when status is scheduled' });
+  }
+
   try {
     log.info('Creating new blog', { title, status, featured_image: featured_image ? '✅ Yes' : '❌ No' });
     
@@ -213,6 +231,10 @@ router.post('/', verifyToken, async (req, res) => {
 router.put('/:id', verifyToken, async (req, res) => {
   const { title, content, author, category, tags, featured_image, author_profile_picture, excerpt, post_date, scheduled_at, status, is_trending } = req.body;
 
+  if (status === 'scheduled' && !scheduled_at) {
+    return res.status(400).json({ error: 'scheduled_at is required when status is scheduled' });
+  }
+
   try {
     log.info('Updating blog ID:', req.params.id);
     
@@ -246,12 +268,6 @@ router.post('/upload-image', verifyToken, upload.single('image'), async (req, re
     return res.status(400).json({ error: 'No image uploaded' });
   }
 
-  if (isProduction && !useCloudinary) {
-    return res.status(503).json({
-      error: 'Image uploads require Cloudinary in production. Set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET in Render.'
-    });
-  }
-
   if (useCloudinary) {
     try {
       const uploaded = await uploadToCloudinary(req.file.buffer, req.file.mimetype || 'image/jpeg');
@@ -261,14 +277,23 @@ router.post('/upload-image', verifyToken, upload.single('image'), async (req, re
         storage: 'cloudinary'
       });
     } catch (error) {
+      log.warn('Cloudinary upload failed, falling back to local storage', error.message);
+      if (req.file.buffer) {
+        try {
+          const fallback = await saveBufferToLocal(req, req.file);
+          return res.json({ success: true, url: fallback.url, storage: fallback.storage });
+        } catch (localError) {
+          return res.status(500).json({ error: `Cloudinary upload failed: ${error.message}. Local fallback failed: ${localError.message}` });
+        }
+      }
       return res.status(500).json({ error: `Cloudinary upload failed: ${error.message}` });
     }
   }
 
-  const baseUrl = `${req.protocol}://${req.get('host')}`;
+  const localUrl = buildLocalImageUrl(req, req.file.filename);
   res.json({
     success: true,
-    url: `${baseUrl}/uploads/blogs/${req.file.filename}`,
+    url: localUrl,
     storage: 'local'
   });
 });

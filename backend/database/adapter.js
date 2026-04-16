@@ -10,6 +10,36 @@ class DatabaseAdapter {
     this.type = this.detectType();
   }
 
+  normalizeDateTimeValue(value) {
+    if (!value) return null;
+    const raw = String(value).trim();
+    if (!raw) return null;
+
+    // Accept values from datetime-local (YYYY-MM-DDTHH:mm)
+    const withSpace = raw.replace('T', ' ');
+
+    // Add seconds if omitted
+    if (/^\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}$/.test(withSpace)) {
+      return `${withSpace}:00`;
+    }
+
+    // Accept full MySQL DATETIME format
+    if (/^\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}$/.test(withSpace)) {
+      return withSpace;
+    }
+
+    const parsed = new Date(raw);
+    if (Number.isNaN(parsed.getTime())) return null;
+
+    const yyyy = parsed.getFullYear();
+    const mm = String(parsed.getMonth() + 1).padStart(2, '0');
+    const dd = String(parsed.getDate()).padStart(2, '0');
+    const hh = String(parsed.getHours()).padStart(2, '0');
+    const min = String(parsed.getMinutes()).padStart(2, '0');
+    const ss = String(parsed.getSeconds()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd} ${hh}:${min}:${ss}`;
+  }
+
   detectType() {
     if (this.db._pool) return 'mysql'; // mysql2/promise
     if (this.db.query && typeof this.db.query === 'function') return 'mysql'; // fallback
@@ -123,7 +153,13 @@ class DatabaseAdapter {
       const connection = await this.db.getConnection();
       try {
         const publishedAt = data.status === 'published' ? new Date() : null;
-        const scheduledAtValue = data.status === 'scheduled' ? (data.scheduled_at || null) : null;
+        const scheduledAtValue = data.status === 'scheduled'
+          ? this.normalizeDateTimeValue(data.scheduled_at)
+          : null;
+
+        if (data.status === 'scheduled' && !scheduledAtValue) {
+          throw new Error('Invalid or missing scheduled_at for scheduled blog');
+        }
 
         const [result] = await connection.query(
           `INSERT INTO blog_posts (title, slug, content, author, author_profile_picture, category, tags, featured_image, excerpt, post_date, scheduled_at, is_trending, status, published_at) 
@@ -165,7 +201,13 @@ class DatabaseAdapter {
       const connection = await this.db.getConnection();
       try {
         const publishedAt = data.status === 'published' ? new Date() : null;
-        const scheduledAtValue = data.status === 'scheduled' ? (data.scheduled_at || null) : null;
+        const scheduledAtValue = data.status === 'scheduled'
+          ? this.normalizeDateTimeValue(data.scheduled_at)
+          : null;
+
+        if (data.status === 'scheduled' && !scheduledAtValue) {
+          throw new Error('Invalid or missing scheduled_at for scheduled blog');
+        }
 
         const [result] = await connection.query(
           `UPDATE blog_posts 
