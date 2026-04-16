@@ -146,6 +146,31 @@
       text-transform: uppercase;
       color: var(--text-3);
     }
+    .content-block__meta-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .block-remove-btn {
+      border: 1px solid var(--border);
+      background: white;
+      color: var(--text-2);
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      line-height: 1;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .block-remove-btn:hover {
+      border-color: var(--red);
+      color: var(--red);
+      background: rgba(255, 59, 48, 0.08);
+    }
     .content-block__editor {
       outline: none;
       min-height: 44px;
@@ -672,6 +697,9 @@
       block.innerHTML = `
         <div class="content-block__meta">
           <span>${isSubheading ? 'Subheading' : 'Paragraph'}</span>
+          <div class="content-block__meta-actions">
+            <button type="button" class="block-remove-btn" title="Remove block" aria-label="Remove block" onclick="removeEditorBlock(this)">×</button>
+          </div>
         </div>
         <div
           class="content-block__editor"
@@ -681,6 +709,13 @@
       `;
 
       return block;
+    }
+
+    function removeEditorBlock(buttonElement) {
+      const block = buttonElement?.closest('.content-block');
+      if (!block) return;
+      block.remove();
+      syncEditorValues();
     }
 
     function addBodyBlock(type) {
@@ -696,7 +731,9 @@
 
     // Image Block Functions
     function createImageBlock(imageUrl = '') {
-      const imageId = `image-block-${Date.now()}`;
+      const uniqueId = `${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+      const imageId = `image-block-${uniqueId}`;
+      const uploadInputId = `image-block-upload-${uniqueId}`;
       const block = document.createElement('div');
       block.className = 'content-block content-block--image';
       block.dataset.blockType = 'image';
@@ -705,17 +742,20 @@
       block.innerHTML = `
         <div class="content-block__meta">
           <span>Image</span>
-          <span style="font-size: 0.7rem; color: var(--text-3);">Click to replace</span>
+          <div class="content-block__meta-actions">
+            <span style="font-size: 0.7rem; color: var(--text-3);">Click to replace</span>
+            <button type="button" class="block-remove-btn" title="Remove block" aria-label="Remove block" onclick="removeEditorBlock(this)">×</button>
+          </div>
         </div>
-        ${imageUrl ? `<img id="${imageId}" src="${imageUrl}" alt="Blog image" style="max-width: 100%; border-radius: var(--r-md); margin: 0.5rem 0; cursor: pointer;" onclick="document.getElementById('image-block-upload-${Date.now()}').click()">` : `
-          <div style="border: 2px dashed var(--border-h); border-radius: var(--r-md); padding: 2rem; text-align: center; cursor: pointer; background: var(--bg-2); min-height: 150px; display: flex; align-items: center; justify-content: center;" id="${imageId}" onclick="this.nextElementSibling.click()">
+        ${imageUrl ? `<img id="${imageId}" src="${imageUrl}" alt="Blog image" style="max-width: 100%; border-radius: var(--r-md); margin: 0.5rem 0; cursor: pointer;">` : `
+          <div style="border: 2px dashed var(--border-h); border-radius: var(--r-md); padding: 2rem; text-align: center; cursor: pointer; background: var(--bg-2); min-height: 150px; display: flex; align-items: center; justify-content: center;" id="${imageId}" data-role="image-placeholder">
             <div>
               <div style="font-size: 2rem; margin-bottom: 0.5rem;">📸</div>
               <div style="color: var(--text-2); font-size: 0.9rem;">Click or drag to add image</div>
             </div>
           </div>
         `}
-        <input type="file" id="image-block-upload-${Date.now()}" accept="image/*" style="display: none;">
+        <input type="file" id="${uploadInputId}" accept="image/*" style="display: none;">
       `;
       
       return block;
@@ -730,6 +770,11 @@
       
       // Get the file input created in the block
       const fileInput = block.querySelector('input[type="file"]');
+      const imageSurface = block.querySelector('[id^="image-block-"]');
+
+      if (imageSurface && fileInput) {
+        imageSurface.addEventListener('click', () => fileInput.click());
+      }
       
       fileInput.addEventListener('change', async (e) => {
         const file = e.target.files?.[0];
@@ -738,23 +783,25 @@
         try {
           console.log('🖼️ Uploading image to block...');
           const url = await uploadBlogImage(file);
-          
-          // Replace the placeholder with image
-          const imageContainer = block.querySelector('[data-block-type="image"]') || block.querySelector('[id^="image-block-"]');
-          const imgElement = block.querySelector('img');
-          
+
+          let imgElement = block.querySelector('img');
+          if (!imgElement) {
+            const placeholder = block.querySelector('div[data-role="image-placeholder"]');
+            if (placeholder) {
+              imgElement = document.createElement('img');
+              imgElement.alt = 'Blog image';
+              imgElement.style.maxWidth = '100%';
+              imgElement.style.borderRadius = 'var(--r-md)';
+              imgElement.style.margin = '0.5rem 0';
+              imgElement.style.cursor = 'pointer';
+              imgElement.id = placeholder.id;
+              placeholder.replaceWith(imgElement);
+            }
+          }
+
           if (imgElement) {
             imgElement.src = url;
-          } else {
-            const placeholder = block.querySelector('div[id^="image-block-"]');
-            if (placeholder) {
-              const imageId = placeholder.id;
-              placeholder.innerHTML = `<img id="${imageId}" src="${url}" alt="Blog image" style="max-width: 100%; border-radius: var(--r-md); margin: 0.5rem 0; cursor: pointer;">`;
-              placeholder.style.border = 'none';
-              placeholder.style.background = 'transparent';
-              placeholder.style.padding = '0';
-              placeholder.style.minHeight = 'auto';
-            }
+            imgElement.addEventListener('click', () => fileInput.click());
           }
           
           block.dataset.imageUrl = url;
