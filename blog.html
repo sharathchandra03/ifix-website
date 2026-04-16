@@ -179,6 +179,37 @@
       canonical.href = `https://ifix-website.onrender.com${urlPath}`;
     }
 
+    function getOriginBase() {
+      return `${window.location.protocol}//${window.location.host}`;
+    }
+
+    function normalizeImageUrl(rawUrl) {
+      const value = String(rawUrl || '').trim();
+      if (!value) return '';
+
+      if (value.startsWith('/')) {
+        return `${getOriginBase()}${value}`;
+      }
+
+      if (/^https?:\/\/localhost(?::\d+)?\//i.test(value) || /^https?:\/\/127\.0\.0\.1(?::\d+)?\//i.test(value)) {
+        try {
+          const parsed = new URL(value);
+          return `${getOriginBase()}${parsed.pathname}${parsed.search}${parsed.hash}`;
+        } catch {
+          return value;
+        }
+      }
+
+      return value;
+    }
+
+    function withBrokenImageFallback(url, fallback = '') {
+      const normalized = normalizeImageUrl(url);
+      if (!normalized) return '';
+      const safeFallback = escapeHtml(fallback);
+      return `${escapeHtml(normalized)}" onerror="this.onerror=null; ${safeFallback ? `this.src='${safeFallback}';` : "this.style.display='none';"}`;
+    }
+
     function updateSeoForList() {
       document.title = 'Blog - iFix Academy';
       const meta = document.querySelector('meta[name="description"]');
@@ -240,19 +271,22 @@
           saveBlogCache(blogs);
         }
 
+        filteredBlogs = blogs;
+        renderBlogGrid();
+
         const initialSlug = getSlugFromLocation();
         if (initialSlug) {
           await showBlogDetail(initialSlug, false);
           return;
         }
-
-        filteredBlogs = blogs;
-        renderBlogGrid();
       } catch (e) {
         console.error('Error loading blogs:', e);
         const cached = readBlogCache();
         if (cached.length > 0) {
           blogs = cached;
+
+          filteredBlogs = cached;
+          renderBlogGrid();
 
           const initialSlug = getSlugFromLocation();
           if (initialSlug) {
@@ -260,8 +294,6 @@
             return;
           }
 
-          filteredBlogs = cached;
-          renderBlogGrid();
           showLoadError('Live blogs are temporarily unavailable. Showing your last saved blogs.');
           return;
         }
@@ -287,7 +319,7 @@
             ${(() => {
               const imageSrc = blog.featured_image || getFirstImageSrc(blog.content);
               return imageSrc
-                ? `<img src="${escapeHtml(imageSrc)}" alt="${escapeHtml(blog.title)}" loading="lazy" referrerpolicy="no-referrer">`
+                ? `<img src="${withBrokenImageFallback(imageSrc)}" alt="${escapeHtml(blog.title)}" loading="lazy" referrerpolicy="no-referrer">`
                 : getCategoryEmoji(blog.category);
             })()}
           </div>
@@ -403,14 +435,14 @@
         </header>
         <div class="blog-author-row">
           ${blog.author_profile_picture
-            ? `<img src="${escapeHtml(blog.author_profile_picture)}" alt="${escapeHtml(blog.author)}" class="blog-author-row__avatar">`
+            ? `<img src="${withBrokenImageFallback(blog.author_profile_picture)}" alt="${escapeHtml(blog.author)}" class="blog-author-row__avatar">`
             : `<div class="blog-author-row__fallback"></div>`}
           <div>
             <div class="blog-author-row__name">${escapeHtml(blog.author)}</div>
             <div class="blog-author-row__label">Author</div>
           </div>
         </div>
-        ${blog.featured_image ? `<img src="${blog.featured_image}" alt="${blog.title}" class="blog-post__image">` : ''}
+        ${blog.featured_image ? `<img src="${withBrokenImageFallback(blog.featured_image)}" alt="${escapeHtml(blog.title)}" class="blog-post__image">` : ''}
         <div class="blog-post__content">${blog.content}</div>
       `;
 

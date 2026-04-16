@@ -118,6 +118,37 @@ function normalizeSlugInput(slugInput) {
     .replace(/^-|-$/g, '');
 }
 
+function normalizeUrlForHost(rawUrl, req) {
+  const value = String(rawUrl || '').trim();
+  if (!value) return '';
+
+  const hostBase = `${req.protocol}://${req.get('host')}`;
+
+  if (value.startsWith('/')) {
+    return `${hostBase}${value}`;
+  }
+
+  if (/^https?:\/\/localhost(?::\d+)?\//i.test(value) || /^https?:\/\/127\.0\.0\.1(?::\d+)?\//i.test(value)) {
+    try {
+      const parsed = new URL(value);
+      return `${hostBase}${parsed.pathname}${parsed.search}${parsed.hash}`;
+    } catch {
+      return value;
+    }
+  }
+
+  return value;
+}
+
+function normalizeBlogImageFields(blog, req) {
+  if (!blog || typeof blog !== 'object') return blog;
+  return {
+    ...blog,
+    featured_image: normalizeUrlForHost(blog.featured_image, req),
+    author_profile_picture: normalizeUrlForHost(blog.author_profile_picture, req)
+  };
+}
+
 async function generateUniqueSlug(connection, initialSlug) {
   let slug = initialSlug;
   let suffix = 2;
@@ -142,7 +173,7 @@ router.get('/', async (req, res) => {
   try {
     const adapter = new DatabaseAdapter(global.db);
     const blogs = await adapter.getPublishedBlogs(10);
-    res.json(blogs);
+    res.json(blogs.map(blog => normalizeBlogImageFields(blog, req)));
   } catch (error) {
     log.error('Failed to fetch published blogs', error.message);
     res.status(500).json({ error: error.message });
@@ -153,7 +184,7 @@ router.get('/', async (req, res) => {
 router.get('/admin/all', verifyToken, async (req, res) => {
   try {
     const adapter = new DatabaseAdapter(global.db);
-    const blogs = await adapter.getAllBlogs();
+    const blogs = (await adapter.getAllBlogs()).map(blog => normalizeBlogImageFields(blog, req));
     
     log.info(`Found ${blogs.length} blogs in database`);
     
@@ -180,7 +211,7 @@ router.get('/admin/all', verifyToken, async (req, res) => {
 router.get('/post/:slug', async (req, res) => {
   try {
     const adapter = new DatabaseAdapter(global.db);
-    const blog = await adapter.getBlogBySlug(req.params.slug);
+    const blog = normalizeBlogImageFields(await adapter.getBlogBySlug(req.params.slug), req);
     
     if (blog) {
       // Increment view count
