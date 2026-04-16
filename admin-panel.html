@@ -404,8 +404,20 @@
                 <input type="date" id="blog-post-date" class="form-input" required>
               </div>
               <div class="form-group">
+                <label class="form-label">Custom URL Slug (Optional)</label>
+                <input type="text" id="blog-slug" class="form-input" placeholder="my-custom-blog-url-slug">
+                <small style="display:block; margin-top:0.35rem; color:var(--text-3);">Leave empty to auto-generate from title.</small>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
                 <label class="form-label">Category</label>
                 <input type="text" id="blog-category" class="form-input" placeholder="General, Tutorial, Review">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Tags (comma-separated)</label>
+                <input type="text" id="blog-tags" class="form-input" placeholder="macbook, water-damage, repair">
               </div>
             </div>
 
@@ -1066,6 +1078,7 @@
     function collectDraftSnapshot() {
       return {
         title: document.getElementById('blog-title')?.value || '',
+        slug: document.getElementById('blog-slug')?.value || '',
         author: document.getElementById('blog-author')?.value || '',
         postDate: document.getElementById('blog-post-date')?.value || '',
         category: document.getElementById('blog-category')?.value || '',
@@ -1104,6 +1117,7 @@
       try {
         const draft = JSON.parse(raw);
         document.getElementById('blog-title').value = draft.title || '';
+        document.getElementById('blog-slug').value = draft.slug || '';
         document.getElementById('blog-author').value = draft.author || '';
         document.getElementById('blog-post-date').value = draft.postDate || todayForDateInput();
         document.getElementById('blog-category').value = draft.category || '';
@@ -1123,6 +1137,7 @@
 
     function collectBlogPayload(status) {
       const title = document.getElementById('blog-title').value.trim();
+      const customSlug = document.getElementById('blog-slug').value.trim();
       const author = document.getElementById('blog-author').value.trim();
       const postDate = document.getElementById('blog-post-date').value;
       const category = document.getElementById('blog-category').value.trim();
@@ -1144,6 +1159,7 @@
 
       return {
         title,
+        slug: customSlug,
         author,
         post_date: postDate,
         category,
@@ -1454,6 +1470,7 @@
 
       editingBlogId = id;
       document.getElementById('blog-title').value = blog.title;
+      document.getElementById('blog-slug').value = blog.slug || '';
       document.getElementById('blog-author').value = blog.author;
       document.getElementById('blog-post-date').value = formatDateForInput(blog.post_date || blog.published_at);
       document.getElementById('blog-author').value = blog.author;
@@ -1502,6 +1519,7 @@
       editingBlogId = null;
       document.getElementById('form-title').textContent = 'Create New Post';
       document.getElementById('blog-title').value = '';
+      document.getElementById('blog-slug').value = '';
       document.getElementById('blog-author').value = '';
       document.getElementById('blog-post-date').value = todayForDateInput();
       document.getElementById('blog-category').value = '';
@@ -1545,6 +1563,7 @@
       const blogForm = document.getElementById('blog-form');
       const trackedFieldIds = [
         'blog-title',
+        'blog-slug',
         'blog-author',
         'blog-post-date',
         'blog-category',

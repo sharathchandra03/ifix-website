@@ -211,10 +211,11 @@ class DatabaseAdapter {
 
         const [result] = await connection.query(
           `UPDATE blog_posts 
-           SET title = ?, content = ?, author = ?, author_profile_picture = ?, category = ?, tags = ?, featured_image = ?, excerpt = ?, post_date = ?, scheduled_at = ?, is_trending = ?, status = ?, published_at = ?
+           SET title = ?, slug = ?, content = ?, author = ?, author_profile_picture = ?, category = ?, tags = ?, featured_image = ?, excerpt = ?, post_date = ?, scheduled_at = ?, is_trending = ?, status = ?, published_at = ?
            WHERE id = ?`,
           [
             data.title,
+            data.slug,
             data.content,
             data.author,
             data.author_profile_picture || '',

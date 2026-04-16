@@ -144,6 +144,20 @@ async function initializeDatabase() {
 
     await connection.execute(`ALTER TABLE blog_posts MODIFY status ENUM('draft', 'published', 'scheduled') DEFAULT 'draft'`);
 
+    // Blog Media Table (persistent image storage in DB)
+    await connection.execute(`
+      CREATE TABLE IF NOT EXISTS blog_media (
+        id BIGINT AUTO_INCREMENT PRIMARY KEY,
+        original_name VARCHAR(500),
+        mime_type VARCHAR(120) NOT NULL,
+        file_size INT NOT NULL,
+        image_data LONGBLOB NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_created_at (created_at)
+      )
+    `);
+    console.log('✅ Blog media table created');
+
     // Contact Forms Table
     await connection.execute(`
       CREATE TABLE IF NOT EXISTS contacts (

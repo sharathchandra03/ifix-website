@@ -43,16 +43,7 @@ function imageFileFilter(req, file, cb) {
   cb(null, true);
 }
 
-const storage = useCloudinary
-  ? multer.memoryStorage()
-  : multer.diskStorage({
-    destination: (req, file, cb) => cb(null, uploadDir),
-    filename: (req, file, cb) => {
-      const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-      cb(null, `${uniqueSuffix}${path.extname(file.originalname)}`);
-    }
-  }
-);
+const storage = multer.memoryStorage();
 
 const upload = multer({
   storage,
@@ -70,20 +61,37 @@ async function uploadToCloudinary(fileBuffer, mimeType) {
   });
 }
 
-function buildLocalImageUrl(req, fileName) {
-  const baseUrl = `${req.protocol}://${req.get('host')}`;
-  return `${baseUrl}/uploads/blogs/${fileName}`;
+async function ensureBlogMediaTable(connection) {
+  await connection.query(`
+    CREATE TABLE IF NOT EXISTS blog_media (
+      id BIGINT AUTO_INCREMENT PRIMARY KEY,
+      original_name VARCHAR(500),
+      mime_type VARCHAR(120) NOT NULL,
+      file_size INT NOT NULL,
+      image_data LONGBLOB NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      INDEX idx_created_at (created_at)
+    )
+  `);
 }
 
-async function saveBufferToLocal(req, file) {
-  const extension = path.extname(file.originalname || '') || '.jpg';
-  const fileName = `${Date.now()}-${Math.round(Math.random() * 1e9)}${extension}`;
-  const filePath = path.join(uploadDir, fileName);
-  await fs.promises.writeFile(filePath, file.buffer);
-  return {
-    url: buildLocalImageUrl(req, fileName),
-    storage: 'local'
-  };
+async function saveImageToDatabase(req, file) {
+  const connection = await global.db.getConnection();
+  try {
+    await ensureBlogMediaTable(connection);
+    const [result] = await connection.query(
+      `INSERT INTO blog_media (original_name, mime_type, file_size, image_data) VALUES (?, ?, ?, ?)`,
+      [file.originalname || '', file.mimetype || 'image/jpeg', file.size || (file.buffer ? file.buffer.length : 0), file.buffer]
+    );
+
+    const baseUrl = `${req.protocol}://${req.get('host')}`;
+    return {
+      url: `${baseUrl}/api/blog/media/${result.insertId}`,
+      storage: 'database'
+    };
+  } finally {
+    connection.release();
+  }
 }
 
 function effectiveDateColumn() {
@@ -98,6 +106,16 @@ function buildSlugFromTitle(title) {
     .replace(/[^\w-]/g, '');
 
   return base || `post-${Date.now()}`;
+}
+
+function normalizeSlugInput(slugInput) {
+  return String(slugInput || '')
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9-]/g, '')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
 }
 
 async function generateUniqueSlug(connection, initialSlug) {
@@ -176,9 +194,35 @@ router.get('/post/:slug', async (req, res) => {
   }
 });
 
+// GET blog media by ID (stored in DB)
+router.get('/media/:id', async (req, res) => {
+  let connection;
+  try {
+    connection = await global.db.getConnection();
+    await ensureBlogMediaTable(connection);
+    const [rows] = await connection.query(
+      'SELECT mime_type, image_data FROM blog_media WHERE id = ? LIMIT 1',
+      [req.params.id]
+    );
+
+    if (!rows.length) {
+      return res.status(404).json({ error: 'Image not found' });
+    }
+
+    res.setHeader('Content-Type', rows[0].mime_type || 'image/jpeg');
+    res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    return res.send(rows[0].image_data);
+  } catch (error) {
+    log.error('Failed to fetch media', error.message);
+    return res.status(500).json({ error: error.message });
+  } finally {
+    if (connection) connection.release();
+  }
+});
+
 // POST create blog (admin only)
 router.post('/', verifyToken, async (req, res) => {
-  const { title, content, author, category, tags, featured_image, author_profile_picture, excerpt, post_date, scheduled_at, is_trending } = req.body;
+  const { title, slug: customSlugRaw, content, author, category, tags, featured_image, author_profile_picture, excerpt, post_date, scheduled_at, is_trending } = req.body;
   const status = req.body.status || 'draft';
   let connection;
 
@@ -190,8 +234,19 @@ router.post('/', verifyToken, async (req, res) => {
     log.info('Creating new blog', { title, status, featured_image: featured_image ? '✅ Yes' : '❌ No' });
     
     connection = await global.db.getConnection();
-    const baseSlug = buildSlugFromTitle(title);
-    const slug = await generateUniqueSlug(connection, baseSlug);
+    const customSlug = normalizeSlugInput(customSlugRaw);
+    let slug;
+
+    if (customSlug) {
+      const [existingSlug] = await connection.query('SELECT id FROM blog_posts WHERE slug = ? LIMIT 1', [customSlug]);
+      if (existingSlug.length > 0) {
+        return res.status(409).json({ error: 'This custom slug is already in use. Please choose another.' });
+      }
+      slug = customSlug;
+    } else {
+      const baseSlug = buildSlugFromTitle(title);
+      slug = await generateUniqueSlug(connection, baseSlug);
+    }
     
     log.info('Generated slug:', slug);
     
@@ -229,7 +284,7 @@ router.post('/', verifyToken, async (req, res) => {
 
 // PUT update blog (admin only)
 router.put('/:id', verifyToken, async (req, res) => {
-  const { title, content, author, category, tags, featured_image, author_profile_picture, excerpt, post_date, scheduled_at, status, is_trending } = req.body;
+  const { title, slug: customSlugRaw, content, author, category, tags, featured_image, author_profile_picture, excerpt, post_date, scheduled_at, status, is_trending } = req.body;
 
   if (status === 'scheduled' && !scheduled_at) {
     return res.status(400).json({ error: 'scheduled_at is required when status is scheduled' });
@@ -237,10 +292,33 @@ router.put('/:id', verifyToken, async (req, res) => {
 
   try {
     log.info('Updating blog ID:', req.params.id);
-    
+
     const adapter = new DatabaseAdapter(global.db);
+    const current = await adapter.getBlogById(req.params.id);
+    if (!current) {
+      return res.status(404).json({ error: 'Blog not found' });
+    }
+
+    let nextSlug = current.slug;
+    const customSlug = normalizeSlugInput(customSlugRaw);
+    if (customSlug) {
+      const connection = await global.db.getConnection();
+      try {
+        const [rows] = await connection.query('SELECT id FROM blog_posts WHERE slug = ? AND id <> ? LIMIT 1', [customSlug, req.params.id]);
+        if (rows.length > 0) {
+          return res.status(409).json({ error: 'This custom slug is already in use. Please choose another.' });
+        }
+        nextSlug = customSlug;
+      } finally {
+        connection.release();
+      }
+    } else if (!current.slug) {
+      nextSlug = buildSlugFromTitle(title);
+    }
+    
     const updated = await adapter.updateBlog(req.params.id, {
       title,
+      slug: nextSlug,
       content,
       author,
       author_profile_picture,
@@ -268,34 +346,21 @@ router.post('/upload-image', verifyToken, upload.single('image'), async (req, re
     return res.status(400).json({ error: 'No image uploaded' });
   }
 
-  if (useCloudinary) {
-    try {
-      const uploaded = await uploadToCloudinary(req.file.buffer, req.file.mimetype || 'image/jpeg');
-      return res.json({
-        success: true,
-        url: uploaded.secure_url,
-        storage: 'cloudinary'
-      });
-    } catch (error) {
-      log.warn('Cloudinary upload failed, falling back to local storage', error.message);
-      if (req.file.buffer) {
-        try {
-          const fallback = await saveBufferToLocal(req, req.file);
-          return res.json({ success: true, url: fallback.url, storage: fallback.storage });
-        } catch (localError) {
-          return res.status(500).json({ error: `Cloudinary upload failed: ${error.message}. Local fallback failed: ${localError.message}` });
-        }
+  try {
+    const uploaded = await saveImageToDatabase(req, req.file);
+    return res.json({ success: true, url: uploaded.url, storage: uploaded.storage });
+  } catch (error) {
+    log.error('Database image upload failed', error.message);
+    if (useCloudinary) {
+      try {
+        const uploaded = await uploadToCloudinary(req.file.buffer, req.file.mimetype || 'image/jpeg');
+        return res.json({ success: true, url: uploaded.secure_url, storage: 'cloudinary' });
+      } catch (cloudError) {
+        return res.status(500).json({ error: `Database upload failed: ${error.message}. Cloudinary fallback failed: ${cloudError.message}` });
       }
-      return res.status(500).json({ error: `Cloudinary upload failed: ${error.message}` });
     }
+    return res.status(500).json({ error: `Database upload failed: ${error.message}` });
   }
-
-  const localUrl = buildLocalImageUrl(req, req.file.filename);
-  res.json({
-    success: true,
-    url: localUrl,
-    storage: 'local'
-  });
 });
 
 // DELETE blog (admin only)

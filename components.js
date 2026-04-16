@@ -2,19 +2,22 @@
    Light theme · Brand blue #3478F6 · New logo
 */
 (function () {
-  const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+  const currentPath = (window.location.pathname || '/').replace(/\/+$/, '') || '/';
 
   const navLinks = [
-    { href: 'index.html',   label: 'Home' },
-    { href: 'courses.html', label: 'Courses' },
-    { href: 'shop.html',    label: 'Shop' },
-    { href: 'blog.html',    label: 'Blog' },
-    { href: 'about.html',   label: 'About Us' },
-    { href: 'contact.html', label: 'Contact Us' },
+    { href: '/',         label: 'Home' },
+    { href: '/courses',  label: 'Courses' },
+    { href: '/shop',     label: 'Shop' },
+    { href: '/blog',     label: 'Blog' },
+    { href: '/about',    label: 'About Us' },
+    { href: '/contact',  label: 'Contact Us' },
   ];
 
   function isActive(href) {
-    return currentPage === href || (currentPage === '' && href === 'index.html');
+    if (href === '/blog') {
+      return currentPath === '/blog' || currentPath.startsWith('/blog/');
+    }
+    return currentPath === href;
   }
 
   function buildNavHTML() {
@@ -28,12 +31,12 @@
     return `
       <nav class="navbar" id="navbar">
         <div class="navbar__inner">
-          <a href="index.html" class="navbar__logo">
-            <img src="Assets/iFix Academy logo.png" alt="iFix Academy" class="navbar__logo-img">
+          <a href="/" class="navbar__logo">
+            <img src="/Assets/iFix Academy logo.png" alt="iFix Academy" class="navbar__logo-img">
           </a>
           <div class="navbar__links">${links}</div>
           <div class="navbar__actions">
-            <a href="contact.html#contact-form" class="btn btn--enroll">Enroll Now</a>
+            <a href="/contact#contact-form" class="btn btn--enroll">Enroll Now</a>
             <button class="hamburger" id="hamburger" aria-label="Open menu">
               <span></span><span></span><span></span>
             </button>
@@ -43,7 +46,7 @@
       <div class="mobile-menu" id="mobileMenu">
         <button class="mobile-menu__close" id="mobileClose">&#x2715;</button>
         <div class="mobile-menu__links">${mobileLinks}</div>
-        <a href="contact.html#contact-form" class="btn btn--primary mobile-menu__cta">Enroll Now</a>
+        <a href="/contact#contact-form" class="btn btn--primary mobile-menu__cta">Enroll Now</a>
       </div>
       <div class="mobile-overlay" id="mobileOverlay"></div>
     `;
@@ -54,7 +57,7 @@
       <footer class="footer">
         <div class="footer__inner">
           <div class="footer__brand">
-            <a href="index.html"><img src="Assets/iFix Academy logo.png" alt="iFix Academy" class="footer__logo-img"></a>
+            <a href="/"><img src="/Assets/iFix Academy logo.png" alt="iFix Academy" class="footer__logo-img"></a>
             <p class="footer__tagline">India's most hands-on repair training academy.<br>Get certified. Get hired. Build your future.</p>
             <div class="footer__social">
               <a href="https://www.youtube.com/channel/UCEFbnYCVxll7Q3OPKb1B6jQ" target="_blank" class="footer__social-link" aria-label="YouTube">
@@ -71,22 +74,22 @@
           <div class="footer__col">
             <h4 class="footer__col-title">Quick Links</h4>
             <ul class="footer__list">
-              <li><a href="index.html"   class="footer__link">Home</a></li>
-              <li><a href="courses.html" class="footer__link">All Courses</a></li>
-              <li><a href="shop.html"    class="footer__link">Shop</a></li>
-              <li><a href="blog.html"    class="footer__link">Blog</a></li>
-              <li><a href="about.html"   class="footer__link">About Us</a></li>
-              <li><a href="contact.html" class="footer__link">Contact Us</a></li>
+              <li><a href="/"         class="footer__link">Home</a></li>
+              <li><a href="/courses"  class="footer__link">All Courses</a></li>
+              <li><a href="/shop"     class="footer__link">Shop</a></li>
+              <li><a href="/blog"     class="footer__link">Blog</a></li>
+              <li><a href="/about"    class="footer__link">About Us</a></li>
+              <li><a href="/contact"  class="footer__link">Contact Us</a></li>
             </ul>
           </div>
           <div class="footer__col">
             <h4 class="footer__col-title">Courses</h4>
             <ul class="footer__list">
-              <li><a href="courses.html#mobile"  class="footer__link">Mobile Repairing</a></li>
-              <li><a href="courses.html#laptop"  class="footer__link">Laptop Repairing</a></li>
-              <li><a href="courses.html#iphone"  class="footer__link">iPhone Repairing</a></li>
-              <li><a href="courses.html#display" class="footer__link">Display Repairing</a></li>
-              <li><a href="courses.html#online"  class="footer__link">Online Learning</a></li>
+              <li><a href="/courses#mobile"  class="footer__link">Mobile Repairing</a></li>
+              <li><a href="/courses#laptop"  class="footer__link">Laptop Repairing</a></li>
+              <li><a href="/courses#iphone"  class="footer__link">iPhone Repairing</a></li>
+              <li><a href="/courses#display" class="footer__link">Display Repairing</a></li>
+              <li><a href="/courses#online"  class="footer__link">Online Learning</a></li>
             </ul>
           </div>
           <div class="footer__col">
