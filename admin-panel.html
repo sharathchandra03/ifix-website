@@ -1220,7 +1220,8 @@
       const tags = document.getElementById('blog-tags').value.trim();
       const featuredImage = document.getElementById('blog-featured-image').value.trim();
       const authorProfilePicture = document.getElementById('blog-author-profile-picture').value.trim();
-      const scheduledAt = document.getElementById('blog-scheduled-at').value;
+      const scheduledAtInput = document.getElementById('blog-scheduled-at').value;
+      const scheduledAt = scheduledAtInput ? new Date(scheduledAtInput).toISOString() : '';
       const isTrending = document.getElementById('blog-trending').checked;
       const excerpt = getEditorHtml('excerpt-editor');
       const content = serializeBlogEditorContent();
@@ -1229,7 +1230,7 @@
         throw new Error('Title, Author, Post Date, Excerpt, and Content are required.');
       }
 
-      if (status === 'scheduled' && !scheduledAt) {
+      if (status === 'scheduled' && !scheduledAtInput) {
         throw new Error('Choose a schedule date and time before scheduling.');
       }
 

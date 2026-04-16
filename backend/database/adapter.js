@@ -15,6 +15,19 @@ class DatabaseAdapter {
     const raw = String(value).trim();
     if (!raw) return null;
 
+    // If timezone is present (ISO with Z or +/-offset), normalize to UTC DATETIME.
+    if (/[zZ]$|[+-]\d{2}:?\d{2}$/.test(raw)) {
+      const parsedTz = new Date(raw);
+      if (Number.isNaN(parsedTz.getTime())) return null;
+      const yyyy = parsedTz.getUTCFullYear();
+      const mm = String(parsedTz.getUTCMonth() + 1).padStart(2, '0');
+      const dd = String(parsedTz.getUTCDate()).padStart(2, '0');
+      const hh = String(parsedTz.getUTCHours()).padStart(2, '0');
+      const min = String(parsedTz.getUTCMinutes()).padStart(2, '0');
+      const ss = String(parsedTz.getUTCSeconds()).padStart(2, '0');
+      return `${yyyy}-${mm}-${dd} ${hh}:${min}:${ss}`;
+    }
+
     // Accept values from datetime-local (YYYY-MM-DDTHH:mm)
     const withSpace = raw.replace('T', ' ');
 
@@ -40,6 +53,27 @@ class DatabaseAdapter {
     return `${yyyy}-${mm}-${dd} ${hh}:${min}:${ss}`;
   }
 
+  async publishDueScheduledBlogs() {
+    if (this.type !== 'mysql') {
+      throw new Error(`Unsupported database type: ${this.type}`);
+    }
+
+    const connection = await this.db.getConnection();
+    try {
+      const [result] = await connection.query(
+        `UPDATE blog_posts
+         SET status = 'published',
+             published_at = COALESCE(published_at, NOW())
+         WHERE status = 'scheduled'
+           AND scheduled_at IS NOT NULL
+           AND scheduled_at <= UTC_TIMESTAMP()`
+      );
+      return result.affectedRows || 0;
+    } finally {
+      connection.release();
+    }
+  }
+
   detectType() {
     if (this.db._pool) return 'mysql'; // mysql2/promise
     if (this.db.query && typeof this.db.query === 'function') return 'mysql'; // fallback
@@ -53,6 +87,7 @@ class DatabaseAdapter {
     console.log('[DB Adapter] Fetching all blogs');
     
     if (this.type === 'mysql') {
+      await this.publishDueScheduledBlogs();
       const connection = await this.db.getConnection();
       try {
         const query = `
@@ -78,6 +113,7 @@ class DatabaseAdapter {
     console.log('[DB Adapter] Fetching published blogs, limit:', limit);
     
     if (this.type === 'mysql') {
+      await this.publishDueScheduledBlogs();
       const connection = await this.db.getConnection();
       try {
         const query = `
@@ -106,6 +142,7 @@ class DatabaseAdapter {
     console.log('[DB Adapter] Fetching blog by slug:', slug);
     
     if (this.type === 'mysql') {
+      await this.publishDueScheduledBlogs();
       const connection = await this.db.getConnection();
       try {
         const [rows] = await connection.query(
