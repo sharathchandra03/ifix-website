@@ -5,6 +5,14 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const cloudinary = require('cloudinary').v2;
+const DatabaseAdapter = require('../database/adapter');
+
+// Simple logging helper
+const log = {
+  info: (msg, data) => console.log(`[BLOG] ✅ ${msg}`, data || ''),
+  warn: (msg, data) => console.warn(`[BLOG] ⚠️ ${msg}`, data || ''),
+  error: (msg, data) => console.error(`[BLOG] ❌ ${msg}`, data || '')
+};
 
 const useCloudinary = Boolean(
   process.env.CLOUDINARY_CLOUD_NAME &&
@@ -100,18 +108,11 @@ function isPublishedFilter() {
 // GET all published blogs
 router.get('/', async (req, res) => {
   try {
-    const connection = await global.db.getConnection();
-    const query = `
-      SELECT id, title, slug, content, author, author_profile_picture, featured_image, excerpt, post_date, scheduled_at, category, tags, views, published_at, is_trending 
-      FROM blog_posts 
-      WHERE ${isPublishedFilter()}
-      ORDER BY COALESCE(post_date, published_at, scheduled_at, created_at) DESC 
-      LIMIT 10
-    `;
-    const [rows] = await connection.query(query);
-    connection.release();
-    res.json(rows);
+    const adapter = new DatabaseAdapter(global.db);
+    const blogs = await adapter.getPublishedBlogs(10);
+    res.json(blogs);
   } catch (error) {
+    log.error('Failed to fetch published blogs', error.message);
     res.status(500).json({ error: error.message });
   }
 });
@@ -119,40 +120,44 @@ router.get('/', async (req, res) => {
 // GET all blogs for admin dashboard
 router.get('/admin/all', verifyToken, async (req, res) => {
   try {
-    const connection = await global.db.getConnection();
-    const query = `
-      SELECT id, title, slug, content, author, author_profile_picture, featured_image, excerpt, post_date, scheduled_at, category, tags, views, status, published_at, is_trending 
-      FROM blog_posts 
-      ORDER BY created_at DESC
-    `;
-    const [rows] = await connection.query(query);
-    connection.release();
-    res.json(rows);
+    const adapter = new DatabaseAdapter(global.db);
+    const blogs = await adapter.getAllBlogs();
+    
+    log.info(`Found ${blogs.length} blogs in database`);
+    
+    if (blogs.length > 0) {
+      log.info('Sample blog:', {
+        id: blogs[0].id,
+        title: blogs[0].title,
+        status: blogs[0].status,
+        featured_image: blogs[0].featured_image ? '✅ Yes' : '❌ No'
+      });
+    }
+    
+    res.json(blogs);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    log.error('Failed to fetch blogs', error.message);
+    res.status(500).json({ 
+      error: error.message,
+      details: error.stack 
+    });
   }
 });
 
 // GET single blog by slug
 router.get('/post/:slug', async (req, res) => {
   try {
-    const connection = await global.db.getConnection();
-    const [rows] = await connection.query(
-      `SELECT * FROM blog_posts WHERE slug = ? AND ${isPublishedFilter()}`,
-      [req.params.slug]
-    );
+    const adapter = new DatabaseAdapter(global.db);
+    const blog = await adapter.getBlogBySlug(req.params.slug);
     
-    if (rows.length > 0) {
+    if (blog) {
       // Increment view count
-      await connection.query(
-        'UPDATE blog_posts SET views = views + 1 WHERE id = ?',
-        [rows[0].id]
-      );
+      await adapter.incrementViewCount(blog.id);
     }
     
-    connection.release();
-    res.json(rows[0] || {});
+    res.json(blog || {});
   } catch (error) {
+    log.error('Failed to fetch blog', error.message);
     res.status(500).json({ error: error.message });
   }
 });
@@ -161,39 +166,43 @@ router.get('/post/:slug', async (req, res) => {
 router.post('/', verifyToken, async (req, res) => {
   const { title, content, author, category, tags, featured_image, author_profile_picture, excerpt, post_date, scheduled_at, is_trending } = req.body;
   const status = req.body.status || 'draft';
-  const publishedAt = status === 'published' ? new Date() : null;
-  const scheduledAtValue = status === 'scheduled' ? (scheduled_at || null) : null;
   let connection;
 
   try {
+    log.info('Creating new blog', { title, status, featured_image: featured_image ? '✅ Yes' : '❌ No' });
+    
     connection = await global.db.getConnection();
     const baseSlug = buildSlugFromTitle(title);
     const slug = await generateUniqueSlug(connection, baseSlug);
-    const [result] = await connection.query(
-      `INSERT INTO blog_posts (title, slug, content, author, author_profile_picture, category, tags, featured_image, excerpt, post_date, scheduled_at, is_trending, status, published_at) 
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)` ,
-      [
-        title,
-        slug,
-        content,
-        author,
-        author_profile_picture || '',
-        category,
-        tags || '',
-        featured_image || '',
-        excerpt || '',
-        post_date || null,
-        scheduledAtValue,
-        is_trending ? 1 : 0,
-        status,
-        publishedAt
-      ]
-    );
-    res.status(201).json({ id: result.insertId, slug });
+    
+    log.info('Generated slug:', slug);
+    
+    const adapter = new DatabaseAdapter(global.db);
+    const result = await adapter.createBlog({
+      title,
+      slug,
+      content,
+      author,
+      author_profile_picture,
+      category,
+      tags,
+      featured_image,
+      excerpt,
+      post_date,
+      scheduled_at,
+      is_trending,
+      status
+    });
+    
+    log.info('Blog created successfully', { id: result.id, slug, featured_image: featured_image ? '✅ Yes' : '❌ No' });
+    
+    res.status(201).json(result);
   } catch (error) {
     if (error.code === 'ER_DUP_ENTRY') {
+      log.warn('Duplicate blog title');
       return res.status(409).json({ error: 'A blog with this title already exists. Try a different title.' });
     }
+    log.error('Failed to create blog', error.message);
     res.status(500).json({ error: error.message });
   } finally {
     if (connection) connection.release();
@@ -203,38 +212,31 @@ router.post('/', verifyToken, async (req, res) => {
 // PUT update blog (admin only)
 router.put('/:id', verifyToken, async (req, res) => {
   const { title, content, author, category, tags, featured_image, author_profile_picture, excerpt, post_date, scheduled_at, status, is_trending } = req.body;
-  let connection;
 
   try {
-    connection = await global.db.getConnection();
-    const published_at = status === 'published' ? new Date() : null;
-    const scheduledAtValue = status === 'scheduled' ? (scheduled_at || null) : null;
-    const [result] = await connection.query(
-      `UPDATE blog_posts 
-       SET title = ?, content = ?, author = ?, author_profile_picture = ?, category = ?, tags = ?, featured_image = ?, excerpt = ?, post_date = ?, scheduled_at = ?, is_trending = ?, status = ?, published_at = ?
-       WHERE id = ?`,
-      [
-        title,
-        content,
-        author,
-        author_profile_picture || '',
-        category,
-        tags || '',
-        featured_image || '',
-        excerpt || '',
-        post_date || null,
-        scheduledAtValue,
-        is_trending ? 1 : 0,
-        status,
-        published_at,
-        req.params.id
-      ]
-    );
-    res.json({ updated: result.affectedRows > 0 });
+    log.info('Updating blog ID:', req.params.id);
+    
+    const adapter = new DatabaseAdapter(global.db);
+    const updated = await adapter.updateBlog(req.params.id, {
+      title,
+      content,
+      author,
+      author_profile_picture,
+      category,
+      tags,
+      featured_image,
+      excerpt,
+      post_date,
+      scheduled_at,
+      is_trending,
+      status
+    });
+    
+    log.info('Blog updated:', { id: req.params.id, success: updated });
+    res.json({ updated });
   } catch (error) {
+    log.error('Failed to update blog', error.message);
     res.status(500).json({ error: error.message });
-  } finally {
-    if (connection) connection.release();
   }
 });
 
@@ -274,10 +276,13 @@ router.post('/upload-image', verifyToken, upload.single('image'), async (req, re
 // DELETE blog (admin only)
 router.delete('/:id', verifyToken, async (req, res) => {
   try {
-    const connection = await global.db.getConnection();
-    const [result] = await connection.query('DELETE FROM blog_posts WHERE id = ?', [req.params.id]);
-    connection.release();
-    res.json({ deleted: result.affectedRows > 0 });
+    log.info('Deleting blog ID:', req.params.id);
+    
+    const adapter = new DatabaseAdapter(global.db);
+    const deleted = await adapter.deleteBlog(req.params.id);
+    
+    log.info('Blog deleted:', { id: req.params.id, success: deleted });
+    res.json({ deleted });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

@@ -166,6 +166,25 @@
       color: var(--text-2);
       min-height: 54px;
     }
+    .content-block--image {
+      border: 1px solid var(--border-h);
+      border-radius: var(--r-lg);
+      padding: 0.75rem;
+      background: var(--bg-3);
+      position: relative;
+    }
+    .content-block--image img {
+      max-width: 100%;
+      height: auto;
+      border-radius: var(--r-md);
+      margin: 0.5rem 0;
+      display: block;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .content-block--image img:hover {
+      opacity: 0.9;
+    }
     .mini-panel { background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 1rem; }
     .mini-panel__title { font-weight: 700; margin-bottom: 0.8rem; color: var(--text); }
     .upload-row { display: flex; flex-direction: column; gap: 0.75rem; }
@@ -336,6 +355,11 @@
               <button type="button" class="publish-btn" onclick="saveBlog('published')">Publish Now</button>
             </div>
           </div>
+          
+          <!-- Auto-save indicator -->
+          <div id="auto-save-indicator" style="display: none; padding: 0.75rem 1rem; background: rgba(52, 199, 89, 0.1); border: 1px solid var(--green); border-radius: var(--r-md); color: var(--green); font-size: 0.9rem; margin-bottom: 1rem;">
+            ✅ Draft saved
+          </div>
 
           <form id="blog-form" onsubmit="event.preventDefault(); saveBlog('published'); return false;">
             <div class="form-row">
@@ -444,7 +468,7 @@
                       <option value="24px">XL</option>
                     </select>
                     <button type="button" class="tool-btn" onclick="showTableBuilder()">+ Table</button>
-                    <button type="button" class="tool-btn" onclick="document.getElementById('body-image-input').click()">+ Image</button>
+                    <button type="button" class="tool-btn" onclick="addImageBlock()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white;">+ Add Image</button>
                   </div>
                   <div id="blog-editor" class="editor-canvas" contenteditable="true" data-placeholder="Write your post body here..."></div>
                 </div>
@@ -663,6 +687,80 @@
       syncEditorValues();
     }
 
+    // Image Block Functions
+    function createImageBlock(imageUrl = '') {
+      const imageId = `image-block-${Date.now()}`;
+      const block = document.createElement('div');
+      block.className = 'content-block content-block--image';
+      block.dataset.blockType = 'image';
+      block.dataset.imageId = imageId;
+      
+      block.innerHTML = `
+        <div class="content-block__meta">
+          <span>Image</span>
+          <span style="font-size: 0.7rem; color: var(--text-3);">Click to replace</span>
+        </div>
+        ${imageUrl ? `<img id="${imageId}" src="${imageUrl}" alt="Blog image" style="max-width: 100%; border-radius: var(--r-md); margin: 0.5rem 0; cursor: pointer;" onclick="document.getElementById('image-block-upload-${Date.now()}').click()">` : `
+          <div style="border: 2px dashed var(--border-h); border-radius: var(--r-md); padding: 2rem; text-align: center; cursor: pointer; background: var(--bg-2); min-height: 150px; display: flex; align-items: center; justify-content: center;" id="${imageId}" onclick="this.nextElementSibling.click()">
+            <div>
+              <div style="font-size: 2rem; margin-bottom: 0.5rem;">📸</div>
+              <div style="color: var(--text-2); font-size: 0.9rem;">Click or drag to add image</div>
+            </div>
+          </div>
+        `}
+        <input type="file" id="image-block-upload-${Date.now()}" accept="image/*" style="display: none;">
+      `;
+      
+      return block;
+    }
+
+    async function addImageBlock() {
+      const editor = getEditor('blog-editor');
+      if (!editor) return;
+
+      const block = createImageBlock();
+      editor.appendChild(block);
+      
+      // Get the file input created in the block
+      const fileInput = block.querySelector('input[type="file"]');
+      
+      fileInput.addEventListener('change', async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        
+        try {
+          console.log('🖼️ Uploading image to block...');
+          const url = await uploadBlogImage(file);
+          
+          // Replace the placeholder with image
+          const imageContainer = block.querySelector('[data-block-type="image"]') || block.querySelector('[id^="image-block-"]');
+          const imgElement = block.querySelector('img');
+          
+          if (imgElement) {
+            imgElement.src = url;
+          } else {
+            const placeholder = block.querySelector('div[id^="image-block-"]');
+            if (placeholder) {
+              const imageId = placeholder.id;
+              placeholder.innerHTML = `<img id="${imageId}" src="${url}" alt="Blog image" style="max-width: 100%; border-radius: var(--r-md); margin: 0.5rem 0; cursor: pointer;">`;
+              placeholder.style.border = 'none';
+              placeholder.style.background = 'transparent';
+              placeholder.style.padding = '0';
+              placeholder.style.minHeight = 'auto';
+            }
+          }
+          
+          block.dataset.imageUrl = url;
+          syncEditorValues();
+        } catch (error) {
+          alert('Failed to upload image: ' + error.message);
+        }
+      });
+      
+      // Trigger file input
+      fileInput.click();
+    }
+
     function serializeBlogEditorContent() {
       const editor = getEditor('blog-editor');
       if (!editor) return '';
@@ -673,13 +771,24 @@
       }
 
       return blocks.map(block => {
-        const blockType = block.dataset.blockType === 'subheading' ? 'subheading' : 'paragraph';
-        const blockEditor = block.querySelector('.content-block__editor');
-        const blockHtml = (blockEditor?.innerHTML || '').trim();
-        const contentHtml = blockHtml || '';
-        return blockType === 'subheading'
-          ? `<h3>${contentHtml}</h3>`
-          : `<p>${contentHtml}</p>`;
+        const blockType = block.dataset.blockType;
+        
+        if (blockType === 'image') {
+          const img = block.querySelector('img');
+          const imageUrl = img?.src || block.dataset.imageUrl || '';
+          if (imageUrl) {
+            return `<figure style="margin: 1rem 0; text-align: center;"><img src="${imageUrl}" alt="Blog image" style="max-width: 100%; border-radius: var(--r-md); height: auto;"></figure>`;
+          }
+          return '';
+        } else if (blockType === 'subheading') {
+          const blockEditor = block.querySelector('.content-block__editor');
+          const blockHtml = (blockEditor?.innerHTML || '').trim();
+          return `<h3>${blockHtml}</h3>`;
+        } else {
+          const blockEditor = block.querySelector('.content-block__editor');
+          const blockHtml = (blockEditor?.innerHTML || '').trim();
+          return `<p>${blockHtml}</p>`;
+        }
       }).join('');
     }
 
@@ -852,18 +961,39 @@
     }
 
     async function uploadBlogImage(file) {
-      const formData = new FormData();
-      formData.append('image', file);
-      const response = await fetch(`${API_BASE}/blog/upload-image`, {
-        method: 'POST',
-        headers: authHeaders(),
-        body: formData
-      });
-      const data = await response.json();
-      if (!response.ok || !data.url) {
-        throw new Error(data.error || 'Image upload failed');
+      try {
+        console.log('📸 Uploading image:', file.name, `(${(file.size / 1024).toFixed(2)} KB)`);
+        
+        const formData = new FormData();
+        formData.append('image', file);
+        
+        const response = await fetch(`${API_BASE}/blog/upload-image`, {
+          method: 'POST',
+          headers: authHeaders(),
+          body: formData
+        });
+        
+        console.log('📊 Upload response status:', response.status);
+        
+        if (!response.ok) {
+          const errorData = await response.text();
+          console.error('❌ Upload error response:', errorData);
+          throw new Error(`Upload failed: ${response.status} - ${errorData}`);
+        }
+        
+        const data = await response.json();
+        console.log('✅ Image uploaded successfully:', data.url);
+        console.log('📍 Storage type:', data.storage);
+        
+        if (!data.url) {
+          throw new Error(data.error || 'Image upload failed - no URL returned');
+        }
+        
+        return data.url;
+      } catch (error) {
+        console.error('🔴 Image upload failed:', error);
+        throw error;
       }
-      return data.url;
     }
 
     function syncEditorValues() {
@@ -1018,9 +1148,21 @@
       try {
         document.getElementById('blog-status').value = status;
         const payload = collectBlogPayload(status);
+        
+        console.log('💾 Saving blog with status:', status);
+        console.log('📝 Payload:', {
+          title: payload.title,
+          author: payload.author,
+          status: payload.status,
+          featured_image: payload.featured_image ? '✅ Present' : '❌ Missing',
+          excerpt: payload.excerpt ? `${payload.excerpt.length} chars` : '❌ Empty',
+          content: payload.content ? `${payload.content.length} chars` : '❌ Empty'
+        });
 
         const method = editingBlogId ? 'PUT' : 'POST';
         const url = editingBlogId ? `${API_BASE}/blog/${editingBlogId}` : `${API_BASE}/blog`;
+        
+        console.log(`${method === 'POST' ? '➕' : '✏️'} ${method} ${url}`);
 
         const response = await fetch(url, {
           method,
@@ -1028,11 +1170,16 @@
           body: JSON.stringify(payload)
         });
 
+        console.log('📊 Response status:', response.status);
+        
         const data = await response.json();
+        console.log('📦 Response data:', data);
+        
         if (!response.ok) {
-          throw new Error(data.error || 'Unknown error');
+          throw new Error(data.error || `Server error: ${response.status}`);
         }
 
+        console.log(`✅ Blog ${method === 'POST' ? 'created' : 'updated'} successfully!`);
         alert(status === 'published' ? 'Blog published successfully!' : status === 'scheduled' ? 'Blog scheduled successfully!' : 'Draft saved successfully!');
         clearDraftSnapshot();
         cancelEdit();
@@ -1040,6 +1187,7 @@
         updateStats();
         switchTab('blogs');
       } catch (error) {
+        console.error('🔴 Error saving blog:', error);
         persistDraftSnapshot();
         alert('Error: ' + error.message);
       } finally {
@@ -1125,26 +1273,61 @@
     // Load Blogs
     async function loadBlogs() {
       try {
+        const requestHeaders = authHeaders();
+        console.log('📡 Loading blogs from:', `${API_BASE}/blog/admin/all`);
+        console.log('🔐 Auth headers:', requestHeaders);
+        
         const res = await fetch(`${API_BASE}/blog/admin/all`, {
-          headers: authHeaders()
+          headers: requestHeaders
         });
+        
+        console.log('📊 Response status:', res.status, res.statusText);
+        
+        if (!res.ok) {
+          const errorText = await res.text();
+          console.error('❌ API Error Response:', errorText);
+          throw new Error(`API Error: ${res.status} ${res.statusText} - ${errorText}`);
+        }
+        
         allBlogs = await res.json();
+        console.log('✅ Blogs loaded successfully. Count:', allBlogs.length);
+        console.table(allBlogs.map(b => ({ id: b.id, title: b.title, status: b.status })));
+        
+        if (allBlogs.length === 0) {
+          console.warn('⚠️ No blogs found in database. Check blog_posts table.');
+        }
+        
         renderBlogsTable();
       } catch (e) {
-        console.error('Error loading blogs:', e);
+        console.error('🔴 Error loading blogs:', e);
+        alert(`Error loading blogs:\n${e.message}\n\nCheck browser console for details.`);
       }
     }
 
     // Render Blogs Table
     function renderBlogsTable() {
       const tbody = document.getElementById('blogs-table');
+      
+      if (!allBlogs || allBlogs.length === 0) {
+        console.warn('⚠️ No blogs to render');
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-2);">
+              No blog posts found. Create a new post to get started!
+            </td>
+          </tr>
+        `;
+        return;
+      }
+      
+      console.log('🎨 Rendering', allBlogs.length, 'blogs');
       tbody.innerHTML = allBlogs.map(blog => `
         <tr>
-          <td><strong>${blog.title}</strong></td>
-          <td>${blog.category || '-'}</td>
-          <td><span class="status-badge ${blog.status}">${blog.status}</span></td>
-          <td>${blog.views}</td>
-          <td>${blog.author}</td>
+          <td><strong>${escapeHtml(blog.title)}</strong></td>
+          <td>${escapeHtml(blog.category || '-')}</td>
+          <td><span class="status-badge ${blog.status}">${escapeHtml(blog.status)}</span></td>
+          <td>${blog.views || 0}</td>
+          <td>${escapeHtml(blog.author)}</td>
           <td>
             <div class="action-buttons">
               <button class="action-btn edit" onclick="editBlog(${blog.id})">Edit</button>
@@ -1362,6 +1545,55 @@
 
     // Initialize
     setupEditors();
+    
+    // Auto-save draft every 30 seconds
+    let autoSaveInterval;
+    let lastAutoSaveTime = 0;
+    function setupAutoSave() {
+      autoSaveInterval = setInterval(() => {
+        if (!editingBlogId && !document.getElementById('blog-title').value.trim()) return; // Don't save empty blogs
+        
+        try {
+          persistDraftSnapshot();
+          const indicator = document.getElementById('auto-save-indicator');
+          if (indicator) {
+            indicator.innerHTML = '✅ Draft saved at ' + new Date().toLocaleTimeString();
+            indicator.style.display = 'block';
+            setTimeout(() => indicator.style.display = 'none', 3000);
+          }
+        } catch (e) {
+          console.log('Auto-save skipped:', e.message);
+        }
+      }, 30000); // Every 30 seconds
+    }
+    
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      // Ctrl+S or Cmd+S for save draft
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        if (document.getElementById('admin-view').style.display !== 'none') {
+          console.log('💾 Keyboard shortcut: Saving draft...');
+          persistDraftSnapshot();
+          alert('Draft saved!');
+        }
+      }
+      
+      // Ctrl+Shift+P or Cmd+Shift+P for preview
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'P') {
+        e.preventDefault();
+        if (document.getElementById('admin-view').style.display !== 'none') {
+          console.log('👁️ Keyboard shortcut: Opening preview...');
+          try {
+            openPreview();
+          } catch (err) {
+            alert('Fill required fields before previewing');
+          }
+        }
+      }
+    });
+    
+    setupAutoSave();
     checkAuth();
   </script>
 </body>
