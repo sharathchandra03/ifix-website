@@ -547,6 +547,13 @@
       };
     }
 
+    function handleUnauthorized(message = 'Your session expired. Please login again.') {
+      localStorage.removeItem('admin_token');
+      token = null;
+      showLoginView();
+      showLoginMessage('error', message);
+    }
+
     function escapeHtml(value) {
       return String(value || '')
         .replace(/&/g, '&amp;')
@@ -974,6 +981,11 @@
         });
         
         console.log('📊 Upload response status:', response.status);
+
+        if (response.status === 401) {
+          handleUnauthorized('Session expired during image upload. Please login again.');
+          throw new Error('Invalid or expired token');
+        }
         
         if (!response.ok) {
           const errorData = await response.text();
@@ -1171,6 +1183,11 @@
         });
 
         console.log('📊 Response status:', response.status);
+
+        if (response.status === 401) {
+          handleUnauthorized('Session expired while saving blog. Please login again.');
+          throw new Error('Invalid or expired token');
+        }
         
         const data = await response.json();
         console.log('📦 Response data:', data);
@@ -1197,11 +1214,32 @@
     }
 
     // Check if logged in
-    function checkAuth() {
-      if (token) {
-        showAdminDashboard();
-      } else {
+    async function checkAuth() {
+      if (!token || token === 'undefined' || token === 'null') {
+        token = null;
+        localStorage.removeItem('admin_token');
         showLoginView();
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/auth/verify`, {
+          headers: authHeaders()
+        });
+
+        if (res.status === 401) {
+          handleUnauthorized('Invalid or expired session. Please login again.');
+          return;
+        }
+
+        if (!res.ok) {
+          throw new Error(`Verify failed: ${res.status}`);
+        }
+
+        showAdminDashboard();
+      } catch (error) {
+        console.error('Auth verification failed:', error);
+        handleUnauthorized('Unable to verify session. Please login again.');
       }
     }
 
@@ -1221,14 +1259,21 @@
 
         const data = await res.json();
 
-        if (data.success || data.token) {
+        if (data.token) {
           token = data.token;
           localStorage.setItem('admin_token', token);
-          showLoginMessage('success', isSetupMode ? 'Admin account created!' : 'Logged in successfully!');
+          showLoginMessage('success', 'Logged in successfully!');
           setTimeout(() => {
             isSetupMode = false;
             checkAuth();
-          }, 1500);
+          }, 700);
+        } else if (isSetupMode && data.success) {
+          showLoginMessage('success', 'Admin account created. Please login now.');
+          isSetupMode = false;
+          document.querySelector('.login-box__title').textContent = 'Admin Panel';
+          document.querySelector('.login-box__subtitle').textContent = 'Blog & Content Management';
+          document.querySelector('button[type="submit"]').textContent = 'Login';
+          document.getElementById('password').value = '';
         } else {
           showLoginMessage('error', data.error || 'Login failed');
         }
@@ -1282,6 +1327,11 @@
         });
         
         console.log('📊 Response status:', res.status, res.statusText);
+
+        if (res.status === 401) {
+          handleUnauthorized('Session expired while loading admin blogs. Please login again.');
+          return;
+        }
         
         if (!res.ok) {
           const errorText = await res.text();
@@ -1383,6 +1433,11 @@
           method: 'DELETE',
           headers: { 'Authorization': `Bearer ${token}` }
         });
+
+        if (res.status === 401) {
+          handleUnauthorized('Session expired while deleting blog. Please login again.');
+          return;
+        }
 
         const data = await res.json();
         if (data.deleted) {

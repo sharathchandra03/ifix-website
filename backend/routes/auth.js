@@ -74,10 +74,17 @@ router.post('/register-admin', async (req, res) => {
     );
     connection.release();
 
+    const token = jwt.sign(
+      { userId: result.insertId, username, role: 'admin' },
+      process.env.JWT_SECRET || 'ifix_secret_key',
+      { expiresIn: '24h' }
+    );
+
     res.status(201).json({
       success: true,
       message: 'Admin user created successfully',
-      userId: result.insertId
+      userId: result.insertId,
+      token
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
