@@ -121,6 +121,11 @@ Object.entries(htmlRoutes).forEach(([route, fileName]) => {
   });
 });
 
+// Dedicated blog slug route for SEO-friendly URLs
+app.get('/blog/:slug', (req, res) => {
+  res.sendFile(path.join(frontendRoot, 'blog.html'));
+});
+
 async function ensureDefaultAdmin() {
   const adminUsername = process.env.ADMIN_USERNAME;
   const adminPassword = process.env.ADMIN_PASSWORD;
