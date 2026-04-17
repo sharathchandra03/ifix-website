@@ -1283,9 +1283,6 @@
           </article>
         `).join('');
 
-        if (videos[0]?.id) {
-          playHomeVideo(videos[0].id, videos[0].title);
-        }
       } catch (error) {
         renderFallbackVideos(grid);
       }
