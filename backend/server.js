@@ -103,8 +103,10 @@ app.get('/api/health', (req, res) => {
 // Frontend page routes for direct navigation on Render
 const htmlRoutes = {
   '/': 'index.html',
-  '/about': 'about.html',
-  '/about.html': 'about.html',
+  '/about': 'Our Story.html',
+  '/about.html': 'Our Story.html',
+  '/our-story': 'Our Story.html',
+  '/Our Story.html': 'Our Story.html',
   '/courses': 'courses.html',
   '/courses.html': 'courses.html',
   '/shop': 'shop.html',
