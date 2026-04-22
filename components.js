@@ -8,7 +8,7 @@
     { href: '/',         label: 'Home' },
     { href: '/courses',  label: 'Training' },
     { href: '/shop',     label: 'Shop' },
-    { href: '/blog',     label: 'Blog' },
+    { href: '/blog',     label: 'Blogs' },
     { href: '/about',    label: 'Our Story' },
     { href: 'https://ifixindia.in/', label: 'Service' },
     { href: '/contact',  label: 'Contact Us' },
@@ -37,7 +37,7 @@
           </a>
           <div class="navbar__links">${links}</div>
           <div class="navbar__actions">
-            <a href="/contact#contact-form" class="btn btn--enroll">Enroll Now</a>
+            <a href="/contact#contact-form" class="btn btn--enroll">Book Free Demo Class</a>
             <button class="hamburger" id="hamburger" aria-label="Open menu">
               <span></span><span></span><span></span>
             </button>
@@ -47,7 +47,7 @@
       <div class="mobile-menu" id="mobileMenu">
         <button class="mobile-menu__close" id="mobileClose">&#x2715;</button>
         <div class="mobile-menu__links">${mobileLinks}</div>
-        <a href="/contact#contact-form" class="btn btn--primary mobile-menu__cta">Enroll Now</a>
+        <a href="/contact#contact-form" class="btn btn--primary mobile-menu__cta">Book Free Demo</a>
       </div>
       <div class="mobile-overlay" id="mobileOverlay"></div>
     `;

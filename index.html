@@ -35,7 +35,8 @@
     }
     .hero__left {
       position: relative; z-index: 1;
-      padding: clamp(2.5rem,6vw,6rem) clamp(2rem,4vw,3rem) clamp(2.5rem,6vw,6rem) clamp(2rem,7vw,6rem);
+      align-self: start;
+      padding: clamp(1.25rem,3vw,2.6rem) clamp(2rem,4vw,3rem) clamp(2.5rem,6vw,6rem) clamp(2rem,7vw,6rem);
     }
     .hero__eyebrow {
       display: inline-flex; align-items: center; gap: 0.5rem;
@@ -46,15 +47,22 @@
     @keyframes blink { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.35;transform:scale(.65)} }
 
     .hero__headline {
-      font-weight: 800; font-size: clamp(2.75rem,6.5vw,6rem);
-      line-height: 0.98; letter-spacing: -0.04em; color: var(--text); margin-bottom: 1.5rem;
+      font-weight: 800; font-size: clamp(2.1rem,4.9vw,4.85rem);
+      line-height: 1.04; letter-spacing: -0.04em; color: var(--text); margin-bottom: 1.1rem;
+      max-width: 11.5ch;
+      display: flex;
+      flex-direction: column;
+      gap: 0.17em;
     }
-    .hero__headline-line { display: block; overflow: hidden; padding-bottom: 0.06em; }
-    .hero__headline-line--accent { color: var(--accent); }
+    .hero__headline-line { display: block; overflow: hidden; padding-bottom: 0; }
+    .hero__headline-line--lead { font-size: 0.9em; white-space: nowrap; }
+    .hero__headline-line--accent { color: var(--accent); font-size: 0.98em; }
+    .hero__headline-line--compact { font-size: 0.84em; letter-spacing: -0.03em; line-height: 1.12; margin-top: 0.03em; }
+    .hero__headline-nowrap { white-space: nowrap; }
 
     .hero__sub {
       font-size: clamp(0.95rem,1.4vw,1.1rem); line-height: 1.75; color: var(--text-2);
-      max-width: 440px; margin-bottom: 2.25rem; opacity: 0;
+      max-width: 560px; margin-bottom: 2.25rem; opacity: 0;
     }
     .hero__ctas { display: flex; align-items: center; gap: 0.875rem; flex-wrap: wrap; margin-bottom: 3rem; opacity: 0; }
 
@@ -68,14 +76,14 @@
 
     /* RIGHT - Video */
     .hero__right {
-      position: relative; height: 100%; min-height: 100dvh;
-      display: flex; align-items: center; justify-content: center;
+      position: relative; height: 100%; min-height: 0;
+      display: flex; align-items: flex-start; justify-content: center;
       padding: 2rem clamp(2rem,5vw,4rem) 2rem 1.5rem;
       opacity: 0;
       background: var(--bg);
     }
     .hero__video-wrap {
-      position: relative; width: 100%; max-width: 480px;
+      position: relative; width: 100%; max-width: 430px;
       aspect-ratio: 9/16; border-radius: var(--r-2xl);
       overflow: hidden; box-shadow: 0 0 0 1px var(--border);
       background: #0f0f12;
@@ -112,11 +120,86 @@
     @keyframes sPulse { 0%,100%{opacity:.4;transform:scaleX(1)} 50%{opacity:1;transform:scaleX(.5)} }
 
     /* ════════════════════════════════════════
+       TRUST STRIP
+    ════════════════════════════════════════ */
+    .trust-strip {
+      background: var(--bg);
+      padding: 1rem 0 1.75rem;
+      position: relative;
+      z-index: 2;
+    }
+    .trust-strip__inner {
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(247,249,253,0.96));
+      border: 1px solid rgba(0,0,0,0.12);
+      border-radius: 1.5rem;
+      box-shadow: 0 12px 28px rgba(31, 20, 46, 0.06);
+      padding: 1.05rem 1.25rem;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.25rem;
+      align-items: center;
+    }
+    .trust-strip__label {
+      color: #9aa0ab;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .trust-strip__brand {
+      color: #4287E7;
+      font-weight: 800;
+    }
+    .trust-strip__content {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.85rem;
+      align-items: stretch;
+    }
+    .trust-strip__item {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      min-width: 0;
+      padding: 0.85rem 0.9rem;
+      border-radius: 1rem;
+      background: rgba(66,135,231,0.04);
+      border: 1px solid rgba(66,135,231,0.08);
+    }
+    .trust-strip__icon {
+      width: 34px;
+      height: 34px;
+      flex-shrink: 0;
+      border-radius: 0.8rem;
+      display: grid;
+      place-items: center;
+      background: rgba(66,135,231,0.12);
+      color: #4287E7;
+      font-size: 1rem;
+    }
+    .trust-strip__text {
+      font-size: 0.88rem;
+      line-height: 1.35;
+      color: var(--text);
+      font-weight: 600;
+    }
+    .trust-strip__text span {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 0.14rem;
+    }
+
+    /* ════════════════════════════════════════
        COURSES PREVIEW
     ════════════════════════════════════════ */
     .courses-preview {
       background: var(--bg);
-      padding: 7rem 0 5rem;
+      padding: 4rem 0 5rem;
       position: relative;
       overflow: clip;
     }
@@ -151,6 +234,10 @@
     .courses-preview__top .section-sub {
       margin: 0;
       text-align: left;
+    }
+    .courses-preview__top .section-sub--single-line {
+      max-width: none;
+      white-space: nowrap;
     }
     .courses-grid {
       display: grid;
@@ -441,8 +528,13 @@
        ONLINE LEARNING
     ════════════════════════════════════════ */
     .online { background: var(--bg); padding: 7rem 0; border-top: 1px solid var(--border); }
-    .online__inner { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
-    .online__features { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 2rem; }
+    .online__inner { display: grid; grid-template-columns: 1fr 1fr; gap: 6.5rem; align-items: start; }
+    .online__right {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .online__features { display: flex; flex-direction: column; gap: 1.1rem; margin-top: 2rem; }
     .online__feat {
       --mx: 50%;
       --my: 50%;
@@ -470,6 +562,117 @@
     .online__feat-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
     .online__feat-text { font-size: 0.875rem; color: var(--text-2); line-height: 1.55; }
     .online__feat-text strong { color: var(--text); font-weight: 600; display: block; margin-bottom: 1px; }
+
+    .training-highlight {
+      margin-top: 2rem;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .training-highlight__tag {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+    .training-highlight__title {
+      font-weight: 800;
+      font-size: 1.28rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      line-height: 1.22;
+      margin-bottom: 0.5rem;
+    }
+    .training-highlight__desc {
+      font-size: 0.9rem;
+      line-height: 1.65;
+      color: var(--text-2);
+      margin-bottom: 1.2rem;
+    }
+
+    .industry-panel {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--r-2xl);
+      padding: 1.2rem;
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .industry-panel__title {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.7rem;
+    }
+    .industry-panel__track {
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      background: var(--bg);
+      overflow: hidden;
+      position: relative;
+      height: 430px;
+      padding: 0.85rem;
+    }
+    .industry-panel__track::before,
+    .industry-panel__track::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 24px;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .industry-panel__track::before {
+      top: 0;
+      background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(255,255,255,0));
+    }
+    .industry-panel__track::after {
+      bottom: 0;
+      background: linear-gradient(0deg, rgba(255,255,255,0.94), rgba(255,255,255,0));
+    }
+    .industry-panel__loop {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      will-change: transform;
+    }
+    .industry-panel__list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      padding: 0;
+    }
+    .industry-panel__item {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      font-size: 0.84rem;
+      color: var(--text-2);
+      padding: 0.45rem 0.55rem;
+      border-radius: var(--r-sm);
+      background: rgba(52,120,246,0.05);
+      border: 1px solid rgba(52,120,246,0.12);
+      white-space: nowrap;
+    }
+    .industry-panel__item::before {
+      content: '•';
+      color: var(--accent);
+      font-weight: 800;
+    }
+    @keyframes factScroll {
+      from { transform: translateY(0); }
+      to { transform: translateY(calc(-50% - 0.3rem)); }
+    }
 
     /* Toolkit card (right side) */
     .toolkit-card {
@@ -501,8 +704,8 @@
     .toolkit-card__icon { font-size: 2.5rem; margin-bottom: 1rem; display: block; }
     .toolkit-card__title { font-weight: 800; font-size: 1.35rem; color: var(--text); letter-spacing: -0.02em; margin-bottom: 0.5rem; }
     .toolkit-card__desc { font-size: 0.875rem; color: var(--text-2); line-height: 1.65; margin-bottom: 1.75rem; }
-    .stats-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.875rem; margin-top: 1.5rem; }
-    .stat-item { background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-md); padding: 1.1rem; text-align: center; }
+    .stats-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem; margin-top: 0; }
+    .stat-item { background: var(--bg); border: 1.5px solid #555; border-radius: var(--r-md); padding: 1.1rem; text-align: center; }
     .stat-item__num { font-weight: 800; font-size: 1.45rem; color: var(--accent); letter-spacing: -0.02em; display: block; }
     .stat-item__lbl { font-size: 0.68rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; display: block; }
 
@@ -870,6 +1073,22 @@
     @media (max-width: 760px) {
       .courses-grid { grid-template-columns: 1fr; }
     }
+    @media (max-width: 1200px) {
+      .courses-preview__top .section-sub--single-line {
+        white-space: normal;
+        max-width: 620px;
+      }
+    }
+    @media (max-width: 960px) {
+      .trust-strip__inner { grid-template-columns: 1fr; }
+      .trust-strip__content { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 600px) {
+      .trust-strip { padding: 0.85rem 0 1.25rem; }
+      .trust-strip__inner { padding: 0.95rem; }
+      .trust-strip__content { grid-template-columns: 1fr; }
+      .trust-strip__label { white-space: normal; }
+    }
     @media (max-width: 960px) {
       .hero { grid-template-columns: 1fr; min-height: auto; }
       .hero__left { padding: 6.3rem 1.25rem 2.25rem; }
@@ -879,6 +1098,8 @@
       .hero__stat-div { display: none; }
       .hero__scroll { display: none; }
       .online__inner { grid-template-columns: 1fr; gap: 3rem; }
+      .online__right { min-height: 0; }
+      .industry-panel__track { height: 320px; }
       .why__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .why__visuals {
         -webkit-mask-image: linear-gradient(to right, transparent 0%, transparent 30%, rgba(0,0,0,0.48) 44%, #000 58%);
@@ -969,19 +1190,17 @@
   <!-- ════════ HERO ════════ -->
   <section class="hero" id="hero">
     <div class="hero__left">
-      <div class="hero__eyebrow" id="heroEye"><span class="hero__dot"></span>Est. 2009 · Delhi &amp; Patna, India</div>
+      <div class="hero__eyebrow" id="heroEye"><span class="hero__dot"></span>MASTER REPAIR TRAINING FOR MOBILE &amp; LAPTOP REPAIR TECHNICIANS</div>
       <h1 class="hero__headline">
-        <span class="hero__headline-line" id="hl1">Learn to</span>
-        <span class="hero__headline-line hero__headline-line--accent" id="hl2">Fix Anything.</span>
-        <span class="hero__headline-line" id="hl3">Build Everything.</span>
+        <span class="hero__headline-line hero__headline-line--lead" id="hl1">Master Advanced</span>
+        <span class="hero__headline-line hero__headline-line--accent" id="hl2">Apple Repair.</span>
+        <span class="hero__headline-line hero__headline-line--compact" id="hl3">Upgrade to Chip -<br>Level Expertise.</span>
       </h1>
       <p class="hero__sub" id="heroSub">
-        India's most hands-on repair training academy. Master iPhone, MacBook,
-        Android &amp; laptop repair - from circuit boards to software.
-        Get certified. Get hired. Or start your own shop.
+        Hands-on advance level training for technicians ready to repair iPhones &amp; MacBooks at motherboard level and increase their income.
       </p>
       <div class="hero__ctas" id="heroCtas">
-        <a href="courses.html" class="btn btn--primary" style="padding:0.75rem 1.75rem;font-size:0.95rem;">Explore Courses</a>
+        <a href="contact.html#contact-form" class="btn btn--primary" style="padding:0.75rem 1.75rem;font-size:0.95rem;">Book Free Demo Class</a>
         <a href="about.html"   class="btn btn--ghost"   style="padding:0.75rem 1.75rem;font-size:0.95rem;">Our Story</a>
       </div>
       <div class="hero__stats" id="heroStats">
@@ -995,7 +1214,7 @@
 
     <div class="hero__right" id="heroRight">
       <div class="hero__video-wrap">
-        <span class="hero__video-badge"><span class="live-dot"></span>Live Training</span>
+        <span class="hero__video-badge"><span class="live-dot"></span>Live Practical Training</span>
         <video class="hero__video" autoplay muted loop playsinline preload="auto">
           <source src="Assets/Hero Video 2.mp4" type="video/mp4">
         </video>
@@ -1006,49 +1225,74 @@
   </section>
 
   <!-- ════════ COURSES PREVIEW ════════ -->
+  <section class="trust-strip" aria-label="Trust and credibility strip">
+    <div class="container">
+      <div class="trust-strip__inner">
+        <div class="trust-strip__label">Backed by <span class="trust-strip__brand">iFix India</span></div>
+        <div class="trust-strip__content">
+          <div class="trust-strip__item">
+            <div class="trust-strip__icon">✓</div>
+            <div class="trust-strip__text"><span>Est. 2009</span>Trusted training experience</div>
+          </div>
+          <div class="trust-strip__item">
+            <div class="trust-strip__icon">👨‍🏫</div>
+            <div class="trust-strip__text"><span>Learn from Industry Experts</span>Real technicians, real workflows</div>
+          </div>
+          <div class="trust-strip__item">
+            <div class="trust-strip__icon">🛠️</div>
+            <div class="trust-strip__text"><span>Practical Training</span>Hands-on learning from day one</div>
+          </div>
+          <div class="trust-strip__item">
+            <div class="trust-strip__icon">👥</div>
+            <div class="trust-strip__text"><span>Small Batch Size</span>Personalized guidance and focus</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
   <section class="courses-preview" id="courses">
     <div class="container">
       <div class="courses-preview__top">
         <div>
-          <span class="section-label reveal">Professional Repairing Courses</span>
-          <h2 class="section-heading reveal d1">Skills the market<br>actually demands.</h2>
+          <span class="section-label reveal">ADVANCED REPAIR TRAINING PROGRAMS</span>
+          <h2 class="section-heading reveal d1">Skills That Actually Increase Your Repair Income.</h2>
         </div>
-        <p class="section-sub reveal d2" style="max-width:380px;">
-          Every course is built around real repair scenarios. Hands-on from Day 1 - no theory-only classes.
+        <p class="section-sub section-sub--single-line reveal d2">
+          Every course is built around real repair scenarios. 100% hands-on training from Day 1 - no theory-only sessions.
         </p>
       </div>
       <div class="courses-grid">
         <div class="course-card">
-          <span class="course-badge b-popular">⭐ Most Popular</span>
-          <h3 class="course-card__title">Mobile Repairing Course</h3>
-          <p class="course-card__desc">Complete hardware &amp; software troubleshooting for all smartphone brands. The most in-demand skill in India's repair market.</p>
+          <span class="course-badge b-popular">MOST POPULAR</span>
+          <h3 class="course-card__title">Advanced Mobile Repair (L3)</h3>
+          <p class="course-card__desc">Upgrade from basic repairs to advanced diagnostics. Learn fault finding, circuit understanding, and real-world troubleshooting in this <strong>L3</strong> track used by professional technicians.</p>
           <div class="course-card__meta"><span>12 Weeks</span><span>Hands-On Lab</span></div>
           <a href="courses.html#mobile" class="course-card__link">Learn more →</a>
         </div>
         <div class="course-card">
-          <span class="course-badge b-demand">🔥 High Demand</span>
-          <h3 class="course-card__title">Laptop Repairing Course</h3>
-          <p class="course-card__desc">Chip-level laptop motherboard diagnostics, soldering &amp; advanced repair. GPU re-balling alone earns ₹2,000+ per device.</p>
+          <span class="course-badge b-demand">HIGH DEMAND</span>
+          <h3 class="course-card__title">Laptop Chip-Level Repair (L4)</h3>
+          <p class="course-card__desc">Master motherboard diagnostics, micro-soldering, and GPU reballing in this <strong>L4</strong> pathway. Handle complex laptop <strong>Chip-Level</strong> repairs that most technicians avoid - and charge premium prices.</p>
           <div class="course-card__meta"><span>14 Weeks</span><span>Chip-Level</span></div>
           <a href="courses.html#laptop" class="course-card__link">Learn more →</a>
         </div>
         <div class="course-card">
-          <span class="course-badge b-new">🆕 New Course</span>
-          <h3 class="course-card__title">Display Repairing Course</h3>
-          <p class="course-card__desc">LCD/AMOLED display bonding, OCA lamination &amp; refurbishment. Repair what others replace.</p>
+          <span class="course-badge b-new">NEW COURSE</span>
+          <h3 class="course-card__title">Display Refurbishing &amp; Repair</h3>
+          <p class="course-card__desc">Learn LCD/AMOLED repair, OCA lamination, and display refurbishment. Turn damaged screens into profit instead of replacements.</p>
           <div class="course-card__meta"><span>8 Weeks</span><span>Refurb Lab</span></div>
           <a href="courses.html#display" class="course-card__link">Learn more →</a>
         </div>
         <div class="course-card">
-          <span class="course-badge b-premium">💎 Premium</span>
-          <h3 class="course-card__title">iPhone Repairing Course</h3>
-          <p class="course-card__desc">Advanced iOS hardware, Face ID repair &amp; Apple-specific chip-level work. The rarest and highest-paying skill.</p>
+          <span class="course-badge b-premium">PREMIUM</span>
+          <h3 class="course-card__title">Advanced Apple Inc. Repair (L4)</h3>
+          <p class="course-card__desc">Specialize in iPhone &amp; MacBook <strong>Chip-Level</strong> repair in this <strong>L4</strong> track. Learn motherboard diagnostics, IC replacement, and advanced Apple-specific repairs.</p>
           <div class="course-card__meta"><span>16 Weeks</span><span>Premium Track</span></div>
           <a href="courses.html#iphone" class="course-card__link">Learn more →</a>
         </div>
       </div>
       <div style="text-align:center;margin-top:3rem;" class="reveal">
-        <a href="courses.html" class="btn btn--outline" style="padding:0.75rem 2rem;">View All Programmes →</a>
+        <a href="courses.html" class="btn btn--outline" style="padding:0.75rem 2rem;">View All Programs →</a>
       </div>
     </div>
   </section>
@@ -1121,43 +1365,58 @@
     <div class="container">
       <div class="online__inner">
         <div>
-          <span class="section-label reveal">Online Learning</span>
-          <h2 class="section-heading reveal d1" style="margin-bottom:1rem;">Learn Mobile Repairing<br>- From Home</h2>
-          <p class="section-sub reveal d2">Can't visit our Delhi or Patna centre? Our structured online course delivers the same industry-level curriculum to your screen - accessible from every state in India.</p>
+          <span class="section-label reveal">Offline Practical Training</span>
+          <h2 class="section-heading reveal d1" style="margin-bottom:1.5rem;">Learn Advanced Repair - With Real Hands-On Training</h2>
+          <p class="section-sub reveal d2" style="margin-bottom:1.5rem;">Serious skills require real practice. Our offline training in Bangalore is designed for technicians who want to master chip-level repair through hands-on experience.</p>
           <div class="online__features">
-            <div class="online__feat reveal"><span class="online__feat-icon">🎥</span><div class="online__feat-text"><strong>Live &amp; Recorded HD Video Lectures</strong>Hindi and English, rewatch anytime.</div></div>
-            <div class="online__feat reveal d1"><span class="online__feat-icon">🧰</span><div class="online__feat-text"><strong>Repair Tool Kit Delivered to Your Home</strong>Professional tools, Day 1 practice.</div></div>
-            <div class="online__feat reveal d2"><span class="online__feat-icon">💬</span><div class="online__feat-text"><strong>WhatsApp &amp; Telegram Doubt-Clearing</strong>Experts reply within hours, every day.</div></div>
-            <div class="online__feat reveal d3"><span class="online__feat-icon">📜</span><div class="online__feat-text"><strong>Industry-Recognised Certificate</strong>Accepted by employers across India.</div></div>
-            <div class="online__feat reveal"><span class="online__feat-icon">♾️</span><div class="online__feat-text"><strong>Lifetime Access to Course Updates</strong>New phones, new content - always included.</div></div>
+            <div class="online__feat reveal"><span class="online__feat-icon">🎥</span><div class="online__feat-text"><strong>Live Hands-On Training</strong>Work on real faulty iPhones &amp; MacBooks - not just demonstrations.</div></div>
+            <div class="online__feat reveal d1"><span class="online__feat-icon">⚡</span><div class="online__feat-text"><strong>Complete Knowledge of Digital Electronics</strong>Build strong fundamentals in circuits, components, signal flow, and diagnosis logic used in chip-level repair.</div></div>
+            <div class="online__feat reveal d2"><span class="online__feat-icon">💬</span><div class="online__feat-text"><strong>Direct Trainer Support</strong>Learn face-to-face with expert guidance and real-time doubt solving.</div></div>
+            <div class="online__feat reveal d3"><span class="online__feat-icon">🧰</span><div class="online__feat-text"><strong>Industry's Advanced Tools &amp; Machines</strong>Train using the latest professional equipment used in real repair labs.</div></div>
+            <div class="online__feat reveal"><span class="online__feat-icon">📈</span><div class="online__feat-text"><strong>Post-Training Business Support</strong>Get continued business guidance even after completing your course.</div></div>
           </div>
-          <div style="margin-top:2rem;" class="reveal"><a href="courses.html#online" class="btn btn--primary" style="padding:0.75rem 1.75rem;">Start Online Course</a></div>
         </div>
-        <div class="reveal-r">
-          <div class="toolkit-card">
-            <span class="toolkit-card__tag">🔧 Exclusive Offer</span>
-            <span class="toolkit-card__icon">📦</span>
-            <h3 class="toolkit-card__title">Repair Toolkit Delivered to Your Home</h3>
-            <p class="toolkit-card__desc">Professional-grade repairing toolkit shipped directly to your address with every online course enrollment. Start practicing from Day 1.</p>
-            <a href="courses.html#online" class="btn btn--primary">Enroll Online</a>
+        <div class="online__right reveal-r">
+          <div class="industry-panel">
+            <div class="industry-panel__title">Industry Facts (Live)</div>
+            <div class="industry-panel__track">
+              <div class="industry-panel__loop">
+                <div class="industry-panel__list">
+                  <div class="industry-panel__item">Chip-level repair demand is growing year-over-year across India.</div>
+                  <div class="industry-panel__item">Board-level diagnostics can increase repair ticket value significantly.</div>
+                  <div class="industry-panel__item">MacBook/iPhone logic board skills are among the highest paid in service labs.</div>
+                  <div class="industry-panel__item">Advanced tool proficiency improves turnaround time and customer trust.</div>
+                  <div class="industry-panel__item">Independent technicians with lab skills build repeat business faster.</div>
+                  <div class="industry-panel__item">Technicians with component-level skills command better service pricing.</div>
+                  <div class="industry-panel__item">Accurate diagnostics reduce repeat faults and improve customer retention.</div>
+                  <div class="industry-panel__item">Hands-on board practice shortens repair cycle time in live jobs.</div>
+                </div>
+                <div class="industry-panel__list" aria-hidden="true">
+                  <div class="industry-panel__item">Chip-level repair demand is growing year-over-year across India.</div>
+                  <div class="industry-panel__item">Board-level diagnostics can increase repair ticket value significantly.</div>
+                  <div class="industry-panel__item">MacBook/iPhone logic board skills are among the highest paid in service labs.</div>
+                  <div class="industry-panel__item">Advanced tool proficiency improves turnaround time and customer trust.</div>
+                  <div class="industry-panel__item">Independent technicians with lab skills build repeat business faster.</div>
+                  <div class="industry-panel__item">Technicians with component-level skills command better service pricing.</div>
+                  <div class="industry-panel__item">Accurate diagnostics reduce repeat faults and improve customer retention.</div>
+                  <div class="industry-panel__item">Hands-on board practice shortens repair cycle time in live jobs.</div>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="stats-row">
-            <div class="stat-item reveal"><span class="stat-item__num">28+</span><span class="stat-item__lbl">States</span></div>
-            <div class="stat-item reveal d1"><span class="stat-item__num">3,200+</span><span class="stat-item__lbl">Videos</span></div>
-            <div class="stat-item reveal d2"><span class="stat-item__num">100%</span><span class="stat-item__lbl">Certificate</span></div>
+            <div class="stat-item reveal"><span class="stat-item__num">6</span><span class="stat-item__lbl">Service Centers</span></div>
+            <div class="stat-item reveal d1"><span class="stat-item__num">15+</span><span class="stat-item__lbl">Years Experiences</span></div>
+            <div class="stat-item reveal d2"><span class="stat-item__num">10k+</span><span class="stat-item__lbl">Happy Customers</span></div>
+          </div>
+          <div class="training-highlight reveal d1">
+            <span class="training-highlight__tag">EXCLUSIVE TRAINING EXPERIENCE</span>
+            <h3 class="training-highlight__title">Train in a Real Repair Lab Environment</h3>
+            <p class="training-highlight__desc">Get access to a fully equipped lab with advanced tools, real devices, and live repair scenarios. Build confidence by working on actual repair cases during training.</p>
+            <a href="courses.html#online" class="btn btn--primary">Enroll Now</a>
           </div>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- ════════ BRANDS ════════ -->
-  <section class="brands">
-    <div class="container" style="margin-bottom:2rem;text-align:center;">
-      <span class="section-label">Brands You'll Learn to Repair</span>
-    </div>
-    <div class="brands__wrap">
-      <div class="brands__track" id="brandTrack"></div>
     </div>
   </section>
 
@@ -1169,27 +1428,27 @@
       <div class="why-pulse why-pulse--1" why-pulse-a></div>
       <div class="why-pulse why-pulse--2" why-pulse-b></div>
       <div class="why-pulse why-pulse--3" why-pulse-c></div>
-      <div class="why-chip why-chip--1" why-chip-a>Lab Verified</div>
-      <div class="why-chip why-chip--2" why-chip-b>Career Ready</div>
-      <div class="why-chip why-chip--3" why-chip-c>Industry Sync</div>
-      <div class="why-chip why-chip--4" why-chip-d>Placement Focus</div>
-      <div class="why-chip why-chip--5" why-chip-e>Trusted Alumni</div>
+      <div class="why-chip why-chip--1" why-chip-a>Chip-Level Training</div>
+      <div class="why-chip why-chip--2" why-chip-b>Limited Seats</div>
+      <div class="why-chip why-chip--3" why-chip-c>Advanced Repair</div>
+      <div class="why-chip why-chip--4" why-chip-d>Premium Lab</div>
+      <div class="why-chip why-chip--5" why-chip-e>Business Assistance</div>
       <div class="why-prism" why-prism-a></div>
     </div>
     <div class="container">
       <div class="why__head">
-        <span class="section-label reveal">Why iFix Info?</span>
+        <span class="section-label reveal">WHY IFIX TRAINING ACADEMY?</span>
         <h2 class="section-heading reveal d1" style="margin-bottom:1rem;">Why India Chooses<br>iFi<span style="color:var(--accent);">x</span> <span style="color:var(--accent);">Academy</span></h2>
         <p class="section-sub reveal d2">Thousands of students choose IFix Info every year. Here's what sets us apart from every other training centre in India.</p>
       </div>
       <div class="why__grid">
-        <div class="why-card"><div class="why-card__icon">🔩</div><h3 class="why-card__title">100% Practical Training</h3><p class="why-card__desc">Every lesson involves hands-on work with real mobile devices, PCBs, and tools - not just theory.</p></div>
-        <div class="why-card"><div class="why-card__icon">👨‍🏫</div><h3 class="why-card__title">Expert Faculty</h3><p class="why-card__desc">Our instructors are working industry professionals with 10–20 years of mobile &amp; laptop repair experience.</p></div>
-        <div class="why-card"><div class="why-card__icon">&#x1F5E3;&#xFE0F;</div><h3 class="why-card__title">Hindi Medium Available</h3><p class="why-card__desc">All courses taught in Hindi and English, making technical education accessible for every Indian student.</p></div>
-        <div class="why-card"><div class="why-card__icon">📜</div><h3 class="why-card__title">Recognised Certificate</h3><p class="why-card__desc">Our ISO-certified diplomas and certificates are accepted by employers and service centres across India.</p></div>
-        <div class="why-card"><div class="why-card__icon">💼</div><h3 class="why-card__title">Job &amp; Business Support</h3><p class="why-card__desc">We assist graduates in finding jobs or setting up their own mobile repair shop with tools and guidance.</p></div>
+        <div class="why-card"><div class="why-card__icon">🔩</div><h3 class="why-card__title">Practical Training</h3><p class="why-card__desc">Every lesson involves hands-on work with real mobile devices, PCBs, and tools - not just theory.</p></div>
+        <div class="why-card"><div class="why-card__icon">👨‍🏫</div><h3 class="why-card__title">Experienced Trainers</h3><p class="why-card__desc">Our instructors are working industry professionals with 10–20 years of mobile &amp; laptop repair experience.</p></div>
+        <div class="why-card"><div class="why-card__icon">&#x1F5E3;&#xFE0F;</div><h3 class="why-card__title">Multi-Lingual Training</h3><p class="why-card__desc">All courses taught in Hindi and English, making technical education accessible for every Indian student.</p></div>
+        <div class="why-card"><div class="why-card__icon">📜</div><h3 class="why-card__title">Small Batch Training</h3><p class="why-card__desc">Limited students per batch for focused, hands-on learning.</p></div>
+        <div class="why-card"><div class="why-card__icon">💼</div><h3 class="why-card__title">Professional Lab Setup</h3><p class="why-card__desc">Train using industry-grade tools and machines.</p></div>
         <div class="why-card"><div class="why-card__icon">💰</div><h3 class="why-card__title">Affordable Fee Structure</h3><p class="why-card__desc">Best-in-class education at transparent, affordable fees. EMI options and scholarships available.</p></div>
-        <div class="why-card"><div class="why-card__icon">🌐</div><h3 class="why-card__title">Online + Offline Flexibility</h3><p class="why-card__desc">Whether you're in Delhi, Patna, or a remote village, our blended model reaches every corner of India.</p></div>
+        <div class="why-card"><div class="why-card__icon">🌐</div><h3 class="why-card__title">Post-Training Support</h3><p class="why-card__desc">Get guidance and support even after course completion.</p></div>
         <div class="why-card"><div class="why-card__icon">🔄</div><h3 class="why-card__title">Latest Curriculum</h3><p class="why-card__desc">Curriculum is updated quarterly to include the newest smartphones, chipsets, and repair techniques.</p></div>
       </div>
     </div>
@@ -1198,8 +1457,8 @@
   <!-- ════════ TESTIMONIALS ════════ -->
   <section class="testimonials" id="testimonials">
     <div class="testimonials__head">
-      <div><span class="section-label">Student Stories</span><h2 class="section-heading">Real careers.<br>Real results.</h2></div>
-      <p class="section-sub">Over 2,400 students have completed our programs. Here's what they're doing now.</p>
+      <div><span class="section-label">Real Stories. Real Skill Upgrade.</span><h2 class="section-heading">Success Stories</h2></div>
+      <p class="section-sub">Our students don’t just learn - they start handling complex repairs, increase their income and grow their business with confidence.</p>
     </div>
     <div class="testimonials__track-wrap"><div class="testimonials__track" id="tTrack1"></div></div>
     <div class="testimonials__track-wrap" style="margin-top:0;"><div class="testimonials__track testimonials__track--rev" id="tTrack2"></div></div>
@@ -1210,12 +1469,12 @@
     <div class="container">
       <div class="cta-banner__inner">
         <div>
-          <h2 class="cta-banner__heading">Start your repair<br>career today.</h2>
-          <p class="cta-banner__sub">Join 2,400+ graduates who chose hands-on training over theory-only courses.</p>
+          <h2 class="cta-banner__heading">Start Your Advanced <br>Repair Journey Today.</h2>
+          <p class="cta-banner__sub">Upgrade to chip-level skills and start handling high-value repair jobs with confidence.</p>
         </div>
         <div style="display:flex;gap:1rem;flex-wrap:wrap;">
-          <a href="courses.html" class="btn btn--white">View Courses</a>
-          <a href="contact.html" class="btn btn--white-outline">Contact Us</a>
+          <a href="courses.html" class="btn btn--white">Book Free Demo Class</a>
+          <a href="contact.html" class="btn btn--white-outline">Chat on WhatsApp</a>
         </div>
       </div>
     </div>
@@ -1549,6 +1808,55 @@
         }
       }
     });
+  </script>
+
+  <script>
+    (function () {
+      const loop  = document.querySelector('.industry-panel__loop');
+      const track = document.querySelector('.industry-panel__track');
+      if (!loop || !track) return;
+
+      const firstList = loop.querySelector('.industry-panel__list');
+      if (!firstList) return;
+
+      // Clone lists until content fills at least 2× the track height so
+      // there is always enough content to fill the visible area on every
+      // frame, regardless of how tall the track is.
+      function ensureContent() {
+        const gapPx  = parseFloat(getComputedStyle(loop).rowGap) || 0;
+        const listH  = firstList.offsetHeight;
+        const unit   = listH + gapPx;          // one scroll cycle
+        const needed = track.clientHeight * 2 + unit;
+        while (loop.scrollHeight < needed) {
+          const clone = firstList.cloneNode(true);
+          clone.setAttribute('aria-hidden', 'true');
+          loop.appendChild(clone);
+        }
+        return unit;
+      }
+
+      let unit = ensureContent();
+      let pos  = 0;
+      let last = null;
+      const SPEED = unit / 24; // same pace as original 24 s CSS animation
+
+      function tick(t) {
+        if (last !== null) {
+          pos += SPEED * (t - last) / 1000;
+          if (pos >= unit) pos -= unit;        // instant, invisible reset
+          loop.style.transform = 'translateY(-' + pos + 'px)';
+        }
+        last = t;
+        requestAnimationFrame(tick);
+      }
+
+      // Re-measure if fonts/layout shift after load
+      window.addEventListener('load', function () {
+        unit = ensureContent();
+      });
+
+      requestAnimationFrame(tick);
+    })();
   </script>
 </body>
 </html>

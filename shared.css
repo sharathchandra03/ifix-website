@@ -42,13 +42,17 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 /* ═══ NAVBAR ═══════════════════════════════════════════════ */
 .navbar {
   position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  background: rgba(99, 161, 248, 0.17);
+  backdrop-filter: saturate(170%) blur(16px);
+  -webkit-backdrop-filter: saturate(170%) blur(16px);
+  box-shadow: 0 1px 0 rgba(52, 120, 246, 0.12);
   transition: background 0.45s var(--ease-io), box-shadow 0.45s var(--ease-io);
 }
 .navbar.scrolled {
-  background: rgba(255,255,255,0.88);
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-  box-shadow: 0 1px 0 rgba(0,0,0,0.1);
+  background: rgba(99, 161, 248, 0.24);
+  backdrop-filter: saturate(170%) blur(16px);
+  -webkit-backdrop-filter: saturate(170%) blur(16px);
+  box-shadow: 0 1px 0 rgba(52, 120, 246, 0.16);
 }
 .navbar__inner {
   max-width: 1280px; margin: 0 auto;
@@ -67,6 +71,9 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .nav__link:hover { color: var(--text); background: rgba(0,0,0,0.04); }
 .nav__link--active { color: var(--accent); font-weight: 600; }
 .navbar__actions { display: flex; align-items: center; gap: 0.75rem; }
+@media (min-width: 901px) {
+  .navbar__actions { transform: translateX(-52px); }
+}
 
 /* ═══ BUTTONS ══════════════════════════════════════════════ */
 .btn {
@@ -80,6 +87,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .btn--primary:hover { background: var(--accent-h); }
 .btn--enroll  { background: var(--accent); color: #fff; font-size: 0.82rem; padding: 0.5rem 1.1rem; }
 .btn--enroll:hover { background: var(--accent-h); }
+.navbar__actions .btn--enroll { margin-right: 0; }
 .btn--ghost   { border: 1px solid var(--border); color: var(--text-2); background: transparent; }
 .btn--ghost:hover { border-color: var(--border-h); color: var(--text); }
 .btn--outline { border: 1.5px solid var(--accent); color: var(--accent); background: transparent; }
