@@ -6,10 +6,11 @@
 
   const navLinks = [
     { href: '/',         label: 'Home' },
-    { href: '/courses',  label: 'Courses' },
+    { href: '/courses',  label: 'Training' },
     { href: '/shop',     label: 'Shop' },
     { href: '/blog',     label: 'Blog' },
-    { href: '/about',    label: 'About Us' },
+    { href: '/about',    label: 'Our Story' },
+    { href: 'https://ifixindia.in/', label: 'Service' },
     { href: '/contact',  label: 'Contact Us' },
   ];
 
