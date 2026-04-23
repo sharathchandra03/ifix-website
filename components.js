@@ -86,10 +86,10 @@
           <div class="footer__col">
             <h4 class="footer__col-title">Courses</h4>
             <ul class="footer__list">
-              <li><a href="/courses#mobile"  class="footer__link">Mobile Repairing</a></li>
-              <li><a href="/courses#laptop"  class="footer__link">Laptop Repairing</a></li>
-              <li><a href="/courses#iphone"  class="footer__link">iPhone Repairing</a></li>
-              <li><a href="/courses#display" class="footer__link">Display Repairing</a></li>
+              <li><a href="/courses#mobile"  class="footer__link">Android Master</a></li>
+              <li><a href="/courses#laptop"  class="footer__link">Laptop Master</a></li>
+              <li><a href="/courses#display" class="footer__link">iPhone Master</a></li>
+              <li><a href="/courses#iphone" class="footer__link">Macbook Master</a></li>
               <li><a href="/courses#online"  class="footer__link">Online Learning</a></li>
             </ul>
           </div>

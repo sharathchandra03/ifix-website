@@ -53,10 +53,10 @@
     }
 
     /* ── TABS NAV ── */
-    .tabs-nav { background: rgba(255,255,255,0.9); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); position: sticky; top: 58px; z-index: 100; }
-    .tabs-nav__inner { max-width: 1280px; margin: 0 auto; padding: 0 2rem; display: flex; overflow-x: auto; scrollbar-width: none; }
+    .tabs-nav { background: rgba(255,255,255,0.9); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-top: 0.5px solid #1D1D1F; border-bottom: 0.5px solid #1D1D1F; position: sticky; top: 58px; z-index: 100; width: 100%; }
+    .tabs-nav__inner { width: 100%; margin: 0; padding: 0; display: flex; overflow-x: auto; scrollbar-width: none; justify-content: flex-start; }
     .tabs-nav__inner::-webkit-scrollbar { display: none; }
-    .tab-btn { flex-shrink: 0; padding: 1rem 1.4rem; font-size: 0.875rem; font-weight: 600; color: var(--text-2); border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; font-family: var(--ff); cursor: pointer; background: none; border-top: none; border-left: none; border-right: none; }
+    .tab-btn { flex: 1; min-width: auto; padding: 1rem 1.4rem; font-size: 0.875rem; font-weight: 600; color: var(--text-2); border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; font-family: var(--ff); cursor: pointer; background: none; border-top: none; border-left: none; border-right: none; text-align: center; white-space: nowrap; }
     .tab-btn:hover { color: var(--text); }
     .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
 
@@ -457,8 +457,8 @@
       padding:6rem 3.5rem 6rem 4.5rem;
       border-bottom:1px solid var(--border);
       position:relative;
+      background:#fafbfd;
     }
-    .course-scroll-item:nth-child(even) { background:#fafbfd; }
     .csi__inner{
       width:100%; max-width:580px;
       opacity:0; transform:translateY(38px);
@@ -566,45 +566,45 @@
             </div>
           </div>
 
-          <!-- Screen 2 – Display -->
+          <!-- Screen 2 – iPhone Master -->
           <div class="p-screen p-screen--display" id="pScreen2">
             <div class="p-hdr">iFix Academy · Course</div>
-            <div class="p-title">LCD &amp; AMOLED<br>Display Expert</div>
+            <div class="p-title">iPhone Chip-Level<br>Repair Expert</div>
             <div class="p-profile">
               <div class="p-profile__left">
-                <div class="p-avatar">🖥️</div>
-                <div><div class="p-pname">Display Spec.</div><div class="p-psub">LCD / AMOLED Tech</div></div>
+                <div class="p-avatar">🍎</div>
+                <div><div class="p-pname">iPhone Pro</div><div class="p-psub">Chip-Level Repair</div></div>
               </div>
               <div class="p-badge">
-                <span class="p-badge__lbl">Launch</span>
+                <span class="p-badge__lbl">Status</span>
                 <span class="p-badge__val">New</span>
               </div>
             </div>
             <div class="p-actions-row">
-              <div class="p-act"><div class="p-act__icon">🔬</div><div class="p-act__lbl">Inspect</div></div>
-              <div class="p-act"><div class="p-act__icon">💧</div><div class="p-act__lbl">Bond</div></div>
+              <div class="p-act"><div class="p-act__icon">⚡</div><div class="p-act__lbl">Diagnose</div></div>
+              <div class="p-act"><div class="p-act__icon">🔧</div><div class="p-act__lbl">Repair</div></div>
               <div class="p-act"><div class="p-act__icon">📜</div><div class="p-act__lbl">Certify</div></div>
             </div>
             <div class="p-stats-row">Course Duration &amp; Coverage</div>
-            <div class="p-stats-val">5 Weeks · OCA + UV</div>
+            <div class="p-stats-val">6 Weeks · Chip-Level</div>
             <div class="p-visa-row">
               <span class="p-visa-nfc">◎))</span>
               <span class="p-visa-brand">CERTIFIED</span>
             </div>
             <div class="p-bottom">
               <div><div class="p-bl">Skills</div><div class="p-bv">8 Modules</div></div>
-              <div><div class="p-bl">Market</div><div class="p-bv">High Value</div></div>
+              <div><div class="p-bl">Avg. Monthly</div><div class="p-bv">₹35,000</div></div>
             </div>
           </div>
 
-          <!-- Screen 3 – iPhone -->
+          <!-- Screen 3 – Macbook Master -->
           <div class="p-screen p-screen--iphone" id="pScreen3">
             <div class="p-hdr">iFix Academy · Course</div>
-            <div class="p-title">Apple iPhone<br>Repair Premium</div>
+            <div class="p-title">Macbook &amp; Apple<br>Logic Board Expert</div>
             <div class="p-profile">
               <div class="p-profile__left">
-                <div class="p-avatar">🍎</div>
-                <div><div class="p-pname">iPhone Expert</div><div class="p-psub">Apple Ecosystem</div></div>
+                <div class="p-avatar">💻</div>
+                <div><div class="p-pname">Macbook Pro</div><div class="p-psub">Apple Hardware</div></div>
               </div>
               <div class="p-badge">
                 <span class="p-badge__lbl">Tier</span>
@@ -612,19 +612,19 @@
               </div>
             </div>
             <div class="p-actions-row">
-              <div class="p-act"><div class="p-act__icon">⚙️</div><div class="p-act__lbl">Chip</div></div>
+              <div class="p-act"><div class="p-act__icon">⚙️</div><div class="p-act__lbl">Board</div></div>
               <div class="p-act"><div class="p-act__icon">🔍</div><div class="p-act__lbl">Diagnose</div></div>
               <div class="p-act"><div class="p-act__icon">📜</div><div class="p-act__lbl">Certify</div></div>
             </div>
             <div class="p-stats-row">Course Duration &amp; Coverage</div>
-            <div class="p-stats-val">8 Weeks · All iPhones</div>
+            <div class="p-stats-val">8 Weeks · All Macbooks</div>
             <div class="p-visa-row">
               <span class="p-visa-nfc">◎))</span>
               <span class="p-visa-brand">CERTIFIED</span>
             </div>
             <div class="p-bottom">
               <div><div class="p-bl">Skills</div><div class="p-bv">8 Modules</div></div>
-              <div><div class="p-bl">Avg. Monthly</div><div class="p-bv">₹50,000</div></div>
+              <div><div class="p-bl">Avg. Monthly</div><div class="p-bv">₹45,000</div></div>
             </div>
           </div>
 
@@ -904,7 +904,7 @@
   <section class="online-section" id="online">
     <div class="container">
       <span class="section-label reveal">Customised Learning</span>
-      <h2 class="section-heading reveal d1" style="margin-bottom:1rem;">Learn Mobile Repairing<br>- From Home</h2>
+      <h2 class="section-heading reveal d1" style="margin-bottom:1rem; font-size: clamp(2.5rem, 2.5vw, 2.1rem);">Learn Mobile Repairing - From Home</h2>
       <p class="section-sub reveal d2" style="max-width:580px;">Can't visit our Delhi or Patna training centre? Our structured online course delivers the same industry-level curriculum right to your screen - accessible from every state in India.</p>
       <div class="online-grid">
         <div class="online-feat reveal"><div class="online-feat__icon">🎥</div><div class="online-feat__title">Live Hands-On Training</div><div class="online-feat__desc">Work on real faulty iPhones &amp; MacBooks - not just demonstrations.</div></div>
