@@ -31,22 +31,24 @@
     .page-hero__inner {
       position: relative;
       z-index: 2;
-      max-width: 980px;
+      max-width: 1120px;
       margin: 0 auto;
     }
     .page-hero__inner > div {
       width: 100%;
     }
     .page-hero__heading {
-      font-weight: 800; font-size: clamp(2.6rem, 5.6vw, 4.8rem);
-      line-height: 0.94; letter-spacing: -0.04em; color: var(--text);
-      margin-bottom: 1.25rem;
+      font-weight: 800; font-size: clamp(2rem, 4.2vw, 3.8rem);
+      line-height: 0.97; letter-spacing: -0.035em; color: var(--text);
+      margin-bottom: 1rem;
+      max-width: 25ch;
+      text-wrap: auto;
     }
     .page-hero__heading span { color: var(--accent); }
     .page-hero__sub {
       font-size: 1.05rem; line-height: 1.75; color: #111111;
       opacity: 0.72;
-      max-width: 560px; margin-bottom: 2rem;
+      max-width: 640px; margin-bottom: 1.75rem;
     }
     .page-hero__actions { display: flex; gap: 0.9rem; flex-wrap: wrap; margin-bottom: 1.75rem; }
     .hero-chips { display: flex; gap: 0.6rem; flex-wrap: wrap; }
@@ -75,6 +77,21 @@
     /* ── MISSION ── */
     .mission { background: var(--bg-2); padding: 6rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
     .mission__inner { display: grid; grid-template-columns: 1fr 1.1fr; gap: 4rem; align-items: start; }
+    .mission__heading {
+      font-size: clamp(1.75rem, 3.1vw, 2.55rem);
+      line-height: 1.06;
+    }
+    .mission__lead {
+      margin-top: 1.4rem;
+      max-width: 560px;
+      padding: 0;
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+      line-height: 1.75;
+      color: var(--text-2);
+      text-wrap: pretty;
+    }
     .mission__grid { display: grid; gap: 1rem; }
     .mission-card {
       background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-xl);
@@ -87,7 +104,21 @@
     /* ── STORY ── */
     .story { background: var(--bg); padding: 6.5rem 0; }
     .story__inner { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 4rem; align-items: start; }
-    .story__body { display: grid; gap: 1rem; }
+    .story__heading {
+      font-size: clamp(1.7rem, 3vw, 2.45rem);
+      line-height: 1.06;
+    }
+    .story__body {
+      display: grid;
+      gap: 1.05rem;
+      max-width: 620px;
+    }
+    .story__text {
+      margin: 0;
+      line-height: 1.78;
+      color: var(--text-2);
+      text-wrap: pretty;
+    }
     .story__stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.9rem; }
     .story__stat {
       background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--r-lg);
@@ -121,6 +152,10 @@
     /* ── EXPERIENCE ── */
     .experience { background: var(--bg); padding: 6.5rem 0; border-top: 1px solid var(--border); }
     .experience__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 3rem; }
+    .experience__heading {
+      font-size: clamp(1.7rem, 3vw, 2.45rem);
+      line-height: 1.06;
+    }
     .exp-card {
       background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--r-xl);
       padding: 1.5rem; transition: transform 0.3s var(--ease-expo), box-shadow 0.3s;
@@ -185,6 +220,7 @@
       .hero-stats { grid-template-columns: 1fr; }
       .story__stats { grid-template-columns: 1fr; }
       .process__grid, .experience__grid { grid-template-columns: 1fr; }
+      .mission__lead { padding: 1rem 1rem; }
     }
   </style>
 </head>
@@ -200,11 +236,10 @@
     <div class="container page-hero__inner">
       <div>
         <span class="section-label">About Ifix India Training Academy </span>
-        <h1 class="page-hero__heading">Built to train <span>repair pros</span> who fix the impossible.</h1>
+        <h1 class="page-hero__heading">Built by industry experts to help technicians upgrade from basic repairs to <span>advanced chip-level expertise</span>.</h1>
         <p class="page-hero__sub">
-          iFix Academy is the training arm of iFix India. We teach modern repair skills with real devices,
-          real tools, and real instructors who do this work every day. The goal is simple: help you build
-          a career that is practical, respected, and future-proof.
+          Backed by iFix India, a trusted name in Apple device repair since 2009, the academy is designed
+          to bridge the gap between basic mobile repair skills and real-world advanced repair expertise.
         </p>
         <div class="page-hero__actions">
           <a href="courses.html" class="btn btn--primary" style="padding:0.8rem 1.9rem;">Explore Courses</a>
@@ -241,25 +276,25 @@
     <div class="container">
       <div class="mission__inner">
         <div class="reveal-l">
-          <span class="section-label">Our Mission</span>
-          <h2 class="section-heading">Training that is practical, current, and career-ready.</h2>
-          <p class="section-sub" style="margin-top:0.9rem;max-width:520px;">
-            The repair industry evolves fast. We keep our curriculum aligned with real shop workflows,
-            chip-level diagnostics, and the exact tools you will use in the field.
+          <span class="section-label">WHO WE ARE</span>
+          <h2 class="section-heading mission__heading">Training that is practical, current, and career-ready.</h2>
+          <p class="section-sub mission__lead">
+            Built on over a decade of real repair experience, iFix India Training Academy brings industry expertise into structured learning. We bring real repair lab experience into structured training - helping technicians move beyond basic repairs and handle complex device issues with confidence.
+
           </p>
         </div>
         <div class="mission__grid">
           <div class="mission-card reveal">
-            <div class="mission-card__title">Hands-on from day one</div>
-            <div class="mission-card__desc">Every module includes live devices, guided practice, and supervised lab time so you learn by doing.</div>
+            <div class="mission-card__title">Hands-On Training</div>
+            <div class="mission-card__desc">Our practical modules include real devices, guided practice, and supervised lab sessions so you learn by doing.</div>
           </div>
           <div class="mission-card reveal d1">
-            <div class="mission-card__title">Industry-tested methods</div>
-            <div class="mission-card__desc">Our instructors work in active service centers, so your skills stay aligned with real repair demands.</div>
+            <div class="mission-card__title">Industry-Tested Methods</div>
+            <div class="mission-card__desc">Learn techniques used in active service centers, keeping your skills aligned with real repair demands.</div>
           </div>
           <div class="mission-card reveal d2">
-            <div class="mission-card__title">Career launch support</div>
-            <div class="mission-card__desc">Certification, interview prep, and business guidance help you get hired or start your own shop.</div>
+            <div class="mission-card__title">Career Growth Support</div>
+            <div class="mission-card__desc">Get certification, practical guidance, and support to start your own shop or grow your career.</div>
           </div>
         </div>
       </div>
@@ -271,24 +306,24 @@
       <div class="story__inner">
         <div>
           <span class="section-label reveal">Our Story</span>
-          <h2 class="section-heading reveal d1">From repair benches to a national academy.</h2>
+          <h2 class="section-heading story__heading reveal d1">From fixing devices to building skilled technicians.</h2>
+          <br>
           <div class="story__body">
-           <p class="section-sub" style="margin-top:0.9rem;max-width:520px;">
-              Founded in 2009, iFix India began with a mission to make high-quality repair affordable and reliable.
-              As our service centers grew, we saw the industry shortage: skilled technicians.
+           <p class="section-sub story__text">
+              iFix India started in 2009 as a specialized repair service focused on solving problems others couldn't - especially at the motherboard level. Over the years, working on thousands of iPhones and MacBooks gave us deep, practical expertise in advanced repairs.
+
           </p>
-            <p class="section-sub reveal d3">
-              iFix Academy was created to close that gap. We train students with the same tools, procedures,
-              and standards used in professional repair environments. The result is graduates who are ready for real work.
+            <p class="section-sub story__text reveal d3">
+              But one challenge kept repeating - a shortage of technicians who could handle complex repairs confidently. That gap led to the creation of iFix India Training Academy, where we now train students using real devices, real faults, and real repair processes used in professional labs.
             </p>
           </div>
         </div>
         <div>
           <div class="story__stats reveal-r">
             <div class="story__stat"><span class="story__stat-num">2009</span><span class="story__stat-lbl">Founded</span></div>
-            <div class="story__stat"><span class="story__stat-num">15+</span><span class="story__stat-lbl">Years</span></div>
-            <div class="story__stat"><span class="story__stat-num">2,400+</span><span class="story__stat-lbl">Graduates</span></div>
-            <div class="story__stat"><span class="story__stat-num">94%</span><span class="story__stat-lbl">Placement</span></div>
+            <div class="story__stat"><span class="story__stat-num">15+</span><span class="story__stat-lbl"> YEARS REPAIR EXPERIENCE</span></div>
+            <div class="story__stat"><span class="story__stat-num">10000+</span><span class="story__stat-lbl"> DEVICES REPAIRED</span></div>
+            <div class="story__stat"><span class="story__stat-num">100%</span><span class="story__stat-lbl">REAL LAB HANDS-ON TRAINING</span></div>
           </div>
           <div class="story__locations reveal-r d2">
             <div class="story__loc-title">Training Centers</div>
@@ -311,8 +346,19 @@
     /* ── Outer section acts as scroll-height donor ── */
     .hs-section {
       position: relative;
+      background:
+        radial-gradient(900px circle at 18% 20%, rgba(52,120,246,0.10) 0%, rgba(52,120,246,0.03) 36%, transparent 70%),
+        linear-gradient(180deg, #f7faff 0%, #f4f8ff 100%);
       /* Height set by JS: 100vh + maxTranslate; fallback keeps layout intact */
       height: 100vh;
+    }
+    .hs-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(90deg, rgba(52,120,246,0.03) 0%, rgba(52,120,246,0.01) 32%, rgba(52,120,246,0.03) 100%);
+      opacity: 0.9;
     }
 
     /* ── Sticky wrapper: stays in view while section scrolls ── */
@@ -323,8 +369,8 @@
       overflow: hidden;
       display: grid;
       grid-template-columns: 300px 1fr;
-      background: #0f172a;
-      border-top: 1px solid rgba(255,255,255,0.06);
+      background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(244,248,255,0.98));
+      border-top: 1px solid var(--border);
     }
 
     /* ── LEFT: Intro panel ── */
@@ -333,10 +379,11 @@
       flex-direction: column;
       justify-content: center;
       padding: 3.5rem 2.5rem;
-      border-right: 1px solid rgba(255,255,255,0.07);
+      border-right: 1px solid var(--border);
       position: relative;
       z-index: 2;
       flex-shrink: 0;
+      background: linear-gradient(180deg, rgba(52,120,246,0.05), rgba(52,120,246,0.015));
     }
     /* Subtle vertical glow on the left panel */
     .hs-intro::after {
@@ -355,18 +402,18 @@
     .hs-intro__heading {
       font-size: clamp(1.5rem, 2.2vw, 2rem);
       font-weight: 800; line-height: 1.1;
-      letter-spacing: -.03em; color: #fff;
+      letter-spacing: -.03em; color: var(--text);
       margin-bottom: 1rem;
     }
     .hs-intro__heading span { color: var(--accent); }
     .hs-intro__sub {
       font-size: .875rem; line-height: 1.75;
-      color: rgba(255,255,255,.5); margin-bottom: 2.5rem;
+      color: var(--text-2); margin-bottom: 2.5rem;
     }
 
     /* ── Progress bar ── */
     .hs-progress-wrap {
-      height: 2px; background: rgba(255,255,255,.08);
+      height: 2px; background: rgba(0,0,0,.08);
       border-radius: 999px; overflow: hidden; margin-bottom: 1rem;
     }
     .hs-progress-bar {
@@ -376,7 +423,7 @@
     }
     .hs-step-counter {
       font-size: .75rem; font-weight: 700;
-      color: rgba(255,255,255,.35); letter-spacing: .06em;
+      color: var(--text-3); letter-spacing: .06em;
     }
     .hs-step-counter span { color: var(--accent); font-size: .95rem; }
 
@@ -385,15 +432,16 @@
       display: flex; align-items: center; gap: .5rem;
       margin-top: 2rem; font-size: .68rem; font-weight: 600;
       text-transform: uppercase; letter-spacing: .1em;
-      color: rgba(255,255,255,.25);
+      color: var(--text-3);
     }
     .hs-scroll-hint__arrow {
       width: 28px; height: 28px;
-      border: 1px solid rgba(255,255,255,.12);
+      border: 1px solid var(--border);
       border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       font-size: .75rem;
       animation: arrowBounce 1.8s ease-in-out infinite;
+      background: #fff;
     }
     @keyframes arrowBounce {
       0%,100% { transform: translateX(0); }
@@ -419,11 +467,11 @@
     }
     .hs-track-wrap::before {
       left: 0;
-      background: linear-gradient(to right, #0f172a, transparent);
+      background: linear-gradient(to right, rgba(248,249,251,1), transparent);
     }
     .hs-track-wrap::after {
       right: 0;
-      background: linear-gradient(to left, #0f172a, transparent);
+      background: linear-gradient(to left, rgba(248,249,251,1), transparent);
     }
 
     .hs-track {
@@ -439,8 +487,8 @@
     .hs-card {
       width: 380px;
       flex-shrink: 0;
-      background: rgba(255,255,255,.03);
-      border: 1px solid rgba(255,255,255,.07);
+      background: #fff;
+      border: 1px solid rgba(0,0,0,.08);
       border-radius: 24px;
       padding: 2.25rem 2rem;
       display: flex;
@@ -448,12 +496,14 @@
       justify-content: space-between;
       position: relative;
       overflow: hidden;
-      transition: border-color .35s ease, background .35s ease;
+      box-shadow: 0 10px 30px rgba(31,20,46,0.06);
+      transition: border-color .35s ease, background .35s ease, box-shadow .35s ease;
       isolation: isolate;
     }
     .hs-card.is-active {
-      border-color: rgba(52,120,246,.35);
-      background: rgba(52,120,246,.05);
+      border-color: rgba(52,120,246,.22);
+      background: linear-gradient(180deg, rgba(52,120,246,0.035), rgba(255,255,255,1));
+      box-shadow: 0 14px 38px rgba(31,20,46,0.08);
     }
     /* Gradient border shimmer (top-right corner) */
     .hs-card::before {
@@ -462,10 +512,10 @@
       padding: 1px;
       border-radius: inherit;
       background: linear-gradient(135deg,
-        rgba(255,255,255,0) 0%,
-        rgba(255,255,255,0) 45%,
-        rgba(255,255,255,.08) 70%,
-        rgba(255,255,255,.18) 100%);
+        rgba(52,120,246,0) 0%,
+        rgba(52,120,246,0) 45%,
+        rgba(52,120,246,.05) 70%,
+        rgba(52,120,246,.12) 100%);
       -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       -webkit-mask-composite: xor;
       mask-composite: exclude;
@@ -478,7 +528,7 @@
       position: absolute;
       top: -60px; right: -60px;
       width: 200px; height: 200px;
-      background: radial-gradient(circle, rgba(52,120,246,.22) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(52,120,246,.16) 0%, transparent 70%);
       pointer-events: none;
       z-index: 0;
     }
@@ -491,7 +541,7 @@
     .hs-card__num {
       font-size: 5rem; font-weight: 800; line-height: 1;
       letter-spacing: -.05em;
-      color: rgba(255,255,255,.04);
+      color: rgba(52,120,246,.04);
       position: absolute; top: -1rem; right: 1rem;
       pointer-events: none;
       transition: color .35s ease;
@@ -499,12 +549,12 @@
     .hs-card.is-active .hs-card__num { color: rgba(52,120,246,.12); }
     .hs-card__title {
       font-size: 1.25rem; font-weight: 800;
-      letter-spacing: -.025em; color: #fff;
+      letter-spacing: -.025em; color: var(--text);
       margin-bottom: .75rem; line-height: 1.2;
     }
     .hs-card__desc {
       font-size: .875rem; line-height: 1.75;
-      color: rgba(255,255,255,.5);
+      color: var(--text-2);
       margin-bottom: 1.75rem;
     }
     .hs-card__bottom {
@@ -513,12 +563,12 @@
     }
     .hs-card__bullet {
       display: flex; align-items: center; gap: .6rem;
-      font-size: .8rem; color: rgba(255,255,255,.4);
+      font-size: .8rem; color: var(--text);
     }
     .hs-card__bullet::before {
       content: '';
       width: 5px; height: 5px; border-radius: 50%;
-      background: var(--accent); opacity: .6; flex-shrink: 0;
+      background: var(--accent); opacity: .85; flex-shrink: 0;
       transition: opacity .3s ease;
     }
     .hs-card.is-active .hs-card__bullet::before { opacity: 1; }
@@ -531,7 +581,7 @@
     .hs-connector__line {
       width: 100%; height: 1px;
       background: linear-gradient(to right,
-        rgba(52,120,246,.4), rgba(52,120,246,.1));
+        rgba(52,120,246,.28), rgba(52,120,246,.08));
     }
 
     /* ── Mobile fallback: revert to vertical ── */
@@ -541,15 +591,16 @@
         position: relative; top: 0;
         height: auto; overflow: visible;
         grid-template-columns: 1fr;
-        background: #0f172a;
+        background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(248,249,251,1));
       }
-      .hs-intro { border-right: none; border-bottom: 1px solid rgba(255,255,255,.07); padding: 3rem 1.5rem 2rem; }
+      .hs-intro { border-right: none; border-bottom: 1px solid var(--border); padding: 3rem 1.5rem 2rem; }
       .hs-scroll-hint { display: none; }
       .hs-track-wrap::before, .hs-track-wrap::after { display: none; }
       .hs-track-wrap { overflow: visible; }
       .hs-track { flex-direction: column; padding: 1.75rem 1rem; transform: none !important; }
       .hs-card { width: 100%; }
       .hs-connector { display: none; }
+      .hs-card__title { color: var(--text); }
     }
   </style>
 
@@ -560,10 +611,10 @@
       <div class="hs-intro">
         <span class="hs-intro__eyebrow">How We Train</span>
         <h2 class="hs-intro__heading">
-          A structured path from <span>beginner</span><br>to job-ready.
+          A clear path from <span>beginner</span><br>to advanced technician.
         </h2>
         <p class="hs-intro__sub">
-          Every course follows a clear progression so you build confidence fast and graduate with practical, employable skills.
+          Our training is built around real repair workflows - not classroom theory. You learn by doing, progressing from fundamentals to complex repairs step-by-step.
         </p>
         <div class="hs-progress-wrap">
           <div class="hs-progress-bar" id="hsProgressBar"></div>
@@ -586,14 +637,14 @@
             <div class="hs-card__top">
               <span class="hs-card__step">Step 01</span>
               <div class="hs-card__num">01</div>
-              <div class="hs-card__title">Core Foundations</div>
-              <div class="hs-card__desc">Understand device architecture, safety protocols, and professional tool usage before touching a real board. Theory meets lab on Day&nbsp;1.</div>
+              <div class="hs-card__title">Build the Basics</div>
+              <div class="hs-card__desc">Start with the fundamentals that most technicians skip — understanding how devices actually work before repairing them.</div>
             </div>
             <div class="hs-card__bottom">
-              <div class="hs-card__bullet">Device anatomy &amp; component identification</div>
-              <div class="hs-card__bullet">ESD safety &amp; workshop setup</div>
-              <div class="hs-card__bullet">Professional tool handling</div>
-              <div class="hs-card__bullet">Circuit fundamentals</div>
+              <div class="hs-card__bullet">Device structure &amp; key components</div>
+              <div class="hs-card__bullet">Safe workspace &amp; ESD practices</div>
+              <div class="hs-card__bullet">Tool control and handling</div>
+              <div class="hs-card__bullet">Core electronics basics</div>
             </div>
           </div>
 
@@ -605,14 +656,14 @@
             <div class="hs-card__top">
               <span class="hs-card__step">Step 02</span>
               <div class="hs-card__num">02</div>
-              <div class="hs-card__title">Diagnosis &amp; Repair</div>
-              <div class="hs-card__desc">Practice fault finding, component replacement, and chip-level techniques on real customer devices under instructor supervision.</div>
+              <div class="hs-card__title">Learn to Diagnose</div>
+              <div class="hs-card__desc">Instead of guessing, learn how to identify real faults using proper testing methods and repair logic.</div>
             </div>
             <div class="hs-card__bottom">
-              <div class="hs-card__bullet">Screen, battery &amp; port replacement</div>
-              <div class="hs-card__bullet">PCB &amp; chip-level diagnostics</div>
-              <div class="hs-card__bullet">Water damage recovery</div>
-              <div class="hs-card__bullet">Micro-soldering skills</div>
+              <div class="hs-card__bullet">Fault tracing techniques</div>
+              <div class="hs-card__bullet">Common hardware failures</div>
+              <div class="hs-card__bullet">Power &amp; signal testing basics</div>
+              <div class="hs-card__bullet">Repair decision making</div>
             </div>
           </div>
 
@@ -624,14 +675,14 @@
             <div class="hs-card__top">
               <span class="hs-card__step">Step 03</span>
               <div class="hs-card__num">03</div>
-              <div class="hs-card__title">Certification</div>
-              <div class="hs-card__desc">Complete skill assessments and live repair projects assessed by senior technicians. Receive your industry-recognised iFix Academy diploma.</div>
+              <div class="hs-card__title">Master Advanced Repairs</div>
+              <div class="hs-card__desc">Work on complex issues that most shops avoid — including motherboard-level problems and precision repair.</div>
             </div>
             <div class="hs-card__bottom">
-              <div class="hs-card__bullet">Practical skill assessment</div>
-              <div class="hs-card__bullet">Live repair project sign-off</div>
-              <div class="hs-card__bullet">ISO-certified diploma</div>
-              <div class="hs-card__bullet">Digital certificate issued</div>
+              <div class="hs-card__bullet">Chip-level troubleshooting</div>
+              <div class="hs-card__bullet">Micro-soldering practice</div>
+              <div class="hs-card__bullet">IC and component replacement</div>
+              <div class="hs-card__bullet">Complex fault resolution</div>
             </div>
           </div>
 
@@ -643,14 +694,14 @@
             <div class="hs-card__top">
               <span class="hs-card__step">Step 04</span>
               <div class="hs-card__num">04</div>
-              <div class="hs-card__title">Career Launch</div>
-              <div class="hs-card__desc">Get placement support, mock interview prep, and a personalised roadmap - whether you're joining a workshop or opening your own shop.</div>
+              <div class="hs-card__title">Work Like a Professional</div>
+              <div class="hs-card__desc">Apply your skills in real scenarios and understand how to handle repairs confidently in a business environment.</div>
             </div>
             <div class="hs-card__bottom">
-              <div class="hs-card__bullet">Job placement assistance</div>
-              <div class="hs-card__bullet">Interview &amp; portfolio prep</div>
-              <div class="hs-card__bullet">Shop setup &amp; pricing guidance</div>
-              <div class="hs-card__bullet">Alumni network access</div>
+              <div class="hs-card__bullet">Live repair case handling</div>
+              <div class="hs-card__bullet">Speed &amp; accuracy improvement</div>
+              <div class="hs-card__bullet">Real job simulation</div>
+              <div class="hs-card__bullet">Career &amp; business direction</div>
             </div>
           </div>
 
@@ -719,26 +770,26 @@
   <section class="experience">
     <div class="container">
       <span class="section-label reveal">Student Experience</span>
-      <h2 class="section-heading reveal d1">Everything you need to learn, practice, and succeed.</h2>
+      <h2 class="section-heading experience__heading reveal d1">Everything you need to learn, practice, and succeed.</h2>
       <p class="section-sub reveal d2" style="max-width:560px;margin-top:0.8rem;">
-        We keep batches focused, training personal, and lab access generous so every student gets meaningful time on the bench.
+       We keep batches focused, training practical, and lab access consistent so every student gets real repair experience.
       </p>
       <div class="experience__grid">
         <div class="exp-card reveal">
-          <div class="exp-card__title">Small batch learning</div>
-          <div class="exp-card__desc">More instructor attention and better hands-on time for every student.</div>
+          <div class="exp-card__title">Small Batch Training</div>
+          <div class="exp-card__desc">Limited students per batch so you get proper attention during every repair and lab session.</div>
         </div>
         <div class="exp-card reveal d1">
-          <div class="exp-card__title">Real devices, real tools</div>
-          <div class="exp-card__desc">Train on the same equipment and devices used in professional service centers.</div>
+          <div class="exp-card__title">Real Device Practice</div>
+          <div class="exp-card__desc">Work on actual faulty devices and learn how real repair problems are diagnosed and solved.</div>
         </div>
         <div class="exp-card reveal d2">
-          <div class="exp-card__title">Tool kit access</div>
-          <div class="exp-card__desc">Use professional-grade tools during training with guidance from experts.</div>
+          <div class="exp-card__title">Professional Lab Access</div>
+          <div class="exp-card__desc">Use microscopes, soldering stations, and tools used in real service centers during training.</div>
         </div>
         <div class="exp-card reveal d3">
-          <div class="exp-card__title">Placement guidance</div>
-          <div class="exp-card__desc">We help connect you with opportunities and show you how to build your own path.</div>
+          <div class="exp-card__title">Career & Business Support</div>
+          <div class="exp-card__desc">Get guidance to find jobs, increase income, or start and grow your own repair business.</div>
         </div>
       </div>
     </div>

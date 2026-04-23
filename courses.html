@@ -84,9 +84,30 @@
     .chip { font-size: 0.75rem; padding: 5px 13px; border-radius: 999px; border: 1px solid var(--border); color: var(--text-2); background: var(--bg); }
 
     .skills-title { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3); margin-bottom: 1rem; }
-    .skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 2rem; }
-    .skill-item { display: flex; align-items: center; gap: 0.6rem; font-size: 0.875rem; color: var(--text-2); }
-    .skill-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 1.2rem;
+      row-gap: 0.6rem;
+      margin-bottom: 2rem;
+    }
+    .skill-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      min-height: 2.35rem;
+      line-height: 1.45;
+      font-size: 0.875rem;
+      color: var(--text-2);
+    }
+    .skill-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+      margin-top: 0.45rem;
+    }
 
     .course-outcome {
       background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--r-lg);
@@ -155,6 +176,13 @@
     .online-feat__icon { font-size: 1.75rem; margin-bottom: 1rem; }
     .online-feat__title { font-weight: 700; font-size: 1rem; color: var(--text); margin-bottom: 0.4rem; }
     .online-feat__desc { font-size: 0.875rem; color: var(--text-2); line-height: 1.6; }
+    .online-feat--align-up .online-feat__icon {
+      margin-bottom: 0.8rem;
+    }
+    .online-feat--align-up .online-feat__title,
+    .online-feat--align-up .online-feat__desc {
+      transform: translateY(-8px);
+    }
 
     /* ── CTA ROW ── */
     .enroll-cta {
@@ -236,11 +264,11 @@
 
   <nav class="tabs-nav" id="tabsNav">
     <div class="tabs-nav__inner">
-      <button class="tab-btn active" data-target="mobile">Mobile Repairing</button>
-      <button class="tab-btn" data-target="laptop">Laptop Repairing</button>
-      <button class="tab-btn" data-target="display">Display Repairing</button>
-      <button class="tab-btn" data-target="iphone">iPhone Repairing</button>
-      <button class="tab-btn" data-target="online">Online Learning</button>
+      <button class="tab-btn active" data-target="mobile">Android Master</button>
+      <button class="tab-btn" data-target="laptop">Laptop Master</button>
+      <button class="tab-btn" data-target="display">iPhone Master</button>
+      <button class="tab-btn" data-target="iphone">Macbook Master</button>
+      <button class="tab-btn" data-target="online">Customised Learning</button>
     </div>
   </nav>
 
@@ -469,7 +497,7 @@
 
       <div class="ss-course-label">
         <div class="ss-course-label__pill bg-popular" id="ssPill">⭐ Most Popular</div>
-        <div class="ss-course-label__name" id="ssName">Mobile Repairing</div>
+        <div class="ss-course-label__name" id="ssName">Android Master</div>
       </div>
 
       <div class="phone-device" id="phoneDevice">
@@ -606,10 +634,10 @@
       <div class="phone-glow" id="phoneGlow" style="background:#3478F6;"></div>
 
       <div class="ph-dots" id="phDots">
-        <span class="ph-dot active" data-idx="0" title="Mobile Repairing"></span>
-        <span class="ph-dot" data-idx="1" title="Laptop Repairing"></span>
-        <span class="ph-dot" data-idx="2" title="Display Repairing"></span>
-        <span class="ph-dot" data-idx="3" title="iPhone Repairing"></span>
+        <span class="ph-dot active" data-idx="0" title="Android Master"></span>
+        <span class="ph-dot" data-idx="1" title="Laptop Master"></span>
+        <span class="ph-dot" data-idx="2" title="iPhone Master"></span>
+        <span class="ph-dot" data-idx="3" title="Macbook Master"></span>
       </div>
 
     </div><!-- /.ss-left -->
@@ -620,9 +648,9 @@
       <!-- ── MOBILE ── -->
       <section class="course-scroll-item" id="mobile" data-course-idx="0">
         <div class="csi__inner">
-          <div class="csi__step">Course 01 · Mobile Repairing</div>
+          <div class="csi__step">Course 01 · Android Master</div>
           <span class="course-badge-lg bg-popular">⭐ Most Popular</span>
-          <h2 class="course-info__title">Mobile Repairing Course</h2>
+          <h2 class="course-info__title">Android Master Course</h2>
           <p class="course-info__desc">The foundation of every repair technician's career. Learn complete hardware &amp; software troubleshooting for all Android and feature phone brands — from screen replacements to PCB-level diagnostics. Immediate employment or self-employment ready.</p>
           <div class="course-chips">
             <span class="chip">⏱ 6 Weeks</span>
@@ -655,9 +683,9 @@
       <!-- ── LAPTOP ── -->
       <section class="course-scroll-item" id="laptop" data-course-idx="1">
         <div class="csi__inner">
-          <div class="csi__step">Course 02 · Laptop Repairing</div>
+          <div class="csi__step">Course 02 · Laptop Master</div>
           <span class="course-badge-lg bg-demand">🔥 High Demand</span>
-          <h2 class="course-info__title">Laptop Repairing Course</h2>
+          <h2 class="course-info__title">Laptop Master Course</h2>
           <p class="course-info__desc">Windows laptops are everywhere — in homes, offices, colleges. From basic diagnostics to advanced chip-level motherboard repair. GPU re-balling alone earns ₹2,000+ per device. Master the skill that keeps businesses running.</p>
           <div class="course-chips">
             <span class="chip">⏱ 7 Weeks</span>
@@ -667,14 +695,14 @@
           </div>
           <div class="skills-title">What You'll Learn</div>
           <div class="skills-grid">
-            <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Motherboard Diagnosis &amp; Repair</div>
-            <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>GPU Re-balling &amp; Rebonding</div>
-            <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Hinge &amp; Chassis Replacement</div>
-            <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Thermal Paste &amp; Cooling</div>
-            <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>BIOS Recovery &amp; Reflashing</div>
-            <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>RAM &amp; SSD Upgrades</div>
-            <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Display Panel Replacement</div>
-            <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Keyboard &amp; Trackpad Fix</div>
+            <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Laptop assembly &amp; Disassembly</div>
+            <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Basic Electronics</div>
+            <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Deep Understanding of Schematics &amp; Boardview</div>
+            <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Motherboard Diagnosis</div>
+            <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Embedded Controller &amp; BIOS Flashing</div>
+            <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Troubleshooting of Not Powering On, Voltage Tripping, No Display Etc.</div>
+            <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Handskill Development</div>
+            <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Live Practicals</div>
           </div>
           <div class="course-outcome">
             <div class="course-outcome__icon">🎓</div>
@@ -690,9 +718,9 @@
       <!-- ── DISPLAY ── -->
       <section class="course-scroll-item" id="display" data-course-idx="2">
         <div class="csi__inner">
-          <div class="csi__step">Course 03 · Display Repairing</div>
+          <div class="csi__step">Course 03 · iPhone Master</div>
           <span class="course-badge-lg bg-new">🆕 New Course</span>
-          <h2 class="course-info__title">Display Repairing Course</h2>
+          <h2 class="course-info__title">iPhone Master Course</h2>
           <p class="course-info__desc">LCD and AMOLED displays are the most expensive components in any smartphone. Mastering OCA lamination, bonding, and refurbishment means you can restore cracked screens to factory condition. High value, high demand, high earning potential.</p>
           <div class="course-chips">
             <span class="chip">⏱ 5 Weeks</span>
@@ -702,14 +730,14 @@
           </div>
           <div class="skills-title">What You'll Learn</div>
           <div class="skills-grid">
-            <div class="skill-item"><span class="skill-dot" style="background:var(--green);"></span>LCD &amp; AMOLED Display Bonding</div>
-            <div class="skill-item"><span class="skill-dot" style="background:var(--green);"></span>OCA Lamination Process</div>
-            <div class="skill-item"><span class="skill-dot" style="background:var(--green);"></span>Digitizer Separation</div>
-            <div class="skill-item"><span class="skill-dot" style="background:var(--green);"></span>UV Curing Techniques</div>
-            <div class="skill-item"><span class="skill-dot" style="background:var(--green);"></span>Glass Refurbishment</div>
-            <div class="skill-item"><span class="skill-dot" style="background:var(--green);"></span>AMOLED Burn-in Fixes</div>
-            <div class="skill-item"><span class="skill-dot" style="background:var(--green);"></span>Touch Calibration</div>
-            <div class="skill-item"><span class="skill-dot" style="background:var(--green);"></span>Display Testing &amp; QC</div>
+            <div class="skill-item"><span class="skill-dot" style="background:var(--green);"></span>Live Trouble Shooting</div>
+            <div class="skill-item"><span class="skill-dot" style="background:var(--green);"></span>Deep Understanding of Bitmap &amp; Schematics</div>
+            <div class="skill-item"><span class="skill-dot" style="background:var(--green);"></span>Charging EPROM Programming</div>
+            <div class="skill-item"><span class="skill-dot" style="background:var(--green);"></span>CPU Reballing</div>
+            <div class="skill-item"><span class="skill-dot" style="background:var(--green);"></span>Booting Sequence</div>
+            <div class="skill-item"><span class="skill-dot" style="background:var(--green);"></span>Deep Understanding of JCID &amp; LB Tool</div>
+            <div class="skill-item"><span class="skill-dot" style="background:var(--green);"></span>Sandwich Motherboard Fixture</div>
+            <div class="skill-item"><span class="skill-dot" style="background:var(--green);"></span>Storage Upgradation</div>
           </div>
           <div class="course-outcome">
             <div class="course-outcome__icon">🎓</div>
@@ -725,9 +753,9 @@
       <!-- ── IPHONE ── -->
       <section class="course-scroll-item" id="iphone" data-course-idx="3">
         <div class="csi__inner">
-          <div class="csi__step">Course 04 · iPhone Repairing</div>
+          <div class="csi__step">Course 04 · Macbook Master</div>
           <span class="course-badge-lg bg-premium">💎 Premium</span>
-          <h2 class="course-info__title">iPhone Repairing Course</h2>
+          <h2 class="course-info__title">Macbook Master Course</h2>
           <p class="course-info__desc">The most premium skill in the mobile repair industry. iPhone technicians who can work on chip-level Apple hardware earn the most in the field. Learn Face ID repair, Apple-specific IC diagnosis, and deep motherboard work very few shops in India can offer.</p>
           <div class="course-chips">
             <span class="chip">⏱ 8 Weeks</span>
@@ -737,14 +765,14 @@
           </div>
           <div class="skills-title">What You'll Learn</div>
           <div class="skills-grid">
-            <div class="skill-item"><span class="skill-dot" style="background:#5856D6;"></span>Screen &amp; Battery Replacement</div>
-            <div class="skill-item"><span class="skill-dot" style="background:#5856D6;"></span>Face ID Module Repair</div>
-            <div class="skill-item"><span class="skill-dot" style="background:#5856D6;"></span>Motherboard Diagnosis</div>
-            <div class="skill-item"><span class="skill-dot" style="background:#5856D6;"></span>Water Damage Recovery</div>
-            <div class="skill-item"><span class="skill-dot" style="background:#5856D6;"></span>Apple-Specific IC Work</div>
-            <div class="skill-item"><span class="skill-dot" style="background:#5856D6;"></span>Charging Port &amp; Camera Fix</div>
-            <div class="skill-item"><span class="skill-dot" style="background:#5856D6;"></span>True Tone &amp; DFU Restore</div>
-            <div class="skill-item"><span class="skill-dot" style="background:#5856D6;"></span>Micro-Soldering on Apple PCB</div>
+            <div class="skill-item"><span class="skill-dot" style="background:#5856D6;"></span>Advanced Digital Electronics</div>
+            <div class="skill-item"><span class="skill-dot" style="background:#5856D6;"></span>Deep Understanding of Schematics</div>
+            <div class="skill-item"><span class="skill-dot" style="background:#5856D6;"></span>Macbook Logicboard Diagnosis</div>
+            <div class="skill-item"><span class="skill-dot" style="background:#5856D6;"></span>BIOS Flashing</div>
+            <div class="skill-item"><span class="skill-dot" style="background:#5856D6;"></span>RAM &amp; SSD Upgrades</div>
+            <div class="skill-item"><span class="skill-dot" style="background:#5856D6;"></span>CPU &amp; GPU Replacement</div>
+            <div class="skill-item"><span class="skill-dot" style="background:#5856D6;"></span>Hand Skill Development</div>
+            <div class="skill-item"><span class="skill-dot" style="background:#5856D6;"></span>Live Practical</div>
           </div>
           <div class="course-outcome">
             <div class="course-outcome__icon">🎓</div>
@@ -765,10 +793,10 @@
     'use strict';
 
     var COURSES = [
-      { label:'⭐ Most Popular', labelCls:'bg-popular', name:'Mobile Repairing',  glow:'#3478F6' },
-      { label:'🔥 High Demand',  labelCls:'bg-demand',  name:'Laptop Repairing',  glow:'#FF6B47' },
-      { label:'🆕 New Course',   labelCls:'bg-new',     name:'Display Repairing', glow:'#00C896' },
-      { label:'💎 Premium',      labelCls:'bg-premium', name:'iPhone Repairing',  glow:'#5856D6' }
+      { label:'⭐ Most Popular', labelCls:'bg-popular', name:'Android Master',  glow:'#3478F6' },
+      { label:'🔥 High Demand',  labelCls:'bg-demand',  name:'Laptop Master',  glow:'#FF6B47' },
+      { label:'🆕 New Course',   labelCls:'bg-new',     name:'iPhone Master', glow:'#00C896' },
+      { label:'💎 Premium',      labelCls:'bg-premium', name:'Macbook Master',  glow:'#5856D6' }
     ];
 
     var screens   = document.querySelectorAll('.p-screen');
@@ -875,15 +903,15 @@
   <!-- ONLINE -->
   <section class="online-section" id="online">
     <div class="container">
-      <span class="section-label reveal">Online Learning</span>
+      <span class="section-label reveal">Customised Learning</span>
       <h2 class="section-heading reveal d1" style="margin-bottom:1rem;">Learn Mobile Repairing<br>- From Home</h2>
       <p class="section-sub reveal d2" style="max-width:580px;">Can't visit our Delhi or Patna training centre? Our structured online course delivers the same industry-level curriculum right to your screen - accessible from every state in India.</p>
       <div class="online-grid">
-        <div class="online-feat reveal"><div class="online-feat__icon">🎥</div><div class="online-feat__title">Live &amp; Recorded HD Lectures</div><div class="online-feat__desc">Available in Hindi and English. Rewatch any class as many times as you need.</div></div>
-        <div class="online-feat reveal d1"><div class="online-feat__icon">🧰</div><div class="online-feat__title">Repair Tool Kit at Home</div><div class="online-feat__desc">Professional-grade toolkit shipped to your address. Start practicing from Day 1.</div></div>
-        <div class="online-feat reveal d2"><div class="online-feat__icon">💬</div><div class="online-feat__title">WhatsApp &amp; Telegram Support</div><div class="online-feat__desc">Doubt-clearing sessions every day. Experts respond within hours.</div></div>
-        <div class="online-feat reveal"><div class="online-feat__icon">📜</div><div class="online-feat__title">Industry-Recognised Certificate</div><div class="online-feat__desc">ISO-certified diploma accepted by employers across India.</div></div>
-        <div class="online-feat reveal d1"><div class="online-feat__icon">♾️</div><div class="online-feat__title">Lifetime Access to Updates</div><div class="online-feat__desc">New smartphones, new repair techniques - your course stays current. Forever.</div></div>
+        <div class="online-feat reveal"><div class="online-feat__icon">🎥</div><div class="online-feat__title">Live Hands-On Training</div><div class="online-feat__desc">Work on real faulty iPhones &amp; MacBooks - not just demonstrations.</div></div>
+        <div class="online-feat online-feat--align-up reveal d1"><div class="online-feat__icon">🧰</div><div class="online-feat__title">Complete Knowledge of Digital Electronics</div><div class="online-feat__desc">Build strong fundamentals in components and circuits for advanced device repair.</div></div>
+        <div class="online-feat reveal d2"><div class="online-feat__icon">💬</div><div class="online-feat__title">Direct Trainer Support</div><div class="online-feat__desc">Learn face-to-face with expert guidance and real-time doubt solving.</div></div>
+        <div class="online-feat reveal"><div class="online-feat__icon">📜</div><div class="online-feat__title">Industry's Advanced Tools &amp; Machines</div><div class="online-feat__desc">Train using the latest professional equipment used in real repair labs.</div></div>
+        <div class="online-feat reveal d1"><div class="online-feat__icon">♾️</div><div class="online-feat__title">Post-Training Business Support</div><div class="online-feat__desc">Get continued business guidance even after completing your course.</div></div>
         <div class="online-feat reveal d2"><div class="online-feat__icon">🚀</div><div class="online-feat__title">Business Setup Guidance</div><div class="online-feat__desc">Learn how to set up your own repair shop: tools, pricing, marketing &amp; suppliers.</div></div>
       </div>
       <div style="margin-top:3rem;display:flex;gap:1rem;flex-wrap:wrap;" class="reveal">
@@ -901,7 +929,7 @@
           <p class="enroll-cta__sub">Join 2,400+ graduates who chose hands-on training. Enroll today or visit our nearest centre.</p>
         </div>
         <div style="display:flex;gap:1rem;flex-wrap:wrap;">
-          <a href="contact.html" class="btn btn--w">Find a Centre</a>
+          <a href="contact.html" class="btn btn--w">Get Free Demo</a>
           <a href="contact.html" class="btn btn--wo">Contact Us</a>
         </div>
       </div>
