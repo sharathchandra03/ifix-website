@@ -83,8 +83,8 @@
       background: var(--bg);
     }
     .hero__video-wrap {
-      position: relative; width: 100%; max-width: 430px;
-      aspect-ratio: 9/16; border-radius: var(--r-2xl);
+      position: relative; width: 100%; max-width: 502px;
+      aspect-ratio: 9/10.6; border-radius: var(--r-2xl);
       overflow: hidden; box-shadow: 0 0 0 1px var(--border);
       background: #0f0f12;
     }
@@ -97,6 +97,7 @@
       height: calc(100% - 6px);
       margin: 3px;
       object-fit: cover;
+      object-position: center top;
       display: block;
       border-radius: calc(var(--r-2xl) - 3px);
     }
@@ -527,14 +528,27 @@
     /* ════════════════════════════════════════
        ONLINE LEARNING
     ════════════════════════════════════════ */
-    .online { background: var(--bg); padding: 7rem 0; border-top: 1px solid var(--border); }
-    .online__inner { display: grid; grid-template-columns: 1fr 1fr; gap: 6.5rem; align-items: start; }
+    .online {
+      background: var(--bg);
+      padding: 7.75rem 0 7rem;
+      border-top: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .online::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(900px 400px at 8% 20%, rgba(52,120,246,0.05) 0%, rgba(52,120,246,0) 72%);
+      pointer-events: none;
+    }
+    .online__inner { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; position: relative; z-index: 1; }
     .online__right {
       display: flex;
       flex-direction: column;
-      gap: 1.5rem;
+      gap: 1.35rem;
     }
-    .online__features { display: flex; flex-direction: column; gap: 1.1rem; margin-top: 2rem; }
+    .online__features { display: flex; flex-direction: column; gap: 1rem; margin-top: 1.65rem; }
     .online__feat {
       --mx: 50%;
       --my: 50%;
@@ -563,36 +577,86 @@
     .online__feat-text { font-size: 0.875rem; color: var(--text-2); line-height: 1.55; }
     .online__feat-text strong { color: var(--text); font-weight: 600; display: block; margin-bottom: 1px; }
 
-    .training-highlight {
-      margin-top: 2rem;
-      background: var(--bg-2);
-      border: 1px solid var(--border);
-      border-radius: var(--r-xl);
-      padding: 1.5rem;
-      box-shadow: var(--shadow-sm);
+    /* ════════════════════════════════════════
+       TRAINING CTA
+    ════════════════════════════════════════ */
+    .training-cta {
+      padding: 0 0 7rem;
+      background: var(--bg);
+      position: relative;
+      overflow: hidden;
     }
-    .training-highlight__tag {
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
+    .training-cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(820px 380px at 75% 15%, rgba(52,120,246,0.08) 0%, rgba(52,120,246,0) 72%);
+      pointer-events: none;
+    }
+    .training-cta__card {
+      position: relative;
+      z-index: 1;
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,250,255,0.96));
+      border: 1px solid rgba(52,120,246,0.14);
+      border-radius: 2rem;
+      box-shadow: 0 16px 42px rgba(31,20,46,0.08);
+      padding: clamp(1.7rem, 3.8vw, 3rem);
+      min-height: 260px;
+      display: grid;
+      grid-template-columns: 1.2fr auto;
+      gap: 2rem;
+      align-items: center;
+      overflow: hidden;
+    }
+    .training-cta__card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(180px circle at 20% 20%, rgba(52,120,246,0.12) 0%, rgba(52,120,246,0) 70%),
+        radial-gradient(180px circle at 82% 75%, rgba(52,120,246,0.08) 0%, rgba(52,120,246,0) 72%);
+      pointer-events: none;
+      opacity: 0.9;
+    }
+    .training-cta__copy {
+      position: relative;
+      z-index: 1;
+      max-width: 720px;
+    }
+    .training-cta__tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
       color: var(--accent);
-      margin-bottom: 0.5rem;
-      display: block;
+      margin-bottom: 0.9rem;
     }
-    .training-highlight__title {
-      font-weight: 800;
-      font-size: 1.28rem;
+    .training-cta__title {
+      font-size: clamp(2rem, 3.8vw, 3.2rem);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
       color: var(--text);
-      letter-spacing: -0.02em;
-      line-height: 1.22;
-      margin-bottom: 0.5rem;
+      font-weight: 800;
+      margin-bottom: 0.85rem;
     }
-    .training-highlight__desc {
-      font-size: 0.9rem;
-      line-height: 1.65;
+    .training-cta__desc {
+      font-size: 1.02rem;
+      line-height: 1.75;
       color: var(--text-2);
-      margin-bottom: 1.2rem;
+      max-width: 58ch;
+    }
+    .training-cta__action {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: flex-end;
+    }
+    .training-cta__action .btn {
+      padding: 0.9rem 2.1rem;
+      min-width: 170px;
     }
 
     .industry-panel {
@@ -704,53 +768,10 @@
     .toolkit-card__icon { font-size: 2.5rem; margin-bottom: 1rem; display: block; }
     .toolkit-card__title { font-weight: 800; font-size: 1.35rem; color: var(--text); letter-spacing: -0.02em; margin-bottom: 0.5rem; }
     .toolkit-card__desc { font-size: 0.875rem; color: var(--text-2); line-height: 1.65; margin-bottom: 1.75rem; }
-    .stats-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem; margin-top: 0; }
+    .stats-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem; margin-top: 3.6rem; }
     .stat-item { background: var(--bg); border: 1.5px solid #555; border-radius: var(--r-md); padding: 1.1rem; text-align: center; }
     .stat-item__num { font-weight: 800; font-size: 1.45rem; color: var(--accent); letter-spacing: -0.02em; display: block; }
     .stat-item__lbl { font-size: 0.68rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; display: block; }
-
-    /* ════════════════════════════════════════
-       YOUTUBE HOME
-    ════════════════════════════════════════ */
-    .youtube-home { background: var(--bg-2); padding: 7rem 0; border-top: 1px solid var(--border); }
-    .youtube-home__head { display: flex; justify-content: space-between; align-items: flex-end; gap: 2rem; margin-bottom: 3rem; flex-wrap: wrap; }
-    .youtube-home__player {
-      border: 1px solid var(--border);
-      border-radius: var(--r-2xl);
-      overflow: hidden;
-      background: var(--bg);
-      box-shadow: var(--shadow-md);
-      margin-bottom: 1.5rem;
-    }
-    .youtube-home__player iframe { width: 100%; aspect-ratio: 16 / 9; border: 0; display: block; }
-    .youtube-home__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.25rem; }
-    .youtube-home__card {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: var(--r-xl);
-      overflow: hidden;
-      box-shadow: var(--shadow-sm);
-      transition: transform 0.35s var(--ease-expo), box-shadow 0.35s ease, border-color 0.3s;
-      cursor: pointer;
-    }
-    .youtube-home__card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: rgba(52,120,246,0.2); }
-    .youtube-home__thumb { position: relative; aspect-ratio: 16/9; overflow: hidden; background: #111; }
-    .youtube-home__thumb img { width: 100%; height: 100%; object-fit: cover; }
-    .youtube-home__play {
-      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-      font-size: 2.2rem; color: white; background: rgba(0,0,0,0.18);
-      text-shadow: 0 6px 24px rgba(0,0,0,0.3);
-    }
-    .youtube-home__thumb::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, rgba(0,0,0,0.04) 0%, rgba(0,0,0,0.18) 100%);
-    }
-    .youtube-home__body { padding: 1rem 1rem 1.1rem; }
-    .youtube-home__title { font-weight: 700; font-size: 0.95rem; color: var(--text); line-height: 1.45; margin-bottom: 0.35rem; }
-    .youtube-home__meta { font-size: 0.78rem; color: var(--text-2); }
-    .youtube-home__loading { grid-column: 1 / -1; text-align: center; padding: 2rem; color: var(--text-2); }
 
     /* ════════════════════════════════════════
        BRANDS
@@ -1093,7 +1114,7 @@
       .hero { grid-template-columns: 1fr; min-height: auto; }
       .hero__left { padding: 6.3rem 1.25rem 2.25rem; }
       .hero__right { min-height: 60vw; padding: 2rem; }
-      .hero__video-wrap { max-width: 260px; margin: auto; }
+      .hero__video-wrap { max-width: 180px; margin: auto; }
       .hero__stats { flex-wrap: wrap; gap: 1rem 1.25rem; }
       .hero__stat-div { display: none; }
       .hero__scroll { display: none; }
@@ -1133,7 +1154,7 @@
     @media (max-width: 600px) {
       .courses-preview,
       .online,
-      .youtube-home,
+      .training-cta,
       .testimonials { padding: 5.25rem 0; }
       .hero__left { padding: 5.9rem 1rem 2rem; }
       .hero__sub { margin-bottom: 1.5rem; }
@@ -1180,6 +1201,17 @@
       .testimonials__head { padding: 0 1rem; margin-bottom: 2.4rem; }
       .tcard { width: min(84vw, 320px); }
       .cta-banner__inner { gap: 1.25rem; }
+    }
+    @media (max-width: 900px) {
+      .training-cta__card {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+      }
+      .training-cta__action { justify-content: flex-start; }
+    }
+    @media (max-width: 640px) {
+      .training-cta__card { min-height: 0; padding: 1.4rem; border-radius: 1.45rem; }
+      .training-cta__action .btn { width: 100%; }
     }
   </style>
 </head>
@@ -1338,36 +1370,6 @@
     </div>
   </section>
 
-  <!-- ════════ YOUTUBE SECTION ════════ -->
-  <section class="youtube-home" id="youtubeHome">
-    <div class="container">
-      <div class="youtube-home__head">
-        <div>
-          <span class="section-label reveal">YouTube Authority</span>
-          <h2 class="section-heading reveal d1">Latest repair videos<br>from our channel.</h2>
-        </div>
-        <p class="section-sub reveal d2" style="max-width:420px;">Watch the newest tutorials, repair walkthroughs, and device breakdowns directly from IFIX Academy.</p>
-      </div>
-      <div class="youtube-home__player reveal" id="youtubeHomePlayerWrap">
-        <div class="youtube-home__facade" id="youtubeHomeFacade" onclick="initHomePlayer()" style="cursor:pointer;position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:inherit;overflow:hidden;">
-          <img src="https://i.ytimg.com/vi/videoseries/maxresdefault.jpg" onerror="this.src='https://i.ytimg.com/vi/9bZkp7q19f0/maxresdefault.jpg'" alt="IFIX Academy YouTube" style="width:100%;height:100%;object-fit:cover;opacity:0.7;">
-          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
-            <div style="width:68px;height:48px;background:#FF0000;border-radius:12px;display:flex;align-items:center;justify-content:center;">
-              <svg viewBox="0 0 24 24" width="28" height="28" fill="white"><path d="M8 5v14l11-7z"/></svg>
-            </div>
-          </div>
-        </div>
-        <iframe id="youtubeHomePlayer" style="display:none;width:100%;aspect-ratio:16/9;border:0;border-radius:inherit;" title="IFIX Academy YouTube videos" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-      </div>
-      <div class="youtube-home__grid" id="youtubeHomeGrid">
-        <div class="youtube-home__loading">Loading videos...</div>
-      </div>
-      <div style="text-align:center;margin-top:2.5rem;" class="reveal">
-        <a href="https://www.youtube.com/channel/UCEFbnYCVxll7Q3OPKb1B6jQ" target="_blank" class="btn btn--outline" style="padding:0.75rem 2rem;">Visit YouTube Channel →</a>
-      </div>
-    </div>
-  </section>
-
   <!-- ════════ ONLINE LEARNING ════════ -->
   <section class="online" id="online">
     <div class="container">
@@ -1417,12 +1419,22 @@
             <div class="stat-item reveal d1"><span class="stat-item__num">15+</span><span class="stat-item__lbl">Years Experiences</span></div>
             <div class="stat-item reveal d2"><span class="stat-item__num">10k+</span><span class="stat-item__lbl">Happy Customers</span></div>
           </div>
-          <div class="training-highlight reveal d1">
-            <span class="training-highlight__tag">EXCLUSIVE TRAINING EXPERIENCE</span>
-            <h3 class="training-highlight__title">Train in a Real Repair Lab Environment</h3>
-            <p class="training-highlight__desc">Get access to a fully equipped lab with advanced tools, real devices, and live repair scenarios. Build confidence by working on actual repair cases during training.</p>
-            <a href="/contact#contact-form" class="btn btn--primary">Enroll Now</a>
-          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ TRAINING CTA ════════ -->
+  <section class="training-cta" id="trainingCta">
+    <div class="container">
+      <div class="training-cta__card reveal">
+        <div class="training-cta__copy">
+          <span class="training-cta__tag">EXCLUSIVE TRAINING EXPERIENCE</span>
+          <h3 class="training-cta__title">Train in a Real Repair Lab Environment</h3>
+          <p class="training-cta__desc">Get access to a fully equipped lab with advanced tools, real devices, and live repair scenarios. Build confidence by working on actual repair cases during training.</p>
+        </div>
+        <div class="training-cta__action">
+          <a href="/contact#contact-form" class="btn btn--primary">Enroll Now</a>
         </div>
       </div>
     </div>
@@ -1483,7 +1495,7 @@
         </div>
         <div style="display:flex;gap:1rem;flex-wrap:wrap;">
           <a href="courses.html" class="btn btn--white">Book Free Demo Class</a>
-          <a href="contact.html" class="btn btn--white-outline">Chat on WhatsApp</a>
+          <a href="https://wa.me/916364429494?text=Hi%20iFix%20Academy,%20I%20want%20to%20know%20more%20about%20the%20training%20programs." target="_blank" rel="noopener noreferrer" class="btn btn--white-outline">Chat on WhatsApp</a>
         </div>
       </div>
     </div>
@@ -1497,7 +1509,6 @@
       localStorage.getItem('ifix_api_base') ||
       (window.location.protocol === 'file:' ? 'http://localhost:5000/api' : '/api')
     ).replace(/\/$/, '');
-    const YOUTUBE_DEFAULT_PLAYLIST = 'UUEFbnYCVxll7Q3OPKb1B6jQ';
 
     /* ── BRANDS ── */
     const brands = ['📱 Samsung','🍎 Apple','📲 Vivo','📳 Oppo','🔴 OnePlus','📡 Xiaomi','💻 HP','🖥️ Dell','🏷️ Lenovo','📱 Realme','📟 Motorola','📞 Nokia'];
@@ -1523,86 +1534,6 @@
       [...testimonials.slice(0,4),...testimonials.slice(0,4)].forEach(t => t1.insertAdjacentHTML('beforeend',tc(t)));
       [...testimonials.slice(4),...testimonials.slice(4)].forEach(t => t2.insertAdjacentHTML('beforeend',tc(t)));
     }
-
-    /* ── YOUTUBE ── */
-    async function loadHomeVideos() {
-      const grid = document.getElementById('youtubeHomeGrid');
-      if (!grid) return;
-
-      try {
-        const response = await fetch(`${API_BASE}/youtube/videos`);
-        const videos = await response.json();
-
-        if (!Array.isArray(videos) || videos.length === 0) {
-          renderFallbackVideos(grid);
-          return;
-        }
-
-        grid.innerHTML = videos.slice(0, 6).map(video => `
-          <article class="youtube-home__card" onclick="playHomeVideo('${video.id}', '${escapeHtml(video.title)}')">
-            <div class="youtube-home__thumb">
-              <img src="${video.thumbnail}" alt="${video.title}">
-              <div class="youtube-home__play">▶</div>
-            </div>
-            <div class="youtube-home__body">
-              <div class="youtube-home__title">${video.title}</div>
-              <div class="youtube-home__meta">IFIX Academy on YouTube</div>
-            </div>
-          </article>
-        `).join('');
-
-      } catch (error) {
-        renderFallbackVideos(grid);
-      }
-    }
-
-    function initHomePlayer() {
-      const facade = document.getElementById('youtubeHomeFacade');
-      const player = document.getElementById('youtubeHomePlayer');
-      if (!facade || !player) return;
-      player.src = `https://www.youtube.com/embed/videoseries?list=${YOUTUBE_DEFAULT_PLAYLIST}&rel=0&autoplay=1`;
-      player.style.display = 'block';
-      facade.style.display = 'none';
-    }
-
-    function playHomeVideo(videoId) {
-      const facade = document.getElementById('youtubeHomeFacade');
-      const player = document.getElementById('youtubeHomePlayer');
-      if (!player || !videoId) return;
-      player.src = `https://www.youtube.com/embed/${videoId}?rel=0&autoplay=1`;
-      player.style.display = 'block';
-      if (facade) facade.style.display = 'none';
-    }
-
-    function renderFallbackVideos(grid) {
-      grid.innerHTML = `
-        <article class="youtube-home__card" onclick="playHomeVideo('', '')">
-          <div class="youtube-home__thumb">
-            <img src="https://i.ytimg.com/vi/9bZkp7q19f0/hqdefault.jpg" alt="IFIX Academy video">
-            <div class="youtube-home__play">▶</div>
-          </div>
-          <div class="youtube-home__body">
-            <div class="youtube-home__title">Browse our channel uploads</div>
-            <div class="youtube-home__meta">Embedded playlist is open above</div>
-          </div>
-        </article>
-      `;
-      const player = document.getElementById('youtubeHomePlayer');
-      if (player) {
-        player.src = `https://www.youtube.com/embed/videoseries?list=${YOUTUBE_DEFAULT_PLAYLIST}&rel=0`;
-      }
-    }
-
-    function escapeHtml(value) {
-      return String(value || '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-    }
-
-    loadHomeVideos();
 
     /* ── REVEAL ── */
     const obs = new IntersectionObserver(entries => {

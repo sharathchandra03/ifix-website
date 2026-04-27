@@ -42,22 +42,18 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 /* ═══ NAVBAR ═══════════════════════════════════════════════ */
 .navbar {
   position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-  background: rgba(99, 161, 248, 0.17);
-  backdrop-filter: saturate(170%) blur(16px);
-  -webkit-backdrop-filter: saturate(170%) blur(16px);
+  background: #e4effe;
   box-shadow: 0 1px 0 rgba(52, 120, 246, 0.12);
   transition: background 0.45s var(--ease-io), box-shadow 0.45s var(--ease-io);
 }
 .navbar.scrolled {
-  background: rgba(99, 161, 248, 0.24);
-  backdrop-filter: saturate(170%) blur(16px);
-  -webkit-backdrop-filter: saturate(170%) blur(16px);
+  background: #e4effe;
   box-shadow: 0 1px 0 rgba(52, 120, 246, 0.16);
 }
 .navbar__inner {
-  max-width: 1280px; margin: 0 auto;
+  max-width: none; margin: 0 auto;
   display: flex; align-items: center; justify-content: space-between;
-  padding: 0.9rem 2rem;
+  padding: 0.9rem clamp(2rem, 7vw, 6rem);
 }
 .navbar__logo { display: flex; align-items: center; }
 .navbar__logo-img { height: 36px; width: auto; object-fit: contain; }
@@ -88,6 +84,36 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .btn--enroll  { background: var(--accent); color: #fff; font-size: 0.82rem; padding: 0.5rem 1.1rem; }
 .btn--enroll:hover { background: var(--accent-h); }
 .navbar__actions .btn--enroll { margin-right: 0; }
+.btn--glow {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  transition: color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+.btn--glow::before {
+  content: '';
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  left: var(--gx, 50%);
+  top: var(--gy, 50%);
+  transform: translate(-50%, -50%) scale(0);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(52,120,246,0.46) 12%, rgba(52,120,246,0.18) 36%, rgba(52,120,246,0) 72%);
+  transition: transform 0.35s ease;
+  pointer-events: none;
+  z-index: -1;
+}
+.btn--glow:hover,
+.btn--glow:focus-visible {
+  color: #eaf3ff;
+  background: var(--accent-h);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.25) inset, 0 10px 28px rgba(52,120,246,0.28);
+}
+.btn--glow:hover::before,
+.btn--glow:focus-visible::before {
+  transform: translate(-50%, -50%) scale(1);
+}
 .btn--ghost   { border: 1px solid var(--border); color: var(--text-2); background: transparent; }
 .btn--ghost:hover { border-color: var(--border-h); color: var(--text); }
 .btn--outline { border: 1.5px solid var(--accent); color: var(--accent); background: transparent; }
@@ -241,7 +267,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 /* ═══ RESPONSIVE SHARED ═════════════════════════════════════ */
 @media (max-width: 900px) {
   .container { padding: 0 1.25rem; }
-  .navbar__inner { padding: 0.8rem 1.1rem; }
+  .navbar__inner { padding: 0.8rem 1.25rem; }
   .navbar__links { display: none; }
   .navbar__actions .btn--enroll { display: none; }
   .hamburger { display: flex; }
@@ -250,7 +276,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 @media (max-width: 560px) {
   .container { padding: 0 1rem; }
-  .navbar__inner { padding: 0.75rem 0.95rem; }
+  .navbar__inner { padding: 0.75rem 1rem; }
   .navbar__logo-img { height: 32px; }
   .mobile-menu { width: 100vw; border-left: none; }
   .btn { width: 100%; justify-content: center; }

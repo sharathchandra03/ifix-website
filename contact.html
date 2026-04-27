@@ -12,12 +12,12 @@
 
   <style>
     /* ── PAGE HERO ── */
-    .page-hero { background: var(--bg); padding: 8.5rem 0 5rem; border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
-    .page-hero::before { content:''; position:absolute; top:-150px; left:-80px; width:500px; height:500px; background:radial-gradient(circle,rgba(52,120,246,0.07) 0%,transparent 65%); border-radius:50%; pointer-events:none; }
-    .page-hero__inner { max-width:1280px; margin:0 auto; padding:0 2rem; display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:start; }
-    .page-hero__heading { font-weight:800; font-size:clamp(2.5rem,5vw,4.5rem); line-height:0.94; letter-spacing:-0.04em; color:var(--text); margin-bottom:1.25rem; }
+    .page-hero { background: var(--bg); padding: 5.35rem 0 1.5rem; border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
+    .page-hero::before { content:''; position:absolute; top:-150px; left:-80px; width:360px; height:360px; background:radial-gradient(circle,rgba(52,120,246,0.07) 0%,transparent 65%); border-radius:50%; pointer-events:none; }
+    .page-hero__inner { max-width:1280px; margin:0 auto; padding:0 2rem; display:grid; grid-template-columns:1fr 1fr; gap:1.6rem; align-items:start; }
+    .page-hero__heading { font-weight:800; font-size:clamp(1.95rem,3.4vw,3.2rem); line-height:0.96; letter-spacing:-0.04em; color:var(--text); margin-bottom:0.7rem; }
     .page-hero__heading span { color:var(--accent); }
-    .page-hero__sub { font-size:1rem; line-height:1.75; color:var(--text-2); margin-bottom:2rem; }
+    .page-hero__sub { font-size:0.88rem; line-height:1.5; color:var(--text-2); margin-bottom:0.7rem; max-width: 48ch; }
 
     /* Quick contact chips */
     .qchips { display:flex; flex-direction:column; gap:0.75rem; }
@@ -129,48 +129,48 @@
     .visit-banner__sub { font-size:1rem; color:var(--text-2); margin-top:0.75rem; max-width:420px; }
 
     /* ── CONTACT FORM ── */
-    .contact-form-section { padding:6rem 0; }
+    .contact-form-section { padding:3.25rem 0 4.25rem; }
     .contact-form-inner { max-width:760px; }
-    .fi__heading { font-weight:800; font-size:2rem; letter-spacing:-0.03em; color:var(--text); margin-bottom:1rem; }
+    .fi__heading { font-weight:800; font-size:1.45rem; letter-spacing:-0.03em; color:var(--text); margin-bottom:0.5rem; }
     .fi__heading span { color:var(--accent); }
-    .fi__desc { font-size:0.95rem; color:var(--text-2); line-height:1.75; margin-bottom:2rem; }
-    .fi__items { display:flex; flex-direction:column; gap:1rem; }
-    .fi__item { display:flex; align-items:flex-start; gap:1rem; background:var(--bg-2); border:1px solid var(--border); border-radius:var(--r-md); padding:1rem 1.25rem; }
+    .fi__desc { font-size:0.84rem; color:var(--text-2); line-height:1.5; margin-bottom:1rem; }
+    .fi__items { display:flex; flex-direction:column; gap:0.55rem; }
+    .fi__item { display:flex; align-items:flex-start; gap:0.7rem; background:var(--bg-2); border:1px solid var(--border); border-radius:var(--r-md); padding:0.7rem 0.9rem; }
     .fi__item-icon { font-size:1.2rem; flex-shrink:0; }
     .fi__item-lbl { font-size:0.68rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-3); }
     .fi__item-val { font-weight:600; color:var(--text); margin-top:2px; }
 
     /* form */
-    .cform { background:var(--bg); border:1px solid var(--border); border-radius:var(--r-2xl); padding:2.5rem; box-shadow:var(--shadow-md); }
-    .cform__title { font-weight:700; font-size:1.35rem; color:var(--text); letter-spacing:-0.02em; margin-bottom:0.4rem; }
-    .cform__sub { font-size:0.875rem; color:var(--text-2); margin-bottom:2rem; }
-    .fg { margin-bottom:1.2rem; }
-    .flbl { display:block; font-size:0.8rem; font-weight:600; color:var(--text); margin-bottom:0.45rem; }
+    .cform { background:var(--bg); border:1px solid var(--border); border-radius:var(--r-2xl); padding:1.35rem 1.45rem; box-shadow:var(--shadow-md); }
+    .cform__title { font-weight:700; font-size:1rem; color:var(--text); letter-spacing:-0.02em; margin-bottom:0.2rem; }
+    .cform__sub { font-size:0.73rem; color:var(--text-2); margin-bottom:0.65rem; }
+    .fg { margin-bottom:0.72rem; }
+    .flbl { display:block; font-size:0.76rem; font-weight:600; color:var(--text); margin-bottom:0.4rem; }
     .finput, .fsel, .ftxt {
       width:100%; background:var(--bg-2); border:1px solid var(--border); border-radius:var(--r-md);
-      padding:0.8rem 1rem; font-family:var(--ff); font-size:0.9rem; color:var(--text);
+      padding:0.62rem 0.88rem; font-family:var(--ff); font-size:0.84rem; color:var(--text);
       outline:none; transition:border-color 0.25s, box-shadow 0.25s; appearance:none; -webkit-appearance:none;
     }
     .finput::placeholder, .ftxt::placeholder { color:var(--text-3); }
     .finput:focus, .fsel:focus, .ftxt:focus { border-color:rgba(52,120,246,0.6); box-shadow:0 0 0 3px rgba(52,120,246,0.1); }
-    .ftxt { resize:vertical; min-height:120px; }
-    .frow { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+    .ftxt { resize:vertical; min-height:80px; }
+    .frow { display:grid; grid-template-columns:1fr 1fr; gap:0.55rem; }
     .fsel { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236E6E73' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 1rem center; padding-right:2.5rem; cursor:pointer; }
     .fsel option { background:var(--bg); }
-    .fsub { width:100%; padding:0.9rem; font-size:1rem; margin-top:0.5rem; border-radius:var(--r-xl); }
+    .fsub { width:100%; padding:0.74rem; font-size:0.9rem; margin-top:0.28rem; border-radius:var(--r-xl); }
 
     @media (max-width:900px) {
-      .page-hero { padding: 6.75rem 0 4rem; }
-      .page-hero__inner { grid-template-columns:1fr; gap:2.5rem; }
+      .page-hero { padding: 5.5rem 0 2rem; }
+      .page-hero__inner { grid-template-columns:1fr; gap:1.4rem; }
       .contact-form-inner { max-width:none; }
       .centres__grid { grid-template-columns:1fr; }
     }
     @media (max-width:560px) {
-      .page-hero { padding: 6rem 0 3.25rem; }
+      .page-hero { padding: 5.15rem 0 1.8rem; }
       .qchip { padding: 0.85rem 1rem; }
       .centre-card { padding: 1.5rem; }
       .centre-foot { align-items: flex-start; }
-      .cform { padding: 1.4rem; }
+      .cform { padding: 1.14rem; }
       .frow { grid-template-columns:1fr; }
     }
   </style>
@@ -181,7 +181,7 @@
 
   <section class="page-hero">
     <div class="page-hero__inner">
-      <div style="margin-top:3.1rem;">
+      <div style="margin-top:2rem;">
         <span class="section-label">iFix Academy · Contact</span>
         <h1 class="page-hero__heading">Get in Touch<br>with <span>iFix</span></h1>
         <p class="page-hero__sub">Visit any of our service centres across Bangalore, Delhi, or Patna. Don't have time to visit? Drop us a message and we'll get back to you promptly.</p>
@@ -198,15 +198,19 @@
             <div class="fg"><label class="flbl" for="fn">First Name *</label><input class="finput" type="text" id="fn" placeholder="Rahul" required></div>
             <div class="fg"><label class="flbl" for="ln">Last Name</label><input class="finput" type="text" id="ln" placeholder="Kumar"></div>
           </div>
-          <div class="fg"><label class="flbl" for="em">Email *</label><input class="finput" type="email" id="em" placeholder="rahul@email.com" required></div>
-          <div class="fg"><label class="flbl" for="ph">Phone / WhatsApp *</label><input class="finput" type="tel" id="ph" placeholder="+91 98765 43210" required></div>
-          <div class="fg">
-            <label class="flbl" for="co">Course of Interest</label>
-            <select class="fsel" id="co"><option value="">Select a course...</option><option>Mobile Repairing Course</option><option>Laptop Repairing Course</option><option>Display Repairing Course</option><option>iPhone Repairing Course</option><option>Online Mobile Repairing</option><option>Not sure - need guidance</option></select>
+          <div class="frow">
+            <div class="fg"><label class="flbl" for="em">Email *</label><input class="finput" type="email" id="em" placeholder="rahul@email.com" required></div>
+            <div class="fg"><label class="flbl" for="ph">Phone / WhatsApp *</label><input class="finput" type="tel" id="ph" placeholder="+91 98765 43210" required></div>
           </div>
-          <div class="fg">
-            <label class="flbl" for="mo">Preferred Mode</label>
-            <select class="fsel" id="mo"><option value="">Select mode...</option><option>Offline (Centre Visit)</option><option>Online (From Home)</option><option>Hybrid</option></select>
+          <div class="frow">
+            <div class="fg">
+              <label class="flbl" for="co">Course of Interest</label>
+              <select class="fsel" id="co"><option value="">Select a course...</option><option>Mobile Repairing Course</option><option>Laptop Repairing Course</option><option>Display Repairing Course</option><option>iPhone Repairing Course</option><option>Online Mobile Repairing</option><option>Not sure - need guidance</option></select>
+            </div>
+            <div class="fg">
+              <label class="flbl" for="mo">Preferred Mode</label>
+              <select class="fsel" id="mo"><option value="">Select mode...</option><option>Offline (Centre Visit)</option><option>Online (From Home)</option><option>Hybrid</option></select>
+            </div>
           </div>
           <div class="fg"><label class="flbl" for="mg">Message</label><textarea class="ftxt" id="mg" placeholder="Tell us a bit about yourself or ask a question..."></textarea></div>
           <button type="submit" class="btn btn--primary fsub" id="fsub">Send Message →</button>

@@ -10,7 +10,7 @@
     { href: '/shop',     label: 'Shop' },
     { href: '/blog',     label: 'Blogs' },
     { href: '/about',    label: 'Our Story' },
-    { href: 'https://ifixindia.in/', label: 'Service' },
+    { href: 'https://ifixindia.in/', label: 'Service', external: true },
     { href: '/contact',  label: 'Contact Us' },
   ];
 
@@ -23,10 +23,10 @@
 
   function buildNavHTML() {
     const links = navLinks.map(l => `
-      <a href="${l.href}" class="nav__link${isActive(l.href) ? ' nav__link--active' : ''}">${l.label}</a>
+      <a href="${l.href}" class="nav__link${isActive(l.href) ? ' nav__link--active' : ''}"${l.external ? ' target="_blank" rel="noopener noreferrer"' : ''}>${l.label}</a>
     `).join('');
     const mobileLinks = navLinks.map(l => `
-      <a href="${l.href}" class="mobile-menu__link${isActive(l.href) ? ' mobile-menu__link--active' : ''}">${l.label}</a>
+      <a href="${l.href}" class="mobile-menu__link${isActive(l.href) ? ' mobile-menu__link--active' : ''}"${l.external ? ' target="_blank" rel="noopener noreferrer"' : ''}>${l.label}</a>
     `).join('');
 
     return `
@@ -37,7 +37,7 @@
           </a>
           <div class="navbar__links">${links}</div>
           <div class="navbar__actions">
-            <a href="/contact#contact-form" class="btn btn--enroll">Book Free Demo Class</a>
+            <a href="/contact#contact-form" class="btn btn--enroll btn--glow">Book Free Demo Class</a>
             <button class="hamburger" id="hamburger" aria-label="Open menu">
               <span></span><span></span><span></span>
             </button>
@@ -171,6 +171,17 @@
     hamburger?.addEventListener('click', open);
     closeBtn?.addEventListener('click', close);
     overlay?.addEventListener('click', close);
+
+    // Pointer-follow glow for header CTA button
+    document.querySelectorAll('.btn--glow').forEach((btn) => {
+      btn.addEventListener('mousemove', (event) => {
+        const rect = btn.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        btn.style.setProperty('--gx', `${x}px`);
+        btn.style.setProperty('--gy', `${y}px`);
+      });
+    });
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', inject);

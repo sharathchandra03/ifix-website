@@ -54,9 +54,42 @@
 
     /* ── TABS NAV ── */
     .tabs-nav { background: rgba(255,255,255,0.9); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-top: 0.5px solid #1D1D1F; border-bottom: 0.5px solid #1D1D1F; position: sticky; top: 58px; z-index: 100; width: 100%; }
-    .tabs-nav__inner { width: 100%; margin: 0; padding: 0; display: flex; overflow-x: auto; scrollbar-width: none; justify-content: flex-start; }
-    .tabs-nav__inner::-webkit-scrollbar { display: none; }
-    .tab-btn { flex: 1; min-width: auto; padding: 1rem 1.4rem; font-size: 0.875rem; font-weight: 600; color: var(--text-2); border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; font-family: var(--ff); cursor: pointer; background: none; border-top: none; border-left: none; border-right: none; text-align: center; white-space: nowrap; }
+    .tabs-nav__inner {
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      min-height: 56px;
+      box-sizing: border-box;
+    }
+    .tabs-nav__label {
+      flex: 0 0 clamp(260px, 25vw, 350px);
+      font-size: 0.92rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      text-align: right;
+      padding-right: 1.35rem;
+    }
+    .tabs-nav__tabs {
+      flex: 1 1 auto;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      overflow-x: auto;
+      scrollbar-width: none;
+      gap: 0;
+    }
+    .tabs-nav__tabs::-webkit-scrollbar { display: none; }
+    .tab-btn { flex: 0 0 auto; min-width: auto; padding: 1rem 1.2rem; font-size: 0.875rem; font-weight: 600; color: var(--text-2); border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; font-family: var(--ff); cursor: pointer; background: none; border-top: none; border-left: none; border-right: none; text-align: center; white-space: nowrap; }
     .tab-btn:hover { color: var(--text); }
     .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
 
@@ -237,7 +270,14 @@
     }
     @media (max-width: 600px) {
       .page-hero { padding: 6rem 0 3.25rem; }
-      .tabs-nav__inner { padding: 0 1rem; }
+      .tabs-nav__inner {
+        padding: 0.85rem 1rem;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.6rem;
+      }
+      .tabs-nav__label { font-size: 0.86rem; }
+      .tabs-nav__tabs { justify-content: flex-start; }
       .tab-btn { padding: 0.82rem 0.95rem; font-size: 0.8rem; }
       .course-outcome { align-items: flex-start; }
       .course-ctas .btn { width: 100%; justify-content: center; }
@@ -264,11 +304,14 @@
 
   <nav class="tabs-nav" id="tabsNav">
     <div class="tabs-nav__inner">
-      <button class="tab-btn active" data-target="mobile">Android Master</button>
-      <button class="tab-btn" data-target="laptop">Laptop Master</button>
-      <button class="tab-btn" data-target="display">iPhone Master</button>
-      <button class="tab-btn" data-target="iphone">Macbook Master</button>
-      <button class="tab-btn" data-target="online">Customised Learning</button>
+      <div class="tabs-nav__label">Explore our courses</div>
+      <div class="tabs-nav__tabs">
+        <button class="tab-btn active" data-target="mobile">Android Master</button>
+        <button class="tab-btn" data-target="laptop">Laptop Master</button>
+        <button class="tab-btn" data-target="display">iPhone Master</button>
+        <button class="tab-btn" data-target="iphone">Macbook Master</button>
+        <button class="tab-btn" data-target="online">Customised Learning</button>
+      </div>
     </div>
   </nav>
 
@@ -287,8 +330,8 @@
     /* ── LEFT: Sticky Panel ──────────────────────────────── */
     .ss-left {
       position: sticky;
-      top: 116px;
-      height: calc(100vh - 116px);
+      top: 128px;
+      height: calc(100vh - 128px);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -436,25 +479,14 @@
 
     /* ── Course label above phone ────────────────────────── */
     /* Keep all content above the dot-grid pseudo-element */
-    .ss-course-label, .phone-device, .phone-glow, .ph-dots { position: relative; z-index: 1; }
-    .ss-course-label { text-align:center; margin-bottom:18px; }
-    .ss-course-label__pill{
-      display:inline-block; font-size:.63rem; font-weight:700;
-      text-transform:uppercase; letter-spacing:.1em;
-      padding:4px 14px; border-radius:999px; margin-bottom:6px;
-      transition:all .4s var(--ease-expo);
-    }
-    .ss-course-label__name{
-      font-size:.92rem; font-weight:800; color:var(--text);
-      letter-spacing:-.02em; transition:all .4s var(--ease-expo);
-    }
+    .phone-device, .phone-glow, .ph-dots { position: relative; z-index: 1; }
 
     /* ── RIGHT: Scroll cards ─────────────────────────────── */
     .ss-right { background:var(--bg); }
     .course-scroll-item{
       min-height:100vh;
-      display:flex; align-items:center;
-      padding:6rem 3.5rem 6rem 4.5rem;
+      display:flex; align-items:flex-start;
+      padding:2.25rem 3.5rem 6rem 4.5rem;
       border-bottom:1px solid var(--border);
       position:relative;
       background:#fafbfd;
@@ -487,6 +519,7 @@
       .ss-left { padding: 2rem 1rem 1.25rem; }
       .course-scroll-item { padding: 2.75rem 1rem; }
       .phone-device { width:186px; height:382px; }
+      .tabs-nav__label { flex-basis: auto; justify-content: flex-start; text-align: left; }
     }
   </style>
 
@@ -494,11 +527,6 @@
 
     <!-- ════════════════ LEFT: STICKY PHONE VISUAL ════════ -->
     <div class="ss-left" id="ssLeft">
-
-      <div class="ss-course-label">
-        <div class="ss-course-label__pill bg-popular" id="ssPill">⭐ Most Popular</div>
-        <div class="ss-course-label__name" id="ssName">Android Master</div>
-      </div>
 
       <div class="phone-device" id="phoneDevice">
         <div class="phone-island"></div>
@@ -801,8 +829,6 @@
 
     var screens   = document.querySelectorAll('.p-screen');
     var dots      = document.querySelectorAll('.ph-dot');
-    var pill      = document.getElementById('ssPill');
-    var nameEl    = document.getElementById('ssName');
     var glowEl    = document.getElementById('phoneGlow');
     var items     = document.querySelectorAll('.course-scroll-item');
     var curIdx    = -1;
@@ -814,9 +840,6 @@
       var c = COURSES[idx];
       screens.forEach(function(s, i){ s.classList.toggle('active', i === idx); });
       dots.forEach(function(d, i){ d.classList.toggle('active', i === idx); });
-      pill.className = 'ss-course-label__pill ' + c.labelCls;
-      pill.textContent = c.label;
-      nameEl.textContent = c.name;
       glowEl.style.background = c.glow;
     }
 
@@ -945,18 +968,40 @@
     document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el => obs.observe(el));
 
     const tabBtns = document.querySelectorAll('.tab-btn');
-    const sections = ['mobile','laptop','display','iphone','online'].map(id => document.getElementById(id));
-    const NAV_H = 58 + 44;
-    tabBtns.forEach(btn => {
+    const sections = ['mobile', 'laptop', 'display', 'iphone', 'online']
+      .map(id => document.getElementById(id))
+      .filter(Boolean);
+
+    const getStickyOffset = () => {
+      const nav = document.querySelector('.navbar');
+      const tabs = document.getElementById('tabsNav');
+      return (nav ? nav.offsetHeight : 58) + (tabs ? tabs.offsetHeight : 56) + 8;
+    };
+
+    const setActiveTab = (id) => {
+      tabBtns.forEach((b) => b.classList.toggle('active', b.dataset.target === id));
+    };
+
+    tabBtns.forEach((btn) => {
       btn.addEventListener('click', () => {
-        const t = document.getElementById(btn.dataset.target);
-        if (t) window.scrollTo({ top: t.offsetTop - NAV_H, behavior: 'smooth' });
+        const target = document.getElementById(btn.dataset.target);
+        if (!target) return;
+        const targetTop = target.getBoundingClientRect().top + window.scrollY - getStickyOffset();
+        setActiveTab(btn.dataset.target);
+        window.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
       });
     });
+
     window.addEventListener('scroll', () => {
-      let cur = '';
-      sections.forEach(s => { if(s && window.scrollY >= s.offsetTop - NAV_H - 10) cur = s.id; });
-      tabBtns.forEach(b => b.classList.toggle('active', b.dataset.target === cur));
+      const focusY = getStickyOffset() + 24;
+      let activeId = sections[0] ? sections[0].id : '';
+
+      sections.forEach((section) => {
+        const top = section.getBoundingClientRect().top;
+        if (top <= focusY) activeId = section.id;
+      });
+
+      if (activeId) setActiveTab(activeId);
     }, { passive: true });
 
     document.querySelectorAll('.online-feat').forEach((card) => {
