@@ -12,12 +12,38 @@
 
   <style>
     /* ── PAGE HERO ── */
-    .page-hero { background: var(--bg); padding: 5.35rem 0 1.5rem; border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
-    .page-hero::before { content:''; position:absolute; top:-150px; left:-80px; width:360px; height:360px; background:radial-gradient(circle,rgba(52,120,246,0.07) 0%,transparent 65%); border-radius:50%; pointer-events:none; }
-    .page-hero__inner { max-width:1280px; margin:0 auto; padding:0 2rem; display:grid; grid-template-columns:1fr 1fr; gap:1.6rem; align-items:start; }
-    .page-hero__heading { font-weight:800; font-size:clamp(1.95rem,3.4vw,3.2rem); line-height:0.96; letter-spacing:-0.04em; color:var(--text); margin-bottom:0.7rem; }
+    .page-hero { background: var(--bg); padding: 5.35rem 0 1.5rem; border-bottom: 1px solid var(--border); position: relative; overflow: hidden; isolation: isolate; }
+
+    /* Sky-blue radial glow — mirrors the React demo component */
+    .page-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background: radial-gradient(circle at 30% 60%, #93c5fd, transparent 68%);
+      opacity: 0.28;
+      pointer-events: none;
+    }
+
+    /* Soft accent glow top-right */
+    .page-hero::after {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -120px;
+      width: 520px;
+      height: 520px;
+      background: radial-gradient(circle, rgba(52,120,246,0.13) 0%, transparent 68%);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .page-hero > * { position: relative; z-index: 1; }
+    .page-hero__inner { max-width:1280px; margin:0 auto; padding:0 2rem; display:grid; grid-template-columns:1.1fr 0.9fr; gap:2.5rem; align-items:center; }
+    .page-hero__heading { font-weight:800; font-size:clamp(2.6rem,4.2vw,4rem); line-height:0.96; letter-spacing:-0.04em; color:var(--text); margin-bottom:1rem; }
     .page-hero__heading span { color:var(--accent); }
-    .page-hero__sub { font-size:0.88rem; line-height:1.5; color:var(--text-2); margin-bottom:0.7rem; max-width: 48ch; }
+    .page-hero__sub { font-size:1.05rem; line-height:1.65; color:var(--text-2); margin-bottom:1.25rem; max-width: 46ch; }
 
     /* Quick contact chips */
     .qchips { display:flex; flex-direction:column; gap:0.75rem; }
@@ -161,7 +187,8 @@
 
     @media (max-width:900px) {
       .page-hero { padding: 5.5rem 0 2rem; }
-      .page-hero__inner { grid-template-columns:1fr; gap:1.4rem; }
+      .page-hero__inner { grid-template-columns:1fr; gap:1.8rem; }
+      .page-hero__sub { font-size:0.95rem; }
       .contact-form-inner { max-width:none; }
       .centres__grid { grid-template-columns:1fr; }
     }
@@ -180,14 +207,14 @@
   <div id="nav-root"></div>
 
   <section class="page-hero">
-    <div class="page-hero__inner">
+    <div class="page-hero__inner" style="position:relative;z-index:1;">
       <div style="margin-top:2rem;">
-        <span class="section-label">iFix Academy · Contact</span>
+        <span class="section-label" style="font-size:0.78rem;letter-spacing:0.12em;">iFix Academy · Contact</span>
         <h1 class="page-hero__heading">Get in Touch<br>with <span>iFix</span></h1>
         <p class="page-hero__sub">Visit any of our service centres across Bangalore, Delhi, or Patna. Don't have time to visit? Drop us a message and we'll get back to you promptly.</p>
-        <div style="display:flex;gap:0.875rem;flex-wrap:wrap;">
-          <a href="tel:+916364429494" class="btn btn--primary" style="padding:0.75rem 1.75rem;">📞 Call Us Now</a>
-          <a href="#contact-form"     class="btn btn--outline" style="padding:0.75rem 1.75rem;">Send a Message</a>
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+          <a href="tel:+916364429494" class="btn btn--primary" style="padding:0.9rem 2.1rem;font-size:1rem;">📞 Call Us Now</a>
+          <a href="#contact-form"     class="btn btn--outline" style="padding:0.9rem 2.1rem;font-size:1rem;">Send a Message</a>
         </div>
       </div>
       <div class="cform reveal" id="contact-form">
