@@ -91,8 +91,9 @@
     .hero-stat__lbl { font-size: 0.7rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; display: block; }
 
     /* ── MISSION ── */
-    .mission { background: var(--bg-2); padding: 6rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-    .mission__inner { display: grid; grid-template-columns: 1fr 1.1fr; gap: 4rem; align-items: start; }
+    .mission { background: var(--bg-2); padding: 3.5rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .mission__inner { display: grid; grid-template-columns: 1fr 1.1fr; gap: 3rem; align-items: center; }
+    .mission__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2.5rem; }
     .mission__heading {
       font-size: clamp(1.75rem, 3.1vw, 2.55rem);
       line-height: 1.06;
@@ -108,7 +109,6 @@
       color: var(--text-2);
       text-wrap: pretty;
     }
-    .mission__grid { display: grid; gap: 1rem; }
     .mission-card {
       background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-xl);
       padding: 1.5rem; box-shadow: var(--shadow-sm); transition: transform 0.3s var(--ease-expo), box-shadow 0.3s;
@@ -224,10 +224,22 @@
     .btn--white-outline { border: 1.5px solid rgba(255,255,255,0.5); color: #fff; border-radius: var(--r-xl); padding: 0.85rem 2rem; font-size: 1rem; }
     .btn--white-outline:hover { background: rgba(255,255,255,0.12); border-color: #fff; }
 
+    /* ── Particle Text Canvas ── */
+    .particle-canvas-container {
+      width: 100%;
+      position: relative;
+    }
+    .particle-canvas-container canvas {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 980px) {
       .page-hero { min-height: auto; padding: 6.75rem 0 4.25rem; }
       .mission__inner, .story__inner { grid-template-columns: 1fr; }
+      .mission__grid { grid-template-columns: repeat(2, 1fr); }
       .process__grid, .experience__grid { grid-template-columns: repeat(2, 1fr); }
       .hero-stats { grid-template-columns: repeat(2, minmax(140px, 1fr)); }
     }
@@ -235,6 +247,7 @@
       .page-hero { padding: 6rem 0 3.5rem; }
       .hero-stats { grid-template-columns: 1fr; }
       .story__stats { grid-template-columns: 1fr; }
+      .mission__grid { grid-template-columns: 1fr; }
       .process__grid, .experience__grid { grid-template-columns: 1fr; }
       .mission__lead { padding: 1rem 1rem; }
     }
@@ -299,19 +312,22 @@
 
           </p>
         </div>
-        <div class="mission__grid">
-          <div class="mission-card reveal">
-            <div class="mission-card__title">Hands-On Training</div>
-            <div class="mission-card__desc">Our practical modules include real devices, guided practice, and supervised lab sessions so you learn by doing.</div>
-          </div>
-          <div class="mission-card reveal d1">
-            <div class="mission-card__title">Industry-Tested Methods</div>
-            <div class="mission-card__desc">Learn techniques used in active service centers, keeping your skills aligned with real repair demands.</div>
-          </div>
-          <div class="mission-card reveal d2">
-            <div class="mission-card__title">Career Growth Support</div>
-            <div class="mission-card__desc">Get certification, practical guidance, and support to start your own shop or grow your career.</div>
-          </div>
+        <div class="particle-canvas-container">
+          <canvas id="joinIfixCanvas" width="800" height="320"></canvas>
+        </div>
+      </div>
+      <div class="mission__grid">
+        <div class="mission-card reveal">
+          <div class="mission-card__title">Hands-On Training</div>
+          <div class="mission-card__desc">Our practical modules include real devices, guided practice, and supervised lab sessions so you learn by doing.</div>
+        </div>
+        <div class="mission-card reveal d1">
+          <div class="mission-card__title">Industry-Tested Methods</div>
+          <div class="mission-card__desc">Learn techniques used in active service centers, keeping your skills aligned with real repair demands.</div>
+        </div>
+        <div class="mission-card reveal d2">
+          <div class="mission-card__title">Career Growth Support</div>
+          <div class="mission-card__desc">Get certification, practical guidance, and support to start your own shop or grow your career.</div>
         </div>
       </div>
     </div>
@@ -829,6 +845,205 @@
   <div id="footer-root"></div>
 
   <script src="components.js"></script>
+
+  <!-- ── PARTICLE TEXT: Join Ifix Today ── -->
+  <script>
+  (function () {
+    'use strict';
+
+    function initParticle() {
+      var canvas = document.getElementById('joinIfixCanvas');
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d');
+      var particles = [];
+      var frameCount = 0;
+      var isRunning = false;
+      var words = ['Join Ifix Today'];
+      var wordIndex = 0;
+      var pixelSteps = 5;
+
+      var palette = [
+        { r: 52,  g: 120, b: 246 },
+        { r: 29,  g: 29,  b: 31  }
+      ];
+
+      function Particle() {
+        this.pos = { x: 0, y: 0 };
+        this.vel = { x: 0, y: 0 };
+        this.acc = { x: 0, y: 0 };
+        this.target = { x: 0, y: 0 };
+        this.closeEnoughTarget = 100;
+        this.maxSpeed = 1.0;
+        this.maxForce = 0.1;
+        this.particleSize = 10;
+        this.isKilled = false;
+        this.startColor = { r: 0, g: 0, b: 0 };
+        this.targetColor = { r: 52, g: 120, b: 246 };
+        this.colorWeight = 0;
+        this.colorBlendRate = 0.01;
+      }
+
+      Particle.prototype.move = function () {
+        var dx = this.pos.x - this.target.x;
+        var dy = this.pos.y - this.target.y;
+        var dist = Math.sqrt(dx * dx + dy * dy);
+        var prox = dist < this.closeEnoughTarget ? dist / this.closeEnoughTarget : 1;
+
+        var tx = this.target.x - this.pos.x;
+        var ty = this.target.y - this.pos.y;
+        var mag = Math.sqrt(tx * tx + ty * ty);
+        if (mag > 0) { tx = (tx / mag) * this.maxSpeed * prox; ty = (ty / mag) * this.maxSpeed * prox; }
+
+        var sx = tx - this.vel.x, sy = ty - this.vel.y;
+        var sm = Math.sqrt(sx * sx + sy * sy);
+        if (sm > 0) { sx = (sx / sm) * this.maxForce; sy = (sy / sm) * this.maxForce; }
+
+        this.acc.x += sx; this.acc.y += sy;
+        this.vel.x += this.acc.x; this.vel.y += this.acc.y;
+        this.pos.x += this.vel.x; this.pos.y += this.vel.y;
+        this.acc.x = 0; this.acc.y = 0;
+      };
+
+      Particle.prototype.draw = function () {
+        if (this.colorWeight < 1.0) this.colorWeight = Math.min(this.colorWeight + this.colorBlendRate, 1.0);
+        var r = Math.round(this.startColor.r + (this.targetColor.r - this.startColor.r) * this.colorWeight);
+        var g = Math.round(this.startColor.g + (this.targetColor.g - this.startColor.g) * this.colorWeight);
+        var b = Math.round(this.startColor.b + (this.targetColor.b - this.startColor.b) * this.colorWeight);
+        ctx.fillStyle = 'rgb(' + r + ',' + g + ',' + b + ')';
+        ctx.fillRect(this.pos.x, this.pos.y, 2, 2);
+      };
+
+      Particle.prototype.kill = function () {
+        if (!this.isKilled) {
+          var rx = Math.random() * canvas.width, ry = Math.random() * canvas.height;
+          var cx = canvas.width / 2, cy = canvas.height / 2;
+          var mag = (canvas.width + canvas.height) / 2;
+          var dx = rx - cx, dy = ry - cy, dm = Math.sqrt(dx * dx + dy * dy);
+          if (dm > 0) { dx = (dx / dm) * mag; dy = (dy / dm) * mag; }
+          this.target.x = cx + dx; this.target.y = cy + dy;
+          this.startColor = {
+            r: this.startColor.r + (this.targetColor.r - this.startColor.r) * this.colorWeight,
+            g: this.startColor.g + (this.targetColor.g - this.startColor.g) * this.colorWeight,
+            b: this.startColor.b + (this.targetColor.b - this.startColor.b) * this.colorWeight
+          };
+          this.targetColor = { r: 0, g: 0, b: 0 };
+          this.colorWeight = 0;
+          this.isKilled = true;
+        }
+      };
+
+      function randPos() {
+        var rx = Math.random() * canvas.width, ry = Math.random() * canvas.height;
+        var cx = canvas.width / 2, cy = canvas.height / 2;
+        var mag = (canvas.width + canvas.height) / 2;
+        var dx = rx - cx, dy = ry - cy, dm = Math.sqrt(dx * dx + dy * dy);
+        if (dm > 0) { dx = (dx / dm) * mag; dy = (dy / dm) * mag; }
+        return { x: cx + dx, y: cy + dy };
+      }
+
+      function showWord(word) {
+        var off = document.createElement('canvas');
+        off.width = canvas.width; off.height = canvas.height;
+        var offCtx = off.getContext('2d');
+        offCtx.fillStyle = 'white';
+        offCtx.font = 'bold 80px "DM Sans", sans-serif';
+        offCtx.textAlign = 'center';
+        offCtx.textBaseline = 'middle';
+        offCtx.fillText(word, canvas.width / 2, canvas.height / 2);
+
+        var imageData = offCtx.getImageData(0, 0, canvas.width, canvas.height);
+        var pixels = imageData.data;
+        /* color assigned per-particle below */
+
+        var particleIndex = 0;
+        var coords = [];
+        for (var i = 0; i < pixels.length; i += pixelSteps * 4) coords.push(i);
+
+        for (var j = coords.length - 1; j > 0; j--) {
+          var k = Math.floor(Math.random() * (j + 1));
+          var tmp = coords[j]; coords[j] = coords[k]; coords[k] = tmp;
+        }
+
+        for (var ci = 0; ci < coords.length; ci++) {
+          var alpha = pixels[coords[ci] + 3];
+          if (alpha > 0) {
+            var x = (coords[ci] / 4) % canvas.width;
+            var y = Math.floor(coords[ci] / 4 / canvas.width);
+            var p;
+            if (particleIndex < particles.length) {
+              p = particles[particleIndex];
+              p.isKilled = false;
+              particleIndex++;
+            } else {
+              p = new Particle();
+              var rp = randPos();
+              p.pos.x = rp.x; p.pos.y = rp.y;
+              p.maxSpeed = Math.random() * 6 + 4;
+              p.maxForce = p.maxSpeed * 0.05;
+              p.particleSize = Math.random() * 6 + 6;
+              p.colorBlendRate = Math.random() * 0.0275 + 0.0025;
+              particles.push(p);
+            }
+            p.startColor = {
+              r: p.startColor.r + (p.targetColor.r - p.startColor.r) * p.colorWeight,
+              g: p.startColor.g + (p.targetColor.g - p.startColor.g) * p.colorWeight,
+              b: p.startColor.b + (p.targetColor.b - p.startColor.b) * p.colorWeight
+            };
+            p.targetColor = palette[Math.random() > 0.45 ? 0 : 1];
+            p.colorWeight = 0;
+            p.target.x = x; p.target.y = y;
+          }
+        }
+
+        for (var pi = particleIndex; pi < particles.length; pi++) particles[pi].kill();
+      }
+
+      function loop() {
+        if (!isRunning) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (var i = particles.length - 1; i >= 0; i--) {
+          particles[i].move();
+          particles[i].draw();
+          if (particles[i].isKilled) {
+            var p = particles[i];
+            if (p.pos.x < 0 || p.pos.x > canvas.width || p.pos.y < 0 || p.pos.y > canvas.height) {
+              particles.splice(i, 1);
+            }
+          }
+        }
+
+        frameCount++;
+        if (frameCount % 320 === 0) {
+          wordIndex = (wordIndex + 1) % words.length;
+          showWord(words[wordIndex]);
+        }
+
+        requestAnimationFrame(loop);
+      }
+
+      var obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting && !isRunning) {
+            isRunning = true;
+            showWord(words[0]);
+            loop();
+          } else if (!entry.isIntersecting && isRunning) {
+            isRunning = false;
+          }
+        });
+      }, { threshold: 0.1 });
+
+      obs.observe(canvas);
+    }
+
+    if (document.readyState === 'complete') {
+      initParticle();
+    } else {
+      window.addEventListener('load', initParticle, { once: true });
+    }
+  })();
+  </script>
   <script>
     const obs = new IntersectionObserver(entries => {
       entries.forEach(e => {

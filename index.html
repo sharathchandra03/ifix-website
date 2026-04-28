@@ -705,6 +705,21 @@
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
     }
 
+    /* Image-only mockup (replaces laptop frame) */
+    .mockup-image__frame {
+      position: relative;
+      border-radius: 1.75rem;
+      overflow: hidden;
+      box-shadow: 0 22px 62px rgba(24, 17, 33, 0.48);
+      aspect-ratio: 16 / 10;
+    }
+    .mockup-image__img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
     .mockup-laptop__inside {
       position: absolute;
       border-radius: 1rem;
@@ -1034,6 +1049,34 @@
     .training-cta__action .btn {
       padding: 0.9rem 2.1rem;
       min-width: 170px;
+    }
+
+    /* ── Border Beam on Training CTA Card ── */
+    @keyframes borderBeam {
+      100% { offset-distance: 100%; }
+    }
+    .border-beam {
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      border: 1.5px solid transparent;
+      mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+      mask-composite: exclude;
+      -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      z-index: 5;
+    }
+    .border-beam::after {
+      content: '';
+      position: absolute;
+      aspect-ratio: 1;
+      width: 200px;
+      background: linear-gradient(to left, #3478f6, #7dd3fc, transparent);
+      animation: borderBeam 5s infinite linear;
+      offset-anchor: 90% 50%;
+      offset-path: rect(0 auto auto 0 round 2rem);
+      offset-distance: 0%;
     }
 
     .industry-panel {
@@ -2405,16 +2448,13 @@
         </div>
 
         <div class="features-laptop__mockup" feature-mockup>
-          <div class="mockup-laptop__frame">
-            <div class="mockup-laptop__screen">
-              <div class="mockup-laptop__inside inside-1" mockup-in-1>Logic Board Diagnostics</div>
-              <div class="mockup-laptop__inside inside-2" mockup-in-2>Live Troubleshoot Sessions</div>
-              <div class="mockup-laptop__inside inside-3" mockup-in-3>Micro Solder Practice</div>
-              <div class="mockup-laptop__inside inside-4" mockup-in-4>Repair Outcome Reports</div>
-              <div class="mockup-laptop__dock"></div>
-            </div>
+          <div class="mockup-image__frame">
+            <img src="Assets/Table image.webp" class="mockup-image__img" alt="iFix repair lab" loading="lazy">
+            <div class="mockup-laptop__inside inside-1" mockup-in-1>Logic Board Diagnostics</div>
+            <div class="mockup-laptop__inside inside-2" mockup-in-2>Live Troubleshoot Sessions</div>
+            <div class="mockup-laptop__inside inside-3" mockup-in-3>Micro Solder Practice</div>
+            <div class="mockup-laptop__inside inside-4" mockup-in-4>Repair Outcome Reports</div>
           </div>
-          <div class="mockup-laptop__base"></div>
         </div>
 
         <div class="mockup-bg-pill mbp-1" mockup-bg-1></div>
@@ -2533,6 +2573,7 @@
   <section class="training-cta" id="trainingCta">
     <div class="container">
       <div class="training-cta__card reveal">
+        <div class="border-beam" aria-hidden="true"></div>
         <div class="training-cta__copy">
           <span class="training-cta__tag">EXCLUSIVE TRAINING EXPERIENCE</span>
           <h3 class="training-cta__title">Train in a Real Repair Lab Environment</h3>
