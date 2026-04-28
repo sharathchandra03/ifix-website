@@ -39,33 +39,48 @@
     }
     .page-hero__heading {
       font-weight: 800; font-size: clamp(2rem, 4.2vw, 3.8rem);
-      line-height: 0.97; letter-spacing: -0.035em; color: var(--text);
+      line-height: 0.97; letter-spacing: -0.035em; color: #ffffff;
       margin-bottom: 1rem;
       max-width: 25ch;
       text-wrap: auto;
+      will-change: clip-path, transform;
     }
-    .page-hero__heading span { color: var(--accent); }
+    .page-hero__heading span { color: #7dd3fc; }
     .page-hero__sub {
-      font-size: 1.05rem; line-height: 1.75; color: #111111;
-      opacity: 0.72;
+      font-size: 1.05rem; line-height: 1.75; color: rgba(255,255,255,0.84);
+      opacity: 1;
       max-width: 640px; margin-bottom: 1.75rem;
     }
+    /* hero chips adapt to dark overlay */
+    .hero-chip {
+      font-size: 0.75rem; font-weight: 600; color: rgba(255,255,255,0.85);
+      border: 1px solid rgba(255,255,255,0.22); border-radius: 999px;
+      padding: 5px 12px; background: rgba(255,255,255,0.10);
+      backdrop-filter: blur(8px);
+    }
+    /* ghost button visible on dark */
+    .page-hero .btn--ghost {
+      border-color: rgba(255,255,255,0.38); color: #ffffff;
+    }
+    .page-hero .btn--ghost:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.65); }
+    /* section label on dark */
+    .page-hero > .container .section-label,
+    .page-hero .section-label { color: #93c5fd; opacity: 1; letter-spacing: 0.14em; }
     .page-hero__actions { display: flex; gap: 0.9rem; flex-wrap: wrap; margin-bottom: 1.75rem; }
     .hero-chips { display: flex; gap: 0.6rem; flex-wrap: wrap; }
-    .hero-chip {
-      font-size: 0.75rem; font-weight: 600; color: var(--text-2);
-      border: 1px solid var(--border); border-radius: 999px;
-      padding: 5px 12px; background: var(--bg-2);
-    }
 
     .hero-bg {
       position: absolute; inset: 0; z-index: 0;
       width: 100%; height: 100%; object-fit: cover;
-      opacity: 0.8;
+      opacity: 0.92;
     }
     .hero-overlay {
       position: absolute; inset: 0; z-index: 1; pointer-events: none;
-      background: linear-gradient(180deg, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0.45) 35%, rgba(255,255,255,0.78) 100%);
+      background: linear-gradient(105deg,
+        rgba(5,15,35,0.72) 0%,
+        rgba(5,15,35,0.50) 38%,
+        rgba(5,15,35,0.18) 65%,
+        rgba(5,15,35,0.04) 100%);
     }
     .hero-stats { display: grid; grid-template-columns: repeat(4, minmax(140px, 1fr)); gap: 0.75rem; margin-top: 2rem; }
     .hero-stat {
@@ -231,14 +246,14 @@
 
   <section class="page-hero">
     <video class="hero-bg" autoplay muted loop playsinline>
-      <source src="Video Assets\Our Story Video.mp4" type="video/mp4">
+      <source src="Video Assets/Our Story Video.mp4" type="video/mp4">
     </video>
     <div class="hero-overlay"></div>
     <div class="container page-hero__inner">
       <div>
-        <span class="section-label">About Ifix India Training Academy </span>
-        <h1 class="page-hero__heading">Built by industry experts to help technicians upgrade from basic repairs to <span>advanced chip-level expertise</span>.</h1>
-        <p class="page-hero__sub">
+        <span class="section-label" id="osHeroLabel">About Ifix India Training Academy </span>
+        <h1 class="page-hero__heading" id="osHeroHeading">Built by industry experts to help technicians upgrade from basic repairs to <span>advanced chip-level expertise</span>.</h1>
+        <p class="page-hero__sub" id="osHeroSub">
           Backed by iFix India, a trusted name in Apple device repair since 2009, the academy is designed
           to bridge the gap between basic mobile repair skills and real-world advanced repair expertise.
         </p>
@@ -253,19 +268,19 @@
         </div>
         <div class="hero-stats">
           <div class="hero-stat">
-            <span class="hero-stat__num">2,400+</span>
+            <span class="hero-stat__num" data-count="2400" data-suffix="+">2,400+</span>
             <span class="hero-stat__lbl">Students trained</span>
           </div>
           <div class="hero-stat">
-            <span class="hero-stat__num">94%</span>
+            <span class="hero-stat__num" data-count="94" data-suffix="%">94%</span>
             <span class="hero-stat__lbl">Placement rate</span>
           </div>
           <div class="hero-stat">
-            <span class="hero-stat__num">14+</span>
+            <span class="hero-stat__num" data-count="14" data-suffix="+">14+</span>
             <span class="hero-stat__lbl">Courses offered</span>
           </div>
           <div class="hero-stat">
-            <span class="hero-stat__num">15+</span>
+            <span class="hero-stat__num" data-count="15" data-suffix="+">15+</span>
             <span class="hero-stat__lbl">Years of expertise</span>
           </div>
         </div>
@@ -875,6 +890,94 @@
     }
 
     window.addEventListener('load', initBlueCtaMotion, { once: true });
+  </script>
+
+  <!-- ── GSAP HERO + COUNTER ANIMATIONS ── -->
+  <script>
+  window.addEventListener('load', function () {
+    if (typeof gsap === 'undefined') return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    /* ─ Hero entrance timeline ─ */
+    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+    // Ken Burns zoom-in settle on video
+    tl.from('.page-hero .hero-bg', {
+      scale: 1.08,
+      duration: 2.6,
+      ease: 'power2.out'
+    }, 0);
+
+    // Section label fades up
+    tl.from('#osHeroLabel', { opacity: 0, y: 16, duration: 0.55 }, 0.18);
+
+    // Heading: clip-path sweep from left → right
+    tl.from('#osHeroHeading', {
+      clipPath: 'inset(0 100% 0 0)',
+      opacity: 0,
+      duration: 0.95,
+      ease: 'power3.inOut'
+    }, 0.42);
+
+    // Sub text
+    tl.from('#osHeroSub', { opacity: 0, y: 20, duration: 0.65 }, 0.9);
+
+    // Actions buttons stagger
+    tl.from('.page-hero__actions .btn', { opacity: 0, y: 16, stagger: 0.1, duration: 0.5 }, 1.05);
+
+    // Hero chips stagger
+    tl.from('.hero-chip', { opacity: 0, y: 10, stagger: 0.08, duration: 0.45 }, 1.18);
+
+    // Stat cards stagger
+    tl.from('.hero-stat', { opacity: 0, y: 24, stagger: 0.1, duration: 0.55 }, 1.28);
+
+    /* ─ Video parallax on scroll ─ */
+    gsap.to('.page-hero .hero-bg', {
+      yPercent: 22,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '.page-hero',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 1.2
+      }
+    });
+
+    /* ─ Animated stat counters (scroll-triggered) ─ */
+    document.querySelectorAll('.hero-stat__num[data-count]').forEach(function (el) {
+      const target  = parseInt(el.dataset.count, 10);
+      const suffix  = el.dataset.suffix || '';
+      const isLarge = target >= 1000;
+
+      gsap.fromTo({ val: 0 }, { val: target }, {
+        duration: 2,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 88%',
+          once: true
+        },
+        onUpdate: function () {
+          const v = Math.round(this.targets()[0].val);
+          el.textContent = isLarge ? v.toLocaleString() + suffix : v + suffix;
+        },
+        onComplete: function () {
+          el.textContent = isLarge ? target.toLocaleString() + suffix : target + suffix;
+        }
+      });
+    });
+
+    /* ─ Mission / story section reveals ─ */
+    gsap.utils.toArray('.mission-card, .story-item, .process-step, .experience-card').forEach(function (el) {
+      gsap.from(el, {
+        opacity: 0,
+        y: 32,
+        duration: 0.65,
+        ease: 'power2.out',
+        scrollTrigger: { trigger: el, start: 'top 82%', once: true }
+      });
+    });
+  }, { once: true });
   </script>
 </body>
 </html>

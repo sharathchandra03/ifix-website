@@ -31,10 +31,10 @@
       border-radius: 50%; pointer-events: none;
     }
     .page-hero__inner { max-width: 1280px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 2; }
-    .page-hero__heading { font-weight: 800; font-size: clamp(2.5rem,6vw,5.5rem); line-height: 0.94; letter-spacing: -0.04em; color: var(--text); margin-bottom: 1.25rem; }
-    .page-hero__heading span { color: var(--accent); }
-    .page-hero .section-label { color: #0f4fbf; opacity: 1; }
-    .page-hero__sub { font-size: 1.05rem; line-height: 1.75; color: #111111; opacity: 0.92; max-width: 560px; }
+    .page-hero__heading { font-weight: 800; font-size: clamp(2.5rem,6vw,5.5rem); line-height: 0.94; letter-spacing: -0.04em; color: #ffffff; margin-bottom: 1.25rem; will-change: clip-path, transform; }
+    .page-hero__heading span { color: #7dd3fc; }
+    .page-hero .section-label { color: #93c5fd; opacity: 1; letter-spacing: 0.14em; }
+    .page-hero__sub { font-size: 1.05rem; line-height: 1.75; color: rgba(255,255,255,0.86); opacity: 1; max-width: 560px; }
 
     .hero-bg {
       position: absolute;
@@ -43,14 +43,19 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-        opacity: 0.8;
+      opacity: 0.92;
     }
     .hero-overlay {
       position: absolute;
       inset: 0;
       z-index: 1;
       pointer-events: none;
-      background: linear-gradient(180deg, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0.45) 35%, rgba(255,255,255,0.78) 100%);
+      /* cinematic left-to-right dark fade — text area dark, right edge shows full video */
+      background: linear-gradient(105deg,
+        rgba(5,15,35,0.72) 0%,
+        rgba(5,15,35,0.50) 38%,
+        rgba(5,15,35,0.18) 65%,
+        rgba(5,15,35,0.04) 100%);
     }
 
     /* ── TABS NAV ── */
@@ -297,9 +302,9 @@
     </video>
     <div class="hero-overlay"></div>
     <div class="page-hero__inner">
-      <span class="section-label">iFix Academy · Programmes</span>
-      <h1 class="page-hero__heading">Professional<br><span>Repairing</span> Courses</h1>
-      <p class="page-hero__sub">Every course is built around real-world repair scenarios. Hands-on from Day 1 - taught by instructors who've spent years in the field. Online and offline options available across India.</p>
+      <span class="section-label" id="cHeroLabel">iFix Academy · Programmes</span>
+      <h1 class="page-hero__heading" id="cHeroHeading">Professional<br><span>Repairing</span> Courses</h1>
+      <p class="page-hero__sub" id="cHeroSub">Every course is built around real-world repair scenarios. Hands-on from Day 1 - taught by instructors who've spent years in the field. Online and offline options available across India.</p>
     </div>
   </section>
 
@@ -1078,6 +1083,50 @@
     }
 
     window.addEventListener('load', initBlueCtaMotion, { once: true });
+  </script>
+
+  <!-- ── GSAP HERO ANIMATIONS ── -->
+  <script>
+  window.addEventListener('load', function () {
+    if (typeof gsap === 'undefined') return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    /* ─ Hero entrance timeline ─ */
+    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+    // Ken Burns: video starts zoomed in, settles to normal
+    tl.from('.page-hero .hero-bg', {
+      scale: 1.08,
+      duration: 2.6,
+      ease: 'power2.out'
+    }, 0);
+
+    // Section label fades up
+    tl.from('#cHeroLabel', { opacity: 0, y: 16, duration: 0.55 }, 0.18);
+
+    // Heading: sweeping clip-path reveal from left
+    tl.from('#cHeroHeading', {
+      clipPath: 'inset(0 100% 0 0)',
+      opacity: 0,
+      duration: 0.9,
+      ease: 'power3.inOut'
+    }, 0.42);
+
+    // Sub text fades up
+    tl.from('#cHeroSub', { opacity: 0, y: 20, duration: 0.65 }, 0.88);
+
+    /* ─ Video parallax on scroll ─ */
+    gsap.to('.page-hero .hero-bg', {
+      yPercent: 22,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '.page-hero',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 1.2
+      }
+    });
+  }, { once: true });
   </script>
 </body>
 </html>
