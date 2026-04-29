@@ -25,6 +25,10 @@
       pointer-events: none;
       overflow: hidden;
       z-index: 0;
+      --scene-x: 0px;
+      --scene-y: 0px;
+      transform: translate3d(var(--scene-x), var(--scene-y), 0);
+      will-change: transform;
     }
     .orb {
       position: absolute;
@@ -75,12 +79,34 @@
       background: radial-gradient(circle at 34% 30%, #f1f5f9 0%, #cbd5e1 55%, #94a3b8 100%);
       animation: orb-float-6 8.5s ease-in-out infinite;
     }
+    .orb--sm-3 {
+      width: 36px; height: 36px;
+      top: 18%; left: 24%;
+      background: radial-gradient(circle at 34% 30%, rgba(191,219,254,0.95) 0%, rgba(96,165,250,0.72) 48%, rgba(37,99,235,0.12) 100%);
+      opacity: 0.75;
+      animation: orb-float-7 10.5s ease-in-out infinite;
+    }
+    .orb--sm-4 {
+      width: 24px; height: 24px;
+      top: 58%; left: 42%;
+      background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.92) 0%, rgba(147,197,253,0.72) 60%, rgba(59,130,246,0.16) 100%);
+      opacity: 0.7;
+      animation: orb-float-8 7.2s ease-in-out infinite;
+    }
+    .orb--sm-5 {
+      width: 18px; height: 18px;
+      bottom: 32%; left: 50%;
+      background: radial-gradient(circle at 34% 30%, rgba(219,234,254,0.95) 0%, rgba(125,211,252,0.7) 58%, rgba(59,130,246,0.12) 100%);
+      opacity: 0.7;
+      animation: orb-float-9 9.4s ease-in-out infinite;
+    }
     /* Mobile: shrink and keep orbs in safe corners */
     @media (max-width: 900px) {
       .orb--lg-blue { width: 130px; height: 130px; top: -30px; right: -30px; }
       .orb--lg-soft { width: 220px; height: 220px; top: -80px; right: -80px; }
       .orb--md-blue { width: 70px; height: 70px; }
       .orb--sm-1 { display: none; }
+      .orb--sm-3, .orb--sm-4, .orb--sm-5 { opacity: 0.45; }
     }
 
     @keyframes orb-float-1 {
@@ -110,10 +136,30 @@
       0%, 100% { transform: translate(0px, 0px); }
       50%       { transform: translate(14px, -20px); }
     }
+    @keyframes orb-float-7 {
+      0%, 100% { transform: translate(0px, 0px); }
+      45%       { transform: translate(16px, 12px); }
+      78%       { transform: translate(-8px, -9px); }
+    }
+    @keyframes orb-float-8 {
+      0%, 100% { transform: translate(0px, 0px); }
+      50%       { transform: translate(-12px, 10px); }
+    }
+    @keyframes orb-float-9 {
+      0%, 100% { transform: translate(0px, 0px); }
+      35%       { transform: translate(10px, -14px); }
+      70%       { transform: translate(-8px, 7px); }
+    }
     .page-hero__inner { max-width:1280px; margin:0 auto; padding:0 2rem; display:grid; grid-template-columns:1.1fr 0.9fr; gap:2.5rem; align-items:center; }
     .page-hero__heading { font-weight:800; font-size:clamp(2.6rem,4.2vw,4rem); line-height:0.96; letter-spacing:-0.04em; color:var(--text); margin-bottom:1rem; }
     .page-hero__heading span { color:var(--accent); }
     .page-hero__sub { font-size:1.05rem; line-height:1.65; color:var(--text-2); margin-bottom:1.25rem; max-width: 46ch; }
+
+    /* Gooey text */
+    .gooey-wrap { display:inline-block; position:relative; margin:0.1rem 0 1rem; font-size:clamp(1.05rem, 1.8vw, 1.35rem); line-height:1.1; }
+    .gooey-ghost { visibility:hidden; display:block; white-space:nowrap; }
+    .gooey-filter-layer { position:absolute; top:0; left:0; width:100%; height:100%; filter:url(#gooey-threshold); }
+    .gooey-filter-layer span { position:absolute; top:0; left:0; white-space:nowrap; font-weight:800; color:#227FEF; }
 
     /* Quick contact chips */
     .qchips { display:flex; flex-direction:column; gap:0.75rem; }
@@ -284,12 +330,33 @@
       <div class="orb orb--arc-bl"></div>
       <div class="orb orb--sm-1"></div>
       <div class="orb orb--sm-2"></div>
+      <div class="orb orb--sm-3"></div>
+      <div class="orb orb--sm-4"></div>
+      <div class="orb orb--sm-5"></div>
     </div>
     <div class="page-hero__inner" style="position:relative;z-index:1;">
       <div style="margin-top:2rem;">
         <span class="section-label" style="font-size:0.78rem;letter-spacing:0.12em;">iFix Academy · Contact</span>
         <h1 class="page-hero__heading">Get in Touch<br>with <span>iFix</span></h1>
         <p class="page-hero__sub">Visit any of our service centres across Bangalore, Delhi, or Patna. Don't have time to visit? Drop us a message and we'll get back to you promptly.</p>
+        <span class="gooey-wrap">
+          <span class="gooey-ghost">Record-Breaking Together.</span>
+          <div class="gooey-filter-layer">
+            <span id="gooey-t1"></span>
+            <span id="gooey-t2"></span>
+          </div>
+        </span>
+        <svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+          <defs>
+            <filter id="gooey-threshold">
+              <feColorMatrix in="SourceGraphic" type="matrix"
+                values="1 0 0 0 0
+                        1 0 0 0 0
+                        1 0 0 0 0
+                        0 0 0 255 -140" />
+            </filter>
+          </defs>
+        </svg>
         <div style="display:flex;gap:1rem;flex-wrap:wrap;">
           <a href="tel:+916364429494" class="btn btn--primary" style="padding:0.9rem 2.1rem;font-size:1rem;">📞 Call Us Now</a>
           <a href="#contact-form"     class="btn btn--outline" style="padding:0.9rem 2.1rem;font-size:1rem;">Send a Message</a>
@@ -318,7 +385,7 @@
             </div>
           </div>
           <div class="fg"><label class="flbl" for="mg">Message</label><textarea class="ftxt" id="mg" placeholder="Tell us a bit about yourself or ask a question..."></textarea></div>
-          <button type="submit" class="btn btn--primary fsub" id="fsub">Send Message →</button>
+          <button type="submit" class="btn btn--primary fsub btn-send-message" id="fsub"><span>Send Message →</span></button>
         </form>
         <div id="formOk" style="display:none;margin-top:1.5rem;text-align:center;padding:1.5rem;background:rgba(52,199,89,0.08);border:1px solid rgba(52,199,89,0.25);border-radius:var(--r-lg);">
           <div style="font-size:2rem;margin-bottom:0.5rem;">✅</div>
@@ -469,6 +536,139 @@
 
     document.querySelectorAll('.blue-cta-motion').forEach((cta) => ctaObserver.observe(cta));
 
+    const gooeyTarget = document.getElementById('gooey-t1');
+    const gooeyTarget2 = document.getElementById('gooey-t2');
+    if (gooeyTarget && gooeyTarget2) {
+      (function () {
+        const texts = [
+          'Big Together.',
+          'Iconic Together.',
+          'Legendary Together.',
+          'Fearless Together.',
+          'Unstoppable Together.',
+          'Viral Together.',
+          'Dominant Together.',
+          'Bold Together.',
+          'Remarkable Together.',
+          'Extraordinary Together.',
+          'Record-Breaking Together.',
+          'Unforgettable Together.'
+        ];
+
+        const morphTime = 1.2;
+        const cooldownTime = 2.2;
+        let textIndex = 0;
+        let morph = 0;
+        let cooldown = cooldownTime;
+        let lastTime = performance.now();
+        let isVisible = false;
+        let rafId = null;
+
+        gooeyTarget.textContent = texts[0];
+        gooeyTarget2.textContent = texts[1];
+
+        const target = gooeyTarget.closest('section') || gooeyTarget.parentElement;
+        const observer = new IntersectionObserver((entries) => {
+          isVisible = entries[0].isIntersecting;
+          if (isVisible && !rafId) {
+            lastTime = performance.now();
+            rafId = requestAnimationFrame(animate);
+          }
+        }, { threshold: 0 });
+        observer.observe(target);
+
+        function setMorph(fraction) {
+          gooeyTarget2.style.filter = `blur(${Math.min(8 / fraction - 8, 100)}px)`;
+          gooeyTarget2.style.opacity = `${Math.pow(fraction, 0.4) * 100}%`;
+
+          const f2 = 1 - fraction;
+          gooeyTarget.style.filter = `blur(${Math.min(8 / f2 - 8, 100)}px)`;
+          gooeyTarget.style.opacity = `${Math.pow(f2, 0.4) * 100}%`;
+        }
+
+        function doCooldown() {
+          morph = 0;
+          gooeyTarget2.style.filter = '';
+          gooeyTarget2.style.opacity = '100%';
+          gooeyTarget.style.filter = '';
+          gooeyTarget.style.opacity = '0%';
+        }
+
+        function animate(now) {
+          if (!isVisible) {
+            rafId = null;
+            return;
+          }
+
+          rafId = requestAnimationFrame(animate);
+          const dt = Math.min((now - lastTime) / 1000, 0.1);
+          lastTime = now;
+
+          const wasCooling = cooldown > 0;
+          cooldown -= dt;
+
+          if (cooldown <= 0) {
+            if (wasCooling) {
+              textIndex = (textIndex + 1) % texts.length;
+              gooeyTarget.textContent = texts[textIndex];
+              gooeyTarget2.textContent = texts[(textIndex + 1) % texts.length];
+            }
+
+            morph -= cooldown;
+            cooldown = 0;
+
+            let fraction = morph / morphTime;
+            if (fraction > 1) {
+              cooldown = cooldownTime;
+              fraction = 1;
+            }
+
+            setMorph(fraction);
+          } else {
+            doCooldown();
+          }
+        }
+      }());
+    }
+
+    const orbScene = document.querySelector('.orb-scene');
+    const pageHero = document.querySelector('.page-hero');
+    if (orbScene && pageHero) {
+      let currentX = 0;
+      let currentY = 0;
+      let targetX = 0;
+      let targetY = 0;
+      let frame = null;
+
+      const tick = () => {
+        currentX += (targetX - currentX) * 0.08;
+        currentY += (targetY - currentY) * 0.08;
+        orbScene.style.setProperty('--scene-x', `${currentX.toFixed(2)}px`);
+        orbScene.style.setProperty('--scene-y', `${currentY.toFixed(2)}px`);
+
+        if (Math.abs(targetX - currentX) > 0.05 || Math.abs(targetY - currentY) > 0.05) {
+          frame = requestAnimationFrame(tick);
+        } else {
+          frame = null;
+        }
+      };
+
+      pageHero.addEventListener('mousemove', (event) => {
+        const rect = pageHero.getBoundingClientRect();
+        const px = (event.clientX - rect.left) / rect.width - 0.5;
+        const py = (event.clientY - rect.top) / rect.height - 0.5;
+        targetX = px * 12;
+        targetY = py * 10;
+        if (!frame) frame = requestAnimationFrame(tick);
+      });
+
+      pageHero.addEventListener('mouseleave', () => {
+        targetX = 0;
+        targetY = 0;
+        if (!frame) frame = requestAnimationFrame(tick);
+      });
+    }
+
     window.addEventListener('scroll', () => {
       document.querySelectorAll('.blue-cta-motion.is-in-view').forEach((cta) => {
         const rect = cta.getBoundingClientRect();
@@ -482,7 +682,7 @@
     async function handleSubmit(e) {
       e.preventDefault();
       const b = document.getElementById('fsub');
-      b.textContent='Sending...'; b.disabled=true; b.style.opacity='0.7';
+      b.innerHTML='<span>Sending...</span>'; b.disabled=true; b.style.opacity='0.7';
       
       try {
         const firstName = document.getElementById('fn').value.trim();
@@ -519,7 +719,8 @@
         console.error('Error:', error);
         document.getElementById('error-text').textContent = error.message || 'Connection error. Please try again.';
         document.getElementById('formError').style.display='block';
-        b.textContent='Send Message →'; b.disabled=false; b.style.opacity='1';
+        b.innerHTML='<span>Send Message →</span>'; b.disabled=false; b.style.opacity='1';
+        window.IFIX_UI?.attachGlowBlobs?.('.btn-send-message');
       }
     }
   </script>

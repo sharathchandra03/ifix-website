@@ -35,9 +35,9 @@
           <a href="/" class="navbar__logo">
             <img src="/Assets/iFix Academy logo.png" alt="iFix Academy" class="navbar__logo-img">
           </a>
-          <div class="navbar__links">${links}</div>
+          <div class="navbar__links">${links}<span class="nav-tabs-indicator" aria-hidden="true"></span></div>
           <div class="navbar__actions">
-            <a href="/contact#contact-form" class="btn btn--enroll btn--glow">Book Free Demo Class</a>
+            <a href="/contact#contact-form" class="btn btn--enroll btn-free-audit"><span>Book Free Demo Class</span></a>
             <button class="hamburger" id="hamburger" aria-label="Open menu">
               <span></span><span></span><span></span>
             </button>
@@ -119,6 +119,12 @@
     `;
   }
 
+  function buildCallFloatHTML() {
+    return `
+      <a href="tel:+916364429494" class="call-float" aria-label="Call iFix Academy">📞</a>
+    `;
+  }
+
   function buildWhatsAppFloatHTML() {
     const phoneNumber = '916364429494';
     const defaultMessage = encodeURIComponent(
@@ -143,11 +149,45 @@
     `;
   }
 
+  function attachGlowBlobs(selectors) {
+    const selectorList = Array.isArray(selectors) ? selectors : [selectors];
+    const elements = selectorList.flatMap((selector) => Array.from(document.querySelectorAll(selector)));
+
+    elements.forEach((btn) => {
+      let blob = btn.querySelector('.glow-blob');
+      if (!blob) {
+        blob = document.createElement('span');
+        blob.className = 'glow-blob';
+        btn.insertBefore(blob, btn.firstChild);
+      }
+
+      if (btn.dataset.glowBound === '1') return;
+      btn.dataset.glowBound = '1';
+
+      btn.addEventListener('mousemove', (event) => {
+        const currentBlob = btn.querySelector('.glow-blob');
+        if (!currentBlob) return;
+        const rect = btn.getBoundingClientRect();
+        currentBlob.style.left = `${event.clientX - rect.left}px`;
+        currentBlob.style.top = `${event.clientY - rect.top}px`;
+        currentBlob.style.opacity = '1';
+      });
+
+      btn.addEventListener('mouseleave', () => {
+        const currentBlob = btn.querySelector('.glow-blob');
+        if (currentBlob) currentBlob.style.opacity = '0';
+      });
+    });
+  }
+
   function inject() {
     const navTarget = document.getElementById('nav-root') || document.getElementById('navbar-container');
     if (navTarget) navTarget.innerHTML = buildNavHTML();
     const footerTarget = document.getElementById('footer-root') || document.getElementById('footer-container');
     if (footerTarget) footerTarget.innerHTML = buildFooterHTML();
+    if (!document.querySelector('.call-float')) {
+      document.body.insertAdjacentHTML('beforeend', buildCallFloatHTML());
+    }
     if (!document.querySelector('.wa-float')) {
       document.body.insertAdjacentHTML('beforeend', buildWhatsAppFloatHTML());
     }
@@ -172,16 +212,36 @@
     closeBtn?.addEventListener('click', close);
     overlay?.addEventListener('click', close);
 
-    // Pointer-follow glow for header CTA button
-    document.querySelectorAll('.btn--glow').forEach((btn) => {
-      btn.addEventListener('mousemove', (event) => {
-        const rect = btn.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
-        btn.style.setProperty('--gx', `${x}px`);
-        btn.style.setProperty('--gy', `${y}px`);
+    attachGlowBlobs(['.btn-free-audit', '.btn-send-message']);
+
+    const navLinksWrap = navbar?.querySelector('.navbar__links');
+    const navIndicator = navLinksWrap?.querySelector('.nav-tabs-indicator');
+    const navLinksEls = navLinksWrap ? Array.from(navLinksWrap.querySelectorAll('.nav__link')) : [];
+
+    if (navLinksWrap && navIndicator && navLinksEls.length) {
+      const moveIndicator = (link) => {
+        if (!link) return;
+        const linkRect = link.getBoundingClientRect();
+        const wrapRect = navLinksWrap.getBoundingClientRect();
+        navIndicator.style.width = `${linkRect.width}px`;
+        navIndicator.style.left = `${linkRect.left - wrapRect.left}px`;
+        navIndicator.style.opacity = '1';
+      };
+
+      const activeLink = navLinksWrap.querySelector('.nav__link--active') || navLinksEls[0];
+      moveIndicator(activeLink);
+
+      navLinksEls.forEach((link) => {
+        link.addEventListener('mouseenter', () => moveIndicator(link));
+        link.addEventListener('focus', () => moveIndicator(link));
       });
-    });
+
+      navLinksWrap.addEventListener('mouseleave', () => moveIndicator(navLinksWrap.querySelector('.nav__link--active') || activeLink));
+      window.addEventListener('resize', () => moveIndicator(navLinksWrap.querySelector('.nav__link--active') || activeLink), { passive: true });
+    }
+
+    window.IFIX_UI = window.IFIX_UI || {};
+    window.IFIX_UI.attachGlowBlobs = attachGlowBlobs;
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', inject);
