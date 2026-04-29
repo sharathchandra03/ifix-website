@@ -400,7 +400,7 @@
       height: calc(100vh - 58px);
       overflow: hidden;
       display: grid;
-      grid-template-columns: 300px 1fr;
+      grid-template-columns: 1fr 1fr;
       background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(244,248,255,0.98));
       border-top: 1px solid var(--border);
     }
@@ -427,19 +427,19 @@
       pointer-events: none;
     }
     .hs-intro__eyebrow {
-      font-size: .68rem; font-weight: 700; text-transform: uppercase;
+      font-size: .8rem; font-weight: 700; text-transform: uppercase;
       letter-spacing: .14em; color: var(--accent);
-      margin-bottom: 1.1rem; display: block;
+      margin-bottom: 1.25rem; display: block;
     }
     .hs-intro__heading {
-      font-size: clamp(1.5rem, 2.2vw, 2rem);
+      font-size: clamp(2rem, 3vw, 2.75rem);
       font-weight: 800; line-height: 1.1;
       letter-spacing: -.03em; color: var(--text);
-      margin-bottom: 1rem;
+      margin-bottom: 1.25rem;
     }
     .hs-intro__heading span { color: var(--accent); }
     .hs-intro__sub {
-      font-size: .875rem; line-height: 1.75;
+      font-size: 1rem; line-height: 1.75;
       color: var(--text-2); margin-bottom: 2.5rem;
     }
 
@@ -454,10 +454,10 @@
       transition: width .1s linear;
     }
     .hs-step-counter {
-      font-size: .75rem; font-weight: 700;
+      font-size: .9rem; font-weight: 700;
       color: var(--text-3); letter-spacing: .06em;
     }
-    .hs-step-counter span { color: var(--accent); font-size: .95rem; }
+    .hs-step-counter span { color: var(--accent); font-size: 1.1rem; }
 
     /* Scroll hint arrow */
     .hs-scroll-hint {
@@ -476,63 +476,73 @@
       background: #fff;
     }
     @keyframes arrowBounce {
-      0%,100% { transform: translateX(0); }
-      50%      { transform: translateX(5px); }
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(5px); }
     }
 
-    /* ── RIGHT: Scrolling track ── */
+    /* ── RIGHT: Vertical card display ── */
     .hs-track-wrap {
       overflow: hidden;
       position: relative;
       display: flex;
       align-items: center;
+      justify-content: center;
     }
-    /* Fade edges */
+    /* Subtle vertical fade edges */
     .hs-track-wrap::before,
     .hs-track-wrap::after {
       content: '';
       position: absolute;
-      top: 0; bottom: 0;
-      width: 60px;
+      left: 0; right: 0;
+      height: 80px;
       z-index: 10;
       pointer-events: none;
     }
     .hs-track-wrap::before {
-      left: 0;
-      background: linear-gradient(to right, rgba(248,249,251,1), transparent);
+      top: 0;
+      background: linear-gradient(to bottom, rgba(248,249,251,0.85), transparent);
     }
     .hs-track-wrap::after {
-      right: 0;
-      background: linear-gradient(to left, rgba(248,249,251,1), transparent);
+      bottom: 0;
+      background: linear-gradient(to top, rgba(248,249,251,0.85), transparent);
     }
 
     .hs-track {
-      display: flex;
-      align-items: stretch;
-      gap: 20px;
-      padding: 2.5rem 3rem;
-      will-change: transform;
-      transition: transform .05s linear; /* near-zero for snap feel */
+      position: relative;
+      width: 100%;
+      height: 100%;
     }
 
     /* ── Individual cards ── */
     .hs-card {
-      width: 380px;
-      flex-shrink: 0;
+      width: 520px;
+      max-width: calc(100% - 4rem);
       background: #fff;
       border: 1px solid rgba(0,0,0,.08);
-      border-radius: 24px;
-      padding: 2.25rem 2rem;
+      border-radius: 28px;
+      padding: 3rem 2.75rem;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      position: relative;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, calc(-50% + 50px));
+      opacity: 0;
       overflow: hidden;
       box-shadow: 0 10px 30px rgba(31,20,46,0.06);
-      transition: border-color .35s ease, background .35s ease, box-shadow .35s ease;
+      transition: opacity 0.55s cubic-bezier(0.4,0,0.2,1),
+                  transform 0.55s cubic-bezier(0.4,0,0.2,1),
+                  border-color .35s ease, background .35s ease, box-shadow .35s ease;
       isolation: isolate;
     }
+    .hs-card.is-above {
+      opacity: 0;
+      transform: translate(-50%, calc(-50% - 50px));
+    }
     .hs-card.is-active {
+      opacity: 1;
+      transform: translate(-50%, -50%);
       border-color: rgba(52,120,246,.22);
       background: linear-gradient(180deg, rgba(52,120,246,0.035), rgba(255,255,255,1));
       box-shadow: 0 14px 38px rgba(31,20,46,0.08);
@@ -567,12 +577,12 @@
     }
     .hs-card__top { position: relative; z-index: 2; }
     .hs-card__step {
-      font-size: .65rem; font-weight: 700; text-transform: uppercase;
+      font-size: .78rem; font-weight: 700; text-transform: uppercase;
       letter-spacing: .14em; color: var(--accent);
-      margin-bottom: .75rem; display: block;
+      margin-bottom: 1rem; display: block;
     }
     .hs-card__num {
-      font-size: 5rem; font-weight: 800; line-height: 1;
+      font-size: 7rem; font-weight: 800; line-height: 1;
       letter-spacing: -.05em;
       color: rgba(52,120,246,.04);
       position: absolute; top: -1rem; right: 1rem;
@@ -581,35 +591,34 @@
     }
     .hs-card.is-active .hs-card__num { color: rgba(52,120,246,.12); }
     .hs-card__title {
-      font-size: 1.25rem; font-weight: 800;
+      font-size: 1.65rem; font-weight: 800;
       letter-spacing: -.025em; color: var(--text);
-      margin-bottom: .75rem; line-height: 1.2;
+      margin-bottom: 1rem; line-height: 1.2;
     }
     .hs-card__desc {
-      font-size: .875rem; line-height: 1.75;
+      font-size: 1rem; line-height: 1.75;
       color: var(--text-2);
-      margin-bottom: 1.75rem;
+      margin-bottom: 2rem;
     }
     .hs-card__bottom {
       position: relative; z-index: 2;
-      display: flex; flex-direction: column; gap: .6rem;
+      display: flex; flex-direction: column; gap: .8rem;
     }
     .hs-card__bullet {
-      display: flex; align-items: center; gap: .6rem;
-      font-size: .8rem; color: var(--text);
+      display: flex; align-items: center; gap: .75rem;
+      font-size: .95rem; color: var(--text);
     }
     .hs-card__bullet::before {
       content: '';
-      width: 5px; height: 5px; border-radius: 50%;
+      width: 6px; height: 6px; border-radius: 50%;
       background: var(--accent); opacity: .85; flex-shrink: 0;
       transition: opacity .3s ease;
     }
     .hs-card.is-active .hs-card__bullet::before { opacity: 1; }
 
-    /* Connector line between cards */
+    /* Connectors hidden in desktop vertical layout */
     .hs-connector {
-      width: 40px; flex-shrink: 0;
-      display: flex; align-items: center;
+      display: none;
     }
     .hs-connector__line {
       width: 100%; height: 1px;
@@ -617,7 +626,7 @@
         rgba(52,120,246,.28), rgba(52,120,246,.08));
     }
 
-    /* ── Mobile fallback: revert to vertical ── */
+    /* ── Mobile: stack cards in normal flow ── */
     @media (max-width: 900px) {
       .hs-section { height: auto !important; }
       .hs-pin {
@@ -629,10 +638,13 @@
       .hs-intro { border-right: none; border-bottom: 1px solid var(--border); padding: 3rem 1.5rem 2rem; }
       .hs-scroll-hint { display: none; }
       .hs-track-wrap::before, .hs-track-wrap::after { display: none; }
-      .hs-track-wrap { overflow: visible; }
-      .hs-track { flex-direction: column; padding: 1.75rem 1rem; transform: none !important; }
-      .hs-card { width: 100%; }
-      .hs-connector { display: none; }
+      .hs-track-wrap { overflow: visible; display: block; padding: 1.75rem 1rem; }
+      .hs-track { position: static; width: auto; height: auto; display: flex; flex-direction: column; gap: 1.25rem; }
+      .hs-card {
+        position: static; top: auto; left: auto;
+        transform: none !important; opacity: 1 !important;
+        width: 100%; max-width: 100%;
+      }
       .hs-card__title { color: var(--text); }
     }
   </style>
@@ -656,7 +668,7 @@
           Step <span id="hsCurStep">1</span> of 4
         </div>
         <div class="hs-scroll-hint">
-          <div class="hs-scroll-hint__arrow">→</div>
+          <div class="hs-scroll-hint__arrow">↓</div>
           Scroll to explore
         </div>
       </div>
@@ -748,55 +760,55 @@
   (function () {
     'use strict';
 
-    var section  = document.getElementById('hsProcess');
-    var pin      = section && section.querySelector('.hs-pin');
-    var track    = document.getElementById('hsTrack');
-    var wrap     = document.getElementById('hsTrackWrap');
-    var bar      = document.getElementById('hsProgressBar');
-    var stepEl   = document.getElementById('hsCurStep');
-    var cards    = track ? Array.from(track.querySelectorAll('.hs-card')) : [];
+    var section = document.getElementById('hsProcess');
+    var track   = document.getElementById('hsTrack');
+    var bar     = document.getElementById('hsProgressBar');
+    var stepEl  = document.getElementById('hsCurStep');
+    var cards   = track ? Array.from(track.querySelectorAll('.hs-card')) : [];
 
-    if (!section || !track || !wrap || window.innerWidth <= 900) return;
+    if (!section || !track || cards.length === 0) return;
 
-    /* ── Set section height = viewport + slide distance + dwell buffer ──
-         Must be >= window.innerHeight + maxSlide so progress reaches 1.0
-         while the pin is still sticky. Extra 280px lets Step 4 sit fully
-         visible before the section scrolls away.                        ── */
+    /* Each card gets ~600px of scroll dwell time */
+    var CARD_SCROLL = 600;
+
     function setup() {
       if (window.innerWidth <= 900) {
         section.style.height = '';
-        track.style.transform = '';
+        cards.forEach(function (c) {
+          c.classList.remove('is-active', 'is-above');
+        });
         return;
       }
-      var maxSlide = track.scrollWidth - wrap.clientWidth;
-      section.style.height = (window.innerHeight + maxSlide + 280) + 'px';
+      section.style.height = (window.innerHeight + cards.length * CARD_SCROLL + 200) + 'px';
+      onScroll();
     }
 
-    /* ── Drive translation on scroll ── */
     function onScroll() {
       if (window.innerWidth <= 900) return;
-      var maxSlide  = track.scrollWidth - wrap.clientWidth;
-      var sectionTop = section.getBoundingClientRect().top + window.pageYOffset;
-      var raw       = window.pageYOffset - sectionTop;
-      var progress  = Math.max(0, Math.min(1, raw / maxSlide));
+      var sTop      = section.getBoundingClientRect().top + window.pageYOffset;
+      var maxScroll = section.offsetHeight - window.innerHeight;
+      var raw       = window.pageYOffset - sTop;
+      var progress  = Math.max(0, Math.min(1, raw / maxScroll));
 
-      track.style.transform = 'translateX(' + (-progress * maxSlide) + 'px)';
-
-      /* Progress bar */
       if (bar) bar.style.width = (progress * 100) + '%';
 
-      /* Active step counter + card highlight */
-      var stepIdx = Math.min(cards.length - 1, Math.round(progress * (cards.length - 1)));
-      if (stepEl) stepEl.textContent = stepIdx + 1;
+      var activeIdx = Math.min(cards.length - 1, Math.floor(progress * cards.length));
+      if (stepEl) stepEl.textContent = activeIdx + 1;
+
       cards.forEach(function (c, i) {
-        c.classList.toggle('is-active', i === stepIdx);
+        c.classList.remove('is-active', 'is-above');
+        if (i === activeIdx) {
+          c.classList.add('is-active');
+        } else if (i < activeIdx) {
+          c.classList.add('is-above');
+        }
+        /* cards with i > activeIdx stay in default state (below, waiting) */
       });
     }
 
     setup();
-    window.addEventListener('resize', function () { setup(); onScroll(); }, { passive: true });
+    window.addEventListener('resize', function () { setup(); }, { passive: true });
     window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll(); /* init on load */
   })();
   </script>
 

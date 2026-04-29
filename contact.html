@@ -282,8 +282,43 @@
     .fi__item-lbl { font-size:0.68rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-3); }
     .fi__item-val { font-weight:600; color:var(--text); margin-top:2px; }
 
+    /* Experienced / Fresher toggle */
+    .exp-toggle { display:grid; grid-template-columns:1fr 1fr; background:var(--bg-2); border:1px solid var(--border); border-radius:var(--r-md); padding:3px; gap:0; }
+    .exp-toggle input[type="radio"] { display:none; }
+    .exp-toggle label { display:block; text-align:center; padding:0.52rem 0.5rem; font-size:0.82rem; font-weight:600; color:var(--text-2); border-radius:calc(var(--r-md) - 3px); cursor:pointer; transition:all 0.22s; user-select:none; }
+    .exp-toggle input[type="radio"]:checked + label { background:var(--accent); color:#fff; box-shadow:0 2px 10px rgba(52,120,246,0.28); }
+
     /* form */
-    .cform { background:var(--bg); border:1px solid var(--border); border-radius:var(--r-2xl); padding:1.35rem 1.45rem; box-shadow:var(--shadow-md); }
+    .cform { background:var(--bg); border:1px solid var(--border); border-radius:var(--r-2xl); padding:1.35rem 1.45rem; box-shadow:var(--shadow-md); position:relative; overflow:hidden; }
+
+    /* border beam */
+    .cform-beam {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      border: 1.5px solid transparent;
+      -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: destination-out;
+      mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+      mask-composite: exclude;
+      pointer-events: none;
+      z-index: 10;
+    }
+    .cform-beam::after {
+      content: '';
+      position: absolute;
+      width: 200px;
+      aspect-ratio: 1 / 1;
+      background: linear-gradient(to left, #93c5fd, #2563eb, transparent);
+      offset-path: rect(0 auto auto 0 round 40px);
+      offset-anchor: 90% 50%;
+      animation: cform-border-beam 12s infinite linear;
+      pointer-events: none;
+    }
+    @keyframes cform-border-beam {
+      0%   { offset-distance: 0%; }
+      100% { offset-distance: 100%; }
+    }
     .cform__title { font-weight:700; font-size:1rem; color:var(--text); letter-spacing:-0.02em; margin-bottom:0.2rem; }
     .cform__sub { font-size:0.73rem; color:var(--text-2); margin-bottom:0.65rem; }
     .fg { margin-bottom:0.72rem; }
@@ -363,28 +398,51 @@
         </div>
       </div>
       <div class="cform reveal" id="contact-form">
+        <div class="cform-beam" aria-hidden="true"></div>
         <div class="cform__title">Get in Touch</div>
         <p class="cform__sub">Fill out the form and we'll reach out within 24 hours.</p>
         <form id="cForm" onsubmit="handleSubmit(event)">
           <div class="frow">
-            <div class="fg"><label class="flbl" for="fn">First Name *</label><input class="finput" type="text" id="fn" placeholder="Rahul" required></div>
-            <div class="fg"><label class="flbl" for="ln">Last Name</label><input class="finput" type="text" id="ln" placeholder="Kumar"></div>
+            <div class="fg"><label class="flbl" for="fn">Full Name *</label><input class="finput" type="text" id="fn" placeholder="Rahul Kumar" required></div>
+            <div class="fg"><label class="flbl" for="ph">Contact / WhatsApp *</label><input class="finput" type="tel" id="ph" placeholder="+91 98765 43210" required></div>
           </div>
           <div class="frow">
             <div class="fg"><label class="flbl" for="em">Email *</label><input class="finput" type="email" id="em" placeholder="rahul@email.com" required></div>
-            <div class="fg"><label class="flbl" for="ph">Phone / WhatsApp *</label><input class="finput" type="tel" id="ph" placeholder="+91 98765 43210" required></div>
+            <div class="fg">
+              <label class="flbl" for="lang">Language</label>
+              <select class="fsel" id="lang">
+                <option value="">Select language...</option>
+                <option>Hindi</option><option>English</option><option>Kannada</option><option>Tamil</option>
+                <option>Telugu</option><option>Malayalam</option><option>Marathi</option><option>Bengali</option>
+                <option>Gujarati</option><option>Punjabi</option><option>Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="frow">
+            <div class="fg"><label class="flbl" for="city">City *</label><input class="finput" type="text" id="city" placeholder="Bangalore" required></div>
+            <div class="fg"><label class="flbl" for="pin">Pin Code *</label><input class="finput" type="text" id="pin" placeholder="560001" maxlength="6" pattern="[0-9]{6}" required></div>
           </div>
           <div class="frow">
             <div class="fg">
-              <label class="flbl" for="co">Course of Interest</label>
-              <select class="fsel" id="co"><option value="">Select a course...</option><option>Mobile Repairing Course</option><option>Laptop Repairing Course</option><option>Display Repairing Course</option><option>iPhone Repairing Course</option><option>Online Mobile Repairing</option><option>Not sure - need guidance</option></select>
+              <label class="flbl" for="co">Course *</label>
+              <select class="fsel" id="co" required>
+                <option value="">Select a course...</option>
+                <option>Mobile Repairing Course</option><option>Laptop Repairing Course</option>
+                <option>Display Repairing Course</option><option>iPhone Repairing Course</option>
+                <option>Online Mobile Repairing</option><option>Not sure – need guidance</option>
+              </select>
             </div>
-            <div class="fg">
-              <label class="flbl" for="mo">Preferred Mode</label>
-              <select class="fsel" id="mo"><option value="">Select mode...</option><option>Offline (Centre Visit)</option><option>Online (From Home)</option><option>Hybrid</option></select>
+            <div class="fg"><label class="flbl" for="prof">Profession</label><input class="finput" type="text" id="prof" placeholder="e.g. Student, Technician..."></div>
+          </div>
+          <div class="fg">
+            <label class="flbl">Experience Level *</label>
+            <div class="exp-toggle">
+              <input type="radio" name="exp" id="exp-fresher" value="Fresher" checked>
+              <label for="exp-fresher">🎓 Fresher</label>
+              <input type="radio" name="exp" id="exp-experienced" value="Experienced">
+              <label for="exp-experienced">💼 Experienced</label>
             </div>
           </div>
-          <div class="fg"><label class="flbl" for="mg">Message</label><textarea class="ftxt" id="mg" placeholder="Tell us a bit about yourself or ask a question..."></textarea></div>
           <button type="submit" class="btn btn--primary fsub btn-send-message" id="fsub"><span>Send Message →</span></button>
         </form>
         <div id="formOk" style="display:none;margin-top:1.5rem;text-align:center;padding:1.5rem;background:rgba(52,199,89,0.08);border:1px solid rgba(52,199,89,0.25);border-radius:var(--r-lg);">
@@ -405,9 +463,9 @@
   <section class="centres" id="centres">
     <div class="container">
       <div class="centres__top">
-        <span class="section-label reveal">Our Apple Service Centres</span>
-        <h2 class="section-heading reveal d1">iFix India in Bangalore</h2>
-        <p class="section-sub reveal d2" style="margin-top:0.75rem;max-width:560px;">Walk into any of our Bangalore centres for iPhone, iPad, MacBook, iMac, and iWatch repairs. All centres are staffed by trained iFix Academy graduates.</p>
+        <span class="section-label reveal">Our Academy Centres</span>
+        <h2 class="section-heading reveal d1">iFix Academy in Bangalore</h2>
+        <p class="section-sub reveal d2" style="margin-top:0.75rem;max-width:560px;">Walk into any of our academy. Trained by professional trainers iFix Academy graduates.</p>
       </div>
       <div class="centres__grid">
 
@@ -685,25 +743,29 @@
       b.innerHTML='<span>Sending...</span>'; b.disabled=true; b.style.opacity='0.7';
       
       try {
-        const firstName = document.getElementById('fn').value.trim();
-        const lastName = document.getElementById('ln').value.trim();
-        const email = document.getElementById('em').value;
-        const phone = document.getElementById('ph').value;
+        const name = document.getElementById('fn').value.trim();
+        const phone = document.getElementById('ph').value.trim();
+        const email = document.getElementById('em').value.trim();
+        const language = document.getElementById('lang').value || 'Not specified';
+        const city = document.getElementById('city').value.trim();
+        const pinCode = document.getElementById('pin').value.trim();
         const courseInterested = document.getElementById('co').value || 'Not specified';
-        const preferredMode = document.getElementById('mo').value || 'Not specified';
-        const message = document.getElementById('mg').value || 'Interested in joining iFix Academy';
+        const profession = document.getElementById('prof').value.trim() || 'Not specified';
+        const experienceLevel = document.querySelector('input[name="exp"]:checked')?.value || 'Fresher';
 
         const res = await fetch(`${API_BASE}/contact`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            first_name: firstName,
-            last_name: lastName,
-            email,
+            name,
             phone,
+            email,
+            language,
+            city,
+            pin_code: pinCode,
             course_interested: courseInterested,
-            preferred_mode: preferredMode,
-            message
+            profession,
+            experience_level: experienceLevel
           })
         });
 
