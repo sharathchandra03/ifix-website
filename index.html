@@ -592,15 +592,17 @@
       top: 0;
       min-height: 100dvh;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
+      gap: 1.75rem;
       overflow: hidden;
-      padding: 3rem 1.25rem;
+      padding: 2.5rem 1.25rem;
     }
 
     .features-laptop__scene {
       width: min(1180px, 95vw);
-      min-height: min(760px, 86dvh);
+      min-height: clamp(380px, calc(100dvh - 20rem), 480px);
       position: relative;
       border-radius: 2.5rem;
       background: rgba(255, 255, 255, 0.42);
@@ -621,14 +623,10 @@
     }
 
     .features-laptop__header {
-      position: absolute;
-      top: 2.2rem;
-      left: 50%;
-      transform: translateX(-50%);
       width: min(760px, 90%);
       text-align: center;
-      z-index: 3;
-      pointer-events: none;
+      padding: 0 2rem 0.25rem;
+      flex-shrink: 0;
     }
 
     .features-laptop__label {
@@ -658,9 +656,9 @@
     .features-laptop__mockup {
       position: absolute;
       left: 50%;
-      top: 56%;
+      top: 50%;
       transform: translate(-50%, -50%);
-      width: min(760px, 82vw);
+      width: min(700px, 78vw);
       perspective: 1800px;
       transform-style: preserve-3d;
       z-index: 2;
@@ -723,14 +721,14 @@
     .mockup-laptop__inside {
       position: absolute;
       border-radius: 1rem;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      background: rgba(255, 255, 255, 0.1);
-      color: #ece8f8;
+      border: 1px solid rgba(23, 20, 30, 0.12);
+      background: rgba(255, 255, 255, 0.90);
+      color: #2a2537;
       font-size: 0.88rem;
       font-weight: 600;
       backdrop-filter: blur(8px);
       padding: 0.8rem 1rem;
-      box-shadow: 0 10px 20px rgba(11, 8, 20, 0.24);
+      box-shadow: 0 10px 20px rgba(11, 8, 20, 0.14);
     }
 
     .inside-1 {
@@ -785,52 +783,52 @@
 
     .mf-1 {
       left: 3%;
-      top: 36%;
+      top: 18%;
     }
 
     .mf-2 {
       right: 4%;
-      top: 38%;
+      top: 22%;
     }
 
     .mf-3 {
       left: 2%;
-      top: 56%;
+      top: 46%;
     }
 
     .mf-4 {
       right: 4%;
-      top: 64%;
+      top: 50%;
     }
 
     .mf-5 {
       left: 13%;
-      top: 82%;
+      top: 76%;
     }
 
     .mf-6 {
       right: 13%;
-      top: 86%;
+      top: 78%;
     }
 
     .mf-7 {
       left: 11%;
-      top: 46%;
+      top: 32%;
     }
 
     .mf-8 {
       right: 11%;
-      top: 48%;
+      top: 36%;
     }
 
     .mf-9 {
       left: 6%;
-      top: 71%;
+      top: 62%;
     }
 
     .mf-10 {
       right: 6%;
-      top: 76%;
+      top: 64%;
     }
 
     .mockup-bg-pill {
@@ -2011,18 +2009,14 @@
         min-height: 165vh;
       }
 
-      .features-laptop__header {
-        top: 1.8rem;
-      }
-
       .features-laptop__sub {
         max-width: 90%;
         margin: 0 auto;
       }
 
       .features-laptop__mockup {
-        width: min(690px, 90vw);
-        top: 60%;
+        width: min(640px, 88vw);
+        top: 50%;
       }
 
       .mockup-float {
@@ -2038,52 +2032,52 @@
 
       .mf-1 {
         left: 2%;
-        top: 35%;
+        top: 18%;
       }
 
       .mf-2 {
         right: 2%;
-        top: 37%;
+        top: 22%;
       }
 
       .mf-3 {
         left: 1%;
-        top: 54%;
+        top: 46%;
       }
 
       .mf-4 {
         right: 2%;
-        top: 62%;
+        top: 50%;
       }
 
       .mf-5 {
         left: 10%;
-        top: 80%;
+        top: 76%;
       }
 
       .mf-6 {
         right: 10%;
-        top: 84%;
+        top: 78%;
       }
 
       .mf-7 {
         left: 8%;
-        top: 44%;
+        top: 32%;
       }
 
       .mf-8 {
         right: 8%;
-        top: 46%;
+        top: 36%;
       }
 
       .mf-9 {
         left: 4%;
-        top: 69%;
+        top: 62%;
       }
 
       .mf-10 {
         right: 4%;
-        top: 74%;
+        top: 64%;
       }
     }
 
@@ -2180,12 +2174,12 @@
       }
 
       .features-laptop__scene {
-        min-height: 980px;
+        min-height: clamp(320px, calc(100dvh - 14rem), 480px);
       }
 
       .features-laptop__header {
-        top: 1.5rem;
         width: min(92vw, 760px);
+        padding: 0 1rem 0.25rem;
       }
 
       .features-laptop__heading {
@@ -2198,7 +2192,7 @@
 
       .features-laptop__mockup {
         width: min(94vw, 420px);
-        top: 49%;
+        top: 50%;
       }
 
       .mockup-float {
@@ -2215,32 +2209,32 @@
 
       .mf-1 {
         left: 2%;
-        top: 28%;
+        top: 18%;
       }
 
       .mf-2 {
         right: 2%;
-        top: 30%;
+        top: 22%;
       }
 
       .mf-3 {
         left: 1%;
-        top: 48%;
+        top: 50%;
       }
 
       .mf-4 {
         right: 2%;
-        top: 52%;
+        top: 54%;
       }
 
       .mf-5 {
         left: 5%;
-        top: 78%;
+        top: 80%;
       }
 
       .mf-6 {
         right: 5%;
-        top: 80%;
+        top: 82%;
       }
 
       .mf-7,
@@ -2439,13 +2433,14 @@
   <!-- ════════ ZENDA-STYLE LAPTOP FEATURES SECTION ════════ -->
   <section class="features-laptop" id="featuresLaptop" feature-wrap>
     <div class="features-laptop__sticky">
+      <div class="features-laptop__header">
+        <div class="features-laptop__label" feature-heading>Hands-On Tracks</div>
+        <h2 class="features-laptop__heading" feature-heading>Every repair flow<br>inside one system.</h2>
+        <p class="features-laptop__sub" feature-sub>Explore IFIX training modules flowing through a real-world repair
+          workflow as you scroll.</p>
+      </div>
+
       <div class="features-laptop__scene">
-        <div class="features-laptop__header">
-          <div class="features-laptop__label" feature-heading>Hands-On Tracks</div>
-          <h2 class="features-laptop__heading" feature-heading>Every repair flow<br>inside one system.</h2>
-          <p class="features-laptop__sub" feature-sub>Explore IFIX training modules flowing through a real-world repair
-            workflow as you scroll.</p>
-        </div>
 
         <div class="features-laptop__mockup" feature-mockup>
           <div class="mockup-image__frame">
@@ -2816,18 +2811,7 @@
             .from('[mockup-in-3]', { y: featureMotion.in3.y, x: featureMotion.in3.x, rotate: featureMotion.in3.rotate, duration: 0.85 }, 0.08)
             .from('[mockup-in-4]', { y: featureMotion.in4.y, x: featureMotion.in4.x, rotate: featureMotion.in4.rotate, duration: 0.85 }, 0.08)
             .from('[mockup-bg-1], [mockup-bg-2], [mockup-bg-3]', { y: '18rem', opacity: 0.2, stagger: 0.06, duration: 0.75 }, 0)
-            .fromTo('[feature-mockup]', { scale: 0.82, rotateX: 16, rotateY: -10 }, { scale: 1.02, rotateX: 2, rotateY: 0, duration: 1, ease: 'power2.out' }, 0.04);
-
-          gsap.to('[feature-mockup]', {
-            yPercent: -4,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: featureWrap,
-              start: 'top top',
-              end: 'bottom bottom',
-              scrub: 1.2
-            }
-          });
+            .fromTo('[feature-mockup]', { scale: 0.82, rotateX: 16, rotateY: -10 }, { scale: 1.0, rotateX: 0, rotateY: 0, duration: 1, ease: 'power2.out' }, 0.04);
         }
 
         const onlineCards = gsap.utils.toArray('.online__feat, .toolkit-card');

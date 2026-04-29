@@ -66,8 +66,8 @@
     /* section label on dark */
     .page-hero > .container .section-label,
     .page-hero .section-label { color: #93c5fd; opacity: 1; letter-spacing: 0.14em; }
-    .page-hero__actions { display: flex; gap: 0.9rem; flex-wrap: wrap; margin-bottom: 1.75rem; }
-    .hero-chips { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+    .page-hero__actions { display: flex; gap: 0.9rem; flex-wrap: wrap; margin-bottom: 1.1rem; }
+    .hero-chips { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
 
     .hero-bg {
       position: absolute; inset: 0; z-index: 0;
@@ -82,7 +82,7 @@
         rgba(5,15,35,0.18) 65%,
         rgba(5,15,35,0.04) 100%);
     }
-    .hero-stats { display: grid; grid-template-columns: repeat(4, minmax(140px, 1fr)); gap: 0.75rem; margin-top: 2rem; }
+    .hero-stats { display: grid; grid-template-columns: repeat(4, minmax(140px, 1fr)); gap: 0.75rem; margin-top: 1rem; }
     .hero-stat {
       background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-lg);
       padding: 1rem; text-align: left; box-shadow: var(--shadow-sm);
@@ -91,7 +91,7 @@
     .hero-stat__lbl { font-size: 0.7rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; display: block; }
 
     /* ── MISSION ── */
-    .mission { background: var(--bg-2); padding: 3.5rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .mission { background: var(--bg-2); padding: 2.25rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
     .mission__inner { display: grid; grid-template-columns: 1fr 1.1fr; gap: 3rem; align-items: center; }
     .mission__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2.5rem; }
     .mission__heading {
@@ -304,7 +304,7 @@
   <section class="mission">
     <div class="container">
       <div class="mission__inner">
-        <div class="reveal-l">
+        <div>
           <span class="section-label">WHO WE ARE</span>
           <h2 class="section-heading mission__heading">Training that is practical, current, and career-ready.</h2>
           <p class="section-sub mission__lead">
@@ -313,19 +313,19 @@
           </p>
         </div>
         <div class="particle-canvas-container">
-          <canvas id="joinIfixCanvas" width="800" height="320"></canvas>
+          <canvas id="joinIfixCanvas" width="800" height="200"></canvas>
         </div>
       </div>
       <div class="mission__grid">
-        <div class="mission-card reveal">
+        <div class="mission-card">
           <div class="mission-card__title">Hands-On Training</div>
           <div class="mission-card__desc">Our practical modules include real devices, guided practice, and supervised lab sessions so you learn by doing.</div>
         </div>
-        <div class="mission-card reveal d1">
+        <div class="mission-card">
           <div class="mission-card__title">Industry-Tested Methods</div>
           <div class="mission-card__desc">Learn techniques used in active service centers, keeping your skills aligned with real repair demands.</div>
         </div>
-        <div class="mission-card reveal d2">
+        <div class="mission-card">
           <div class="mission-card__title">Career Growth Support</div>
           <div class="mission-card__desc">Get certification, practical guidance, and support to start your own shop or grow your career.</div>
         </div>
@@ -1138,13 +1138,13 @@
     tl.from('#osHeroSub', { opacity: 0, y: 20, duration: 0.65 }, 0.9);
 
     // Actions buttons stagger
-    tl.from('.page-hero__actions .btn', { opacity: 0, y: 16, stagger: 0.1, duration: 0.5 }, 1.05);
+    tl.from('.page-hero__actions .btn', { opacity: 0, y: 16, stagger: 0.1, duration: 0.5, clearProps: 'opacity,transform,y' }, 1.05);
 
     // Hero chips stagger
-    tl.from('.hero-chip', { opacity: 0, y: 10, stagger: 0.08, duration: 0.45 }, 1.18);
+    tl.from('.hero-chip', { opacity: 0, y: 10, stagger: 0.08, duration: 0.45, clearProps: 'opacity,transform,y' }, 1.18);
 
     // Stat cards stagger
-    tl.from('.hero-stat', { opacity: 0, y: 24, stagger: 0.1, duration: 0.55 }, 1.28);
+    tl.from('.hero-stat', { opacity: 0, y: 24, stagger: 0.1, duration: 0.55, clearProps: 'opacity,transform,y' }, 1.28);
 
     /* ─ Video parallax on scroll ─ */
     gsap.to('.page-hero .hero-bg', {
@@ -1193,6 +1193,21 @@
       });
     });
   }, { once: true });
+  </script>
+
+  <script>
+  /* Ensure hero elements are always visible (bfcache / reload safety) */
+  window.addEventListener('pageshow', function (e) {
+    var selectors = ['.page-hero__actions .btn', '.hero-chip', '.hero-stat',
+                     '#osHeroLabel', '#osHeroHeading', '#osHeroSub'];
+    selectors.forEach(function (sel) {
+      document.querySelectorAll(sel).forEach(function (el) {
+        el.style.opacity = '';
+        el.style.transform = '';
+        el.style.clipPath = '';
+      });
+    });
+  });
   </script>
 </body>
 </html>
