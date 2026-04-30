@@ -143,12 +143,69 @@
     .story__stat-num { display: block; font-weight: 800; font-size: 1.7rem; color: var(--accent); letter-spacing: -0.02em; }
     .story__stat-lbl { font-size: 0.7rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; display: block; }
     .story__locations {
-      margin-top: 1rem; background: var(--bg-2); border: 1px solid var(--border);
-      border-radius: var(--r-xl); padding: 1.5rem;
+      margin-top: 1rem;
+      background: linear-gradient(140deg, rgba(52,120,246,0.05) 0%, var(--bg-2) 55%);
+      border: 1px solid rgba(52,120,246,0.18);
+      border-radius: var(--r-xl);
+      padding: 1.5rem 1.5rem 1.4rem;
+      position: relative;
+      overflow: hidden;
     }
-    .story__loc-title { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3); margin-bottom: 0.9rem; }
-    .story__loc-list { display: flex; flex-wrap: wrap; gap: 0.6rem; }
-    .loc-chip { font-size: 0.78rem; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--border); color: var(--text-2); }
+    .story__locations::after {
+      content: '';
+      position: absolute;
+      top: -30px; right: -30px;
+      width: 140px; height: 140px;
+      background: radial-gradient(circle, rgba(52,120,246,0.10) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .story__loc-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .story__loc-title {
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.13em; color: var(--text-3);
+      display: flex; align-items: center; gap: 0.45rem;
+    }
+    .story__loc-title-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent); opacity: 0.75; flex-shrink: 0;
+    }
+    .story__loc-badge {
+      font-size: 0.69rem; font-weight: 700;
+      background: rgba(52,120,246,0.10); color: var(--accent);
+      border: 1px solid rgba(52,120,246,0.22);
+      border-radius: 999px; padding: 3px 10px;
+      letter-spacing: 0.04em;
+    }
+    .story__loc-list { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; }
+    .loc-card {
+      display: flex; align-items: center; gap: 0.7rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 0.85rem 1rem;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+    }
+    .loc-card:hover {
+      border-color: rgba(52,120,246,0.32);
+      box-shadow: 0 4px 14px rgba(52,120,246,0.10);
+      transform: translateY(-2px);
+    }
+    .loc-card__pin {
+      width: 34px; height: 34px; flex-shrink: 0;
+      background: rgba(52,120,246,0.10);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--accent);
+    }
+    .loc-card__name {
+      font-weight: 700; font-size: 0.88rem; color: var(--text); line-height: 1.2;
+    }
+    .loc-card__sub {
+      font-size: 0.7rem; color: var(--text-3); margin-top: 2px; letter-spacing: 0.01em;
+    }
 
     /* ── TRAINING FLOW ── */
     .process { background: var(--bg-2); padding: 6.5rem 0; border-top: 1px solid var(--border); }
@@ -358,12 +415,36 @@
             <div class="story__stat"><span class="story__stat-num">100%</span><span class="story__stat-lbl">REAL LAB HANDS-ON TRAINING</span></div>
           </div>
           <div class="story__locations reveal-r d2">
-            <div class="story__loc-title">Training Centers</div>
+            <div class="story__loc-header">
+              <div class="story__loc-title">
+                <span class="story__loc-title-dot"></span>
+                Training Centers
+              </div>
+              <span class="story__loc-badge">2 Locations</span>
+            </div>
             <div class="story__loc-list">
-              <span class="loc-chip">Delhi</span>
-              <span class="loc-chip">Patna</span>
-              <span class="loc-chip">Online</span>
-              <span class="loc-chip">Bangalore Service Network</span>
+              <div class="loc-card">
+                <div class="loc-card__pin">
+                  <svg width="13" height="16" viewBox="0 0 13 16" fill="none" aria-hidden="true">
+                    <path d="M6.5 0C2.91 0 0 2.91 0 6.5c0 4.875 6.5 9.5 6.5 9.5S13 11.375 13 6.5C13 2.91 10.09 0 6.5 0zm0 8.75a2.25 2.25 0 1 1 0-4.5 2.25 2.25 0 0 1 0 4.5z" fill="currentColor"/>
+                  </svg>
+                </div>
+                <div>
+                  <div class="loc-card__name">Indiranagar</div>
+                  <div class="loc-card__sub">Bangalore, Karnataka</div>
+                </div>
+              </div>
+              <div class="loc-card">
+                <div class="loc-card__pin">
+                  <svg width="13" height="16" viewBox="0 0 13 16" fill="none" aria-hidden="true">
+                    <path d="M6.5 0C2.91 0 0 2.91 0 6.5c0 4.875 6.5 9.5 6.5 9.5S13 11.375 13 6.5C13 2.91 10.09 0 6.5 0zm0 8.75a2.25 2.25 0 1 1 0-4.5 2.25 2.25 0 0 1 0 4.5z" fill="currentColor"/>
+                  </svg>
+                </div>
+                <div>
+                  <div class="loc-card__name">Bangalore</div>
+                  <div class="loc-card__sub">Karnataka, India</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
