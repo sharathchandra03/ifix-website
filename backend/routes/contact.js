@@ -54,7 +54,12 @@ router.post('/', async (req, res) => {
     preferred_mode,
     message,
     name,
-    subject
+    subject,
+    language,
+    city,
+    pin_code,
+    profession,
+    experience_level
   } = req.body;
 
   const firstName = (first_name || '').trim();
@@ -62,9 +67,24 @@ router.post('/', async (req, res) => {
   const fullName = (name || `${firstName} ${lastName}`).trim();
   const courseInterested = (course_interested || subject || '').trim();
   const preferredMode = (preferred_mode || '').trim();
+  const langVal = (language || '').trim();
+  const cityVal = (city || '').trim();
+  const pinCodeVal = (pin_code || '').trim();
+  const professionVal = (profession || '').trim();
+  const experienceLevelVal = (experience_level || '').trim();
 
-  if (!fullName || !email || !message) {
-    return res.status(400).json({ error: 'First name (or name), email, and message are required' });
+  const autoMessage = message || [
+    courseInterested ? `Course: ${courseInterested}` : '',
+    cityVal ? `City: ${cityVal}` : '',
+    pinCodeVal ? `Pin: ${pinCodeVal}` : '',
+    professionVal ? `Profession: ${professionVal}` : '',
+    experienceLevelVal ? `Experience: ${experienceLevelVal}` : '',
+    langVal ? `Language: ${langVal}` : '',
+    phone ? `Phone: ${phone}` : ''
+  ].filter(Boolean).join(' | ');
+
+  if (!fullName || !email) {
+    return res.status(400).json({ error: 'Name and email are required' });
   }
 
   let connection;
@@ -84,7 +104,7 @@ router.post('/', async (req, res) => {
           email,
           phone || '',
           courseInterested || 'General Inquiry',
-          preferredMode ? `[Preferred Mode: ${preferredMode}] ${message}` : message
+          preferredMode ? `[Preferred Mode: ${preferredMode}] ${autoMessage}` : autoMessage
         ]
       );
 
@@ -99,13 +119,16 @@ router.post('/', async (req, res) => {
     if (process.env.GOOGLE_SHEETS_ID) {
       try {
         await appendToGoogleSheets({
-          firstName,
-          lastName,
+          fullName,
           email,
           phone,
+          language: langVal,
+          city: cityVal,
+          pinCode: pinCodeVal,
           courseInterested,
-          preferredMode,
-          message
+          profession: professionVal,
+          experienceLevel: experienceLevelVal,
+          message: autoMessage
         });
         sheetsSynced = true;
         if (connection && contactId) {
@@ -146,7 +169,7 @@ router.post('/', async (req, res) => {
 });
 
 // Helper function to append to Google Sheets
-async function appendToGoogleSheets({ firstName, lastName, email, phone, courseInterested, preferredMode, message }) {
+async function appendToGoogleSheets({ fullName, email, phone, language, city, pinCode, courseInterested, profession, experienceLevel, message }) {
   const credentials = buildGoogleCredentials();
 
   if (!credentials.client_email || !credentials.private_key || !credentials.project_id) {
@@ -160,16 +183,19 @@ async function appendToGoogleSheets({ firstName, lastName, email, phone, courseI
 
   const sheets = google.sheets({ version: 'v4', auth });
   const values = [[
-    firstName || '',
-    lastName || '',
+    fullName || '',
     email || '',
     phone || '',
+    language || '',
+    city || '',
+    pinCode || '',
     courseInterested || '',
-    preferredMode || '',
+    profession || '',
+    experienceLevel || '',
     message || '',
     new Date().toISOString()
   ]];
-  let targetRange = process.env.GOOGLE_SHEETS_RANGE || 'Contacts!A:H';
+  let targetRange = process.env.GOOGLE_SHEETS_RANGE || 'Sheet1!A:K';
 
   try {
     return await sheets.spreadsheets.values.append({
@@ -193,7 +219,7 @@ async function appendToGoogleSheets({ firstName, lastName, email, phone, courseI
       throw error;
     }
 
-    targetRange = `${firstTitle}!A:H`;
+    targetRange = `${firstTitle}!A:K`;
     return await sheets.spreadsheets.values.append({
       spreadsheetId: process.env.GOOGLE_SHEETS_ID,
       range: targetRange,

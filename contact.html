@@ -538,6 +538,13 @@
   <div id="footer-root"></div>
   <script src="components.js"></script>
   <script>
+    // Fix #1: When arriving via #contact-form hash from another page, scroll to top
+    // so the full hero (heading + form) is visible rather than just the form.
+    if (window.location.hash === '#contact-form') {
+      history.replaceState(null, '', window.location.pathname + window.location.search);
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+
     const API_BASE = (
       localStorage.getItem('ifix_api_base') ||
       (window.location.protocol === 'file:' ? 'http://localhost:5000/api' : '/api')
@@ -718,16 +725,16 @@
       e.preventDefault();
       const b = document.getElementById('fsub');
       b.innerHTML='<span>Sending...</span>'; b.disabled=true; b.style.opacity='0.7';
-      
+
       try {
         const name = document.getElementById('fn').value.trim();
         const phone = document.getElementById('ph').value.trim();
         const email = document.getElementById('em').value.trim();
-        const language = document.getElementById('lang').value || 'Not specified';
+        const language = document.getElementById('lang').value || '';
         const city = document.getElementById('city').value.trim();
         const pinCode = document.getElementById('pin').value.trim();
-        const courseInterested = document.getElementById('co').value || 'Not specified';
-        const profession = document.getElementById('prof').value.trim() || 'Not specified';
+        const courseInterested = document.getElementById('co').value || '';
+        const profession = document.getElementById('prof').value.trim() || '';
         const experienceLevel = document.querySelector('input[name="exp"]:checked')?.value || 'Fresher';
 
         const res = await fetch(`${API_BASE}/contact`, {
@@ -749,6 +756,9 @@
         const data = await res.json();
 
         if (data.success) {
+          // Fix #2: lock cform height before hiding form to prevent layout shift
+          const cformEl = document.querySelector('.cform');
+          if (cformEl) cformEl.style.minHeight = cformEl.offsetHeight + 'px';
           document.getElementById('cForm').style.display='none';
           document.getElementById('formOk').style.display='block';
         } else {
