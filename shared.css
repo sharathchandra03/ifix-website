@@ -53,10 +53,10 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .navbar__inner {
   max-width: none; margin: 0 auto;
   display: flex; align-items: center; justify-content: space-between;
-  padding: 0.9rem clamp(2rem, 7vw, 6rem);
+  padding: 0.45rem clamp(2rem, 7vw, 6rem);
 }
-.navbar__logo { display: flex; align-items: center; }
-.navbar__logo-img { height: 36px; width: auto; object-fit: contain; }
+.navbar__logo { display: flex; align-items: center; line-height: 0; }
+.navbar__logo-img { height: 52px; width: auto; object-fit: contain; display: block; }
 .navbar__links { display: flex; align-items: center; gap: 0; position: relative; }
 .nav__link {
   font-size: 0.875rem; font-weight: 500; color: var(--text-2);
@@ -400,7 +400,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 @media (max-width: 560px) {
   .container { padding: 0 1rem; }
   .navbar__inner { padding: 0.75rem 1rem; }
-  .navbar__logo-img { height: 32px; }
+  .navbar__logo-img { height: 44px; }
   .mobile-menu { width: 100vw; border-left: none; }
   .btn { width: 100%; justify-content: center; }
   .footer__inner { grid-template-columns: 1fr; }

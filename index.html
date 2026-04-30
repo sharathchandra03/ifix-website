@@ -217,7 +217,7 @@
     .hero__video-wrap {
       position: relative;
       width: 100%;
-      max-width: 545px;
+      max-width: 590px;
       aspect-ratio: 1/1;
       border-radius: var(--r-2xl);
       overflow: hidden;
@@ -895,8 +895,23 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: radial-gradient(900px 400px at 8% 20%, rgba(52, 120, 246, 0.05) 0%, rgba(52, 120, 246, 0) 72%);
+      background:
+        radial-gradient(900px 500px at 5% 15%, rgba(52, 120, 246, 0.06) 0%, transparent 70%),
+        radial-gradient(600px 400px at 90% 80%, rgba(52, 120, 246, 0.04) 0%, transparent 65%);
       pointer-events: none;
+    }
+
+    /* Subtle dot-grid texture */
+    .online::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(52,120,246,0.06) 1px, transparent 1px);
+      background-size: 28px 28px;
+      pointer-events: none;
+      opacity: 0.55;
+      mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 80%);
+      -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 80%);
     }
 
     .online__inner {
@@ -911,68 +926,127 @@
     .online__right {
       display: flex;
       flex-direction: column;
-      gap: 1.35rem;
+      gap: 1.25rem;
+      padding-top: 3rem;
     }
 
     .online__features {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
-      margin-top: 1.65rem;
+      gap: 0.75rem;
+      margin-top: 1.75rem;
     }
 
+    /* ── Feature card — redesigned ─────────────────────────── */
     .online__feat {
       --mx: 50%;
       --my: 50%;
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       gap: 1rem;
-      padding: 1rem 1.25rem;
+      padding: 0.95rem 1.1rem 0.95rem 1rem;
       border-radius: var(--r-md);
-      background: var(--bg-2);
+      background: #fff;
       border: 1px solid var(--border);
-      transition: border-color 0.25s, box-shadow 0.25s, transform 0.28s var(--ease-expo);
+      border-left: 3px solid transparent;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      transition:
+        border-color 0.22s ease,
+        border-left-color 0.22s ease,
+        box-shadow 0.28s ease,
+        transform 0.28s var(--ease-expo),
+        background 0.22s ease;
       position: relative;
       overflow: hidden;
     }
 
-    .online__feat::before {
+    .online__feat::after {
       content: '';
       position: absolute;
       inset: -1px;
-      background: radial-gradient(170px circle at var(--mx) var(--my), rgba(52, 120, 246, 0.2) 0%, rgba(52, 120, 246, 0.08) 30%, rgba(52, 120, 246, 0) 70%);
+      border-radius: inherit;
+      background: radial-gradient(180px circle at var(--mx) var(--my), rgba(52,120,246,0.13) 0%, transparent 70%);
       opacity: 0;
-      transition: opacity 0.25s ease;
+      transition: opacity 0.22s ease;
       pointer-events: none;
     }
 
     .online__feat:hover {
-      border-color: rgba(52, 120, 246, 0.3);
-      box-shadow: 0 12px 24px rgba(52, 120, 246, 0.12);
-      transform: translateY(-4px);
+      border-color: rgba(52, 120, 246, 0.25);
+      border-left-color: var(--accent);
+      box-shadow: 0 8px 28px rgba(52, 120, 246, 0.13), 0 2px 8px rgba(0,0,0,0.04);
+      transform: translateX(4px);
+      background: #fafcff;
     }
 
-    .online__feat:hover::before {
+    .online__feat:hover::after {
       opacity: 1;
     }
 
-    .online__feat-icon {
-      font-size: 1.2rem;
+    /* Number badge */
+    .online__feat-num {
+      font-size: 0.62rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      color: var(--accent);
+      background: rgba(52,120,246,0.1);
+      border: 1px solid rgba(52,120,246,0.18);
+      border-radius: 6px;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       flex-shrink: 0;
-      margin-top: 1px;
+      font-variant-numeric: tabular-nums;
+      transition: background 0.22s, color 0.22s;
+    }
+
+    .online__feat:hover .online__feat-num {
+      background: rgba(52,120,246,0.18);
+    }
+
+    /* Icon circle */
+    .online__feat-icon-wrap {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(52,120,246,0.1) 0%, rgba(52,120,246,0.05) 100%);
+      border: 1px solid rgba(52,120,246,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.22s, transform 0.22s;
+    }
+
+    .online__feat:hover .online__feat-icon-wrap {
+      background: linear-gradient(135deg, rgba(52,120,246,0.18) 0%, rgba(52,120,246,0.08) 100%);
+      transform: scale(1.08) rotate(-3deg);
+    }
+
+    .online__feat-icon {
+      font-size: 1rem;
+      line-height: 1;
+    }
+
+    .online__feat-body {
+      flex: 1;
+      min-width: 0;
     }
 
     .online__feat-text {
-      font-size: 0.875rem;
+      font-size: 0.855rem;
       color: var(--text-2);
-      line-height: 1.55;
+      line-height: 1.5;
     }
 
     .online__feat-text strong {
       color: var(--text);
-      font-weight: 600;
+      font-weight: 650;
       display: block;
-      margin-bottom: 1px;
+      margin-bottom: 2px;
+      font-size: 0.875rem;
     }
 
     /* ════════════════════════════════════════
@@ -1095,11 +1169,17 @@
     }
 
     /* ── Industry Facts Panel ───────────────────────────────── */
+    /* ════════════════════════════════════════
+       INDUSTRY PANEL — Premium redesign
+    ════════════════════════════════════════ */
     .industry-panel {
-      background: var(--bg);
-      border: 1px solid rgba(52, 120, 246, 0.18);
-      border-radius: var(--r-2xl);
-      box-shadow: 0 0 0 4px rgba(52, 120, 246, 0.04), var(--shadow-md);
+      background: #fff;
+      border: 1px solid rgba(52, 120, 246, 0.15);
+      border-radius: 20px;
+      box-shadow:
+        0 0 0 4px rgba(52, 120, 246, 0.04),
+        0 8px 32px rgba(31, 40, 80, 0.08),
+        0 2px 8px rgba(0,0,0,0.04);
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -1109,15 +1189,15 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 1rem 1.35rem;
-      border-bottom: 1px solid var(--border);
-      background: var(--bg-2);
+      padding: 0.85rem 1.25rem;
+      border-bottom: 1px solid rgba(52,120,246,0.1);
+      background: linear-gradient(135deg, #f0f5ff 0%, #f8faff 100%);
     }
 
     .industry-panel__title {
-      font-size: 0.67rem;
-      font-weight: 700;
-      letter-spacing: 0.14em;
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
       color: var(--text);
       margin: 0;
@@ -1126,40 +1206,40 @@
     .industry-panel__live {
       display: inline-flex;
       align-items: center;
-      gap: 0.38rem;
+      gap: 0.4rem;
       font-size: 0.58rem;
       font-weight: 800;
       letter-spacing: 0.13em;
       text-transform: uppercase;
       color: #16a34a;
-      background: rgba(22, 163, 74, 0.1);
-      border: 1px solid rgba(22, 163, 74, 0.22);
-      padding: 0.28rem 0.65rem;
+      background: rgba(22, 163, 74, 0.09);
+      border: 1px solid rgba(22, 163, 74, 0.2);
+      padding: 0.26rem 0.6rem;
       border-radius: 100px;
     }
 
     .industry-panel__live-dot {
-      width: 5px;
-      height: 5px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
       background: #16a34a;
       flex-shrink: 0;
       animation: livePulse 1.9s ease-in-out infinite;
+      box-shadow: 0 0 0 0 rgba(22,163,74,0.4);
     }
 
     @keyframes livePulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50%       { opacity: 0.45; transform: scale(0.6); }
+      0%   { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(22,163,74,0.4); }
+      50%  { opacity: 0.6; transform: scale(0.75); box-shadow: 0 0 0 4px rgba(22,163,74,0); }
+      100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(22,163,74,0); }
     }
 
     .industry-panel__track {
-      border: none;
-      border-radius: 0;
-      background: var(--bg);
+      background: #fff;
       overflow: hidden;
       position: relative;
-      height: 370px;
-      padding: 0.75rem 1.1rem;
+      height: 440px;
+      padding: 0.75rem 1rem;
     }
 
     .industry-panel__track::before,
@@ -1168,7 +1248,7 @@
       position: absolute;
       left: 0;
       right: 0;
-      height: 52px;
+      height: 56px;
       pointer-events: none;
       z-index: 2;
     }
@@ -1198,20 +1278,36 @@
 
     .industry-panel__item {
       display: flex;
-      align-items: flex-start;
-      gap: 0.8rem;
-      padding: 0.7rem 0.9rem;
-      border-radius: var(--r-md);
-      background: var(--bg-2);
-      border: 1px solid var(--border);
-      transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.85rem 1rem;
+      border-radius: 10px;
+      background: #f8faff;
+      border: 1px solid rgba(52,120,246,0.08);
+      transition: border-color 0.22s, box-shadow 0.22s, background 0.22s, transform 0.22s;
       cursor: default;
     }
 
     .industry-panel__item:hover {
       background: #eef4ff;
-      border-color: rgba(52, 120, 246, 0.3);
-      box-shadow: 0 2px 14px rgba(52, 120, 246, 0.09);
+      border-color: rgba(52, 120, 246, 0.25);
+      box-shadow: 0 3px 16px rgba(52, 120, 246, 0.1);
+      transform: translateX(3px);
+    }
+
+    /* Blue dot indicator per item */
+    .industry-panel__item-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      opacity: 0.45;
+      flex-shrink: 0;
+      transition: opacity 0.22s;
+    }
+
+    .industry-panel__item:hover .industry-panel__item-dot {
+      opacity: 0.85;
     }
 
     .industry-panel__item-num {
@@ -1226,34 +1322,58 @@
       min-width: 1.5ch;
     }
 
-    .industry-panel__item-text {
-      font-size: 0.82rem;
-      line-height: 1.55;
+    .industry-panel__item-text,
+    .industry-panel__item > span:last-child,
+    .industry-panel__item > :not(.industry-panel__item-dot) {
+      font-size: 0.835rem;
+      line-height: 1.5;
       color: var(--text-2);
       white-space: normal;
     }
 
-    /* ── Stats footer row (inside panel) ─────────────────── */
+    /* direct text nodes — style via parent */
+    .industry-panel__item {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: var(--text-2);
+    }
+
+    /* ── Stats row — standalone card ─────────────────────── */
     .stats-row {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 0;
-      border-top: 1px solid var(--border);
-      background: var(--bg-2);
-      margin-top: 0;
+      background: linear-gradient(135deg, #f0f5ff 0%, #f8faff 100%);
+      border-radius: 20px;
+      border: 1px solid rgba(52,120,246,0.15);
+      box-shadow: 0 4px 18px rgba(31,40,80,0.07), 0 1px 4px rgba(0,0,0,0.04);
+      overflow: hidden;
     }
 
     .stat-item {
-      padding: 1rem 0.75rem;
+      padding: 1.6rem 1rem;
       text-align: center;
-      border-right: 1px solid var(--border);
-      border-radius: 0;
-      background: transparent;
-      border-top: none;
-      border-bottom: none;
-      border-left: none;
+      border-right: 1px solid rgba(52,120,246,0.12);
       position: relative;
-      transition: background 0.2s;
+      transition: background 0.22s;
+      overflow: hidden;
+    }
+
+    .stat-item::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 2px;
+      background: var(--accent);
+      border-radius: 2px 2px 0 0;
+      transition: width 0.3s ease;
+    }
+
+    .stat-item:hover::before {
+      width: 70%;
     }
 
     .stat-item:last-child {
@@ -1261,25 +1381,27 @@
     }
 
     .stat-item:hover {
-      background: rgba(52, 120, 246, 0.04);
+      background: rgba(52, 120, 246, 0.06);
     }
 
     .stat-item__num {
       font-weight: 800;
-      font-size: 1.5rem;
+      font-size: 2.1rem;
       color: var(--accent);
-      letter-spacing: -0.04em;
+      letter-spacing: -0.05em;
       display: block;
       line-height: 1;
+      font-variant-numeric: tabular-nums;
     }
 
     .stat-item__lbl {
-      font-size: 0.6rem;
+      font-size: 0.67rem;
       color: var(--text-3);
       text-transform: uppercase;
-      letter-spacing: 0.09em;
-      margin-top: 5px;
+      letter-spacing: 0.1em;
+      margin-top: 8px;
       display: block;
+      font-weight: 600;
     }
 
     /* Toolkit card (right side) */
@@ -1347,37 +1469,7 @@
       margin-bottom: 1.75rem;
     }
 
-    .stats-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.25rem;
-      margin-top: 3.6rem;
-    }
-
-    .stat-item {
-      background: var(--bg);
-      border: 1.5px solid #555;
-      border-radius: var(--r-md);
-      padding: 1.1rem;
-      text-align: center;
-    }
-
-    .stat-item__num {
-      font-weight: 800;
-      font-size: 1.45rem;
-      color: var(--accent);
-      letter-spacing: -0.02em;
-      display: block;
-    }
-
-    .stat-item__lbl {
-      font-size: 0.68rem;
-      color: var(--text-3);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-top: 2px;
-      display: block;
-    }
+    /* stat overrides: intentionally blank — main block above handles all styling */
 
     /* ════════════════════════════════════════
        BRANDS
@@ -2574,93 +2666,121 @@
     </div>
   </section>
 
-  <!-- ════════ ONLINE LEARNING ════════ -->
+  <!-- ════════ OFFLINE PRACTICAL TRAINING ════════ -->
   <section class="online" id="online">
     <div class="container">
       <div class="online__inner">
-        <div>
+
+        <!-- LEFT: label + heading + feature cards -->
+        <div class="online__left">
           <span class="section-label reveal">Offline Practical Training</span>
-          <h2 class="section-heading reveal d1" style="margin-bottom:1.5rem; font-size: clamp(1.7rem, 3vw, 2.45rem);">
-            Learn Advanced Repair - With Real Hands-On Training</h2>
-          <p class="section-sub reveal d2" style="margin-bottom:1.5rem;">Serious skills require real practice. Our
+          <h2 class="section-heading reveal d1" style="margin-bottom:1.25rem; font-size: clamp(1.7rem, 3vw, 2.45rem);">
+            Learn Advanced Repair — With Real Hands-On Training</h2>
+          <p class="section-sub reveal d2" style="margin-bottom:0;">Serious skills require real practice. Our
             offline training in Bangalore is designed for technicians who want to master chip-level repair through
             hands-on experience.</p>
+
           <div class="online__features">
-            <div class="online__feat reveal"><span class="online__feat-icon">🎥</span>
-              <div class="online__feat-text"><strong>Live Hands-On Training</strong>Work on real faulty iPhones &amp;
-                MacBooks - not just demonstrations.</div>
+
+            <div class="online__feat reveal" data-feat>
+              
+              <div class="online__feat-icon-wrap"><span class="online__feat-icon">🎥</span></div>
+              <div class="online__feat-body">
+                <div class="online__feat-text">
+                  <strong>Live Hands-On Training</strong>
+                  Work on real faulty iPhones &amp; MacBooks — not just demonstrations.
+                </div>
+              </div>
             </div>
-            <div class="online__feat reveal d1"><span class="online__feat-icon">⚡</span>
-              <div class="online__feat-text"><strong>Complete Knowledge of Digital Electronics</strong>Build strong
-                fundamentals in circuits, components, signal flow, and diagnosis logic used in chip-level repair.</div>
+
+            <div class="online__feat reveal d1" data-feat>
+              
+              <div class="online__feat-icon-wrap"><span class="online__feat-icon">⚡</span></div>
+              <div class="online__feat-body">
+                <div class="online__feat-text">
+                  <strong>Complete Knowledge of Digital Electronics</strong>
+                  Build strong fundamentals in circuits, components, signal flow, and diagnosis logic.
+                </div>
+              </div>
             </div>
-            <div class="online__feat reveal d2"><span class="online__feat-icon">💬</span>
-              <div class="online__feat-text"><strong>Direct Trainer Support</strong>Learn face-to-face with expert
-                guidance and real-time doubt solving.</div>
+
+            <div class="online__feat reveal d2" data-feat>
+             
+              <div class="online__feat-icon-wrap"><span class="online__feat-icon">💬</span></div>
+              <div class="online__feat-body">
+                <div class="online__feat-text">
+                  <strong>Direct Trainer Support</strong>
+                  Learn face-to-face with expert guidance and real-time doubt solving.
+                </div>
+              </div>
             </div>
-            <div class="online__feat reveal d3"><span class="online__feat-icon">🧰</span>
-              <div class="online__feat-text"><strong>Industry's Advanced Tools &amp; Machines</strong>Train using the
-                latest professional equipment used in real repair labs.</div>
+
+            <div class="online__feat reveal d3" data-feat>
+              
+              <div class="online__feat-icon-wrap"><span class="online__feat-icon">🧰</span></div>
+              <div class="online__feat-body">
+                <div class="online__feat-text">
+                  <strong>Industry's Advanced Tools &amp; Machines</strong>
+                  Train using the latest professional equipment used in real repair labs.
+                </div>
+              </div>
             </div>
-            <div class="online__feat reveal"><span class="online__feat-icon">📈</span>
-              <div class="online__feat-text"><strong>Post-Training Business Support</strong>Get continued business
-                guidance even after completing your course.</div>
+
+            <div class="online__feat reveal d4" data-feat>
+              
+              <div class="online__feat-icon-wrap"><span class="online__feat-icon">📈</span></div>
+              <div class="online__feat-body">
+                <div class="online__feat-text">
+                  <strong>Post-Training Business Support</strong>
+                  Get continued business guidance even after completing your course.
+                </div>
+              </div>
             </div>
+
           </div>
         </div>
+
+        <!-- RIGHT: industry facts panel + stats -->
         <div class="online__right reveal-r">
           <div class="industry-panel">
-            <div class="industry-panel__title">Industry Facts (Live)</div>
+            <div class="industry-panel__header">
+              <div class="industry-panel__title">Industry Facts</div>
+              <div class="industry-panel__live">
+                <span class="industry-panel__live-dot"></span>Live Feed
+              </div>
+            </div>
             <div class="industry-panel__track">
               <div class="industry-panel__loop">
                 <div class="industry-panel__list">
-                  <div class="industry-panel__item">Chip-level repair demand is growing year-over-year across India.
-                  </div>
-                  <div class="industry-panel__item">Board-level diagnostics can increase repair ticket value
-                    significantly.</div>
-                  <div class="industry-panel__item">MacBook/iPhone logic board skills are among the highest paid in
-                    service labs.</div>
-                  <div class="industry-panel__item">Advanced tool proficiency improves turnaround time and customer
-                    trust.</div>
-                  <div class="industry-panel__item">Independent technicians with lab skills build repeat business
-                    faster.</div>
-                  <div class="industry-panel__item">Technicians with component-level skills command better service
-                    pricing.</div>
-                  <div class="industry-panel__item">Accurate diagnostics reduce repeat faults and improve customer
-                    retention.</div>
-                  <div class="industry-panel__item">Hands-on board practice shortens repair cycle time in live jobs.
-                  </div>
-                </div>
-                <div class="industry-panel__list" aria-hidden="true">
-                  <div class="industry-panel__item">Chip-level repair demand is growing year-over-year across India.
-                  </div>
-                  <div class="industry-panel__item">Board-level diagnostics can increase repair ticket value
-                    significantly.</div>
-                  <div class="industry-panel__item">MacBook/iPhone logic board skills are among the highest paid in
-                    service labs.</div>
-                  <div class="industry-panel__item">Advanced tool proficiency improves turnaround time and customer
-                    trust.</div>
-                  <div class="industry-panel__item">Independent technicians with lab skills build repeat business
-                    faster.</div>
-                  <div class="industry-panel__item">Technicians with component-level skills command better service
-                    pricing.</div>
-                  <div class="industry-panel__item">Accurate diagnostics reduce repeat faults and improve customer
-                    retention.</div>
-                  <div class="industry-panel__item">Hands-on board practice shortens repair cycle time in live jobs.
-                  </div>
+                  <div class="industry-panel__item"><span class="industry-panel__item-dot"></span>Chip-level repair demand is growing year-over-year across India.</div>
+                  <div class="industry-panel__item"><span class="industry-panel__item-dot"></span>Board-level diagnostics can increase repair ticket value significantly.</div>
+                  <div class="industry-panel__item"><span class="industry-panel__item-dot"></span>MacBook/iPhone logic board skills are among the highest paid in service labs.</div>
+                  <div class="industry-panel__item"><span class="industry-panel__item-dot"></span>Advanced tool proficiency improves turnaround time and customer trust.</div>
+                  <div class="industry-panel__item"><span class="industry-panel__item-dot"></span>Independent technicians with lab skills build repeat business faster.</div>
+                  <div class="industry-panel__item"><span class="industry-panel__item-dot"></span>Technicians with component-level skills command better service pricing.</div>
+                  <div class="industry-panel__item"><span class="industry-panel__item-dot"></span>Accurate diagnostics reduce repeat faults and improve customer retention.</div>
+                  <div class="industry-panel__item"><span class="industry-panel__item-dot"></span>Hands-on board practice shortens repair cycle time in live jobs.</div>
                 </div>
               </div>
             </div>
           </div>
+
           <div class="stats-row">
-            <div class="stat-item reveal"><span class="stat-item__num">6</span><span class="stat-item__lbl">Service
-                Centers</span></div>
-            <div class="stat-item reveal d1"><span class="stat-item__num">15+</span><span class="stat-item__lbl">Years
-                Experiences</span></div>
-            <div class="stat-item reveal d2"><span class="stat-item__num">10k+</span><span class="stat-item__lbl">Happy
-                Customers</span></div>
+            <div class="stat-item">
+              <span class="stat-item__num" data-count="6" data-suffix="">6</span>
+              <span class="stat-item__lbl">Service Centers</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-item__num" data-count="15" data-suffix="+">15+</span>
+              <span class="stat-item__lbl">Years Experience</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-item__num" data-count="10" data-suffix="k+">10k+</span>
+              <span class="stat-item__lbl">Happy Customers</span>
+            </div>
           </div>
         </div>
+
       </div>
     </div>
   </section>
@@ -2936,6 +3056,62 @@
             card.style.removeProperty('--my');
             if (card.classList.contains('toolkit-card')) {
               card.style.transform = '';
+            }
+          });
+        });
+
+        /* ── Offline Training: feature card stagger entrance ── */
+        const featCards = gsap.utils.toArray('.online__feat[data-feat]');
+        if (featCards.length) {
+          gsap.fromTo(featCards,
+            { x: -28, opacity: 0, scale: 0.97 },
+            {
+              x: 0, opacity: 1, scale: 1,
+              duration: 0.55,
+              ease: 'power2.out',
+              stagger: 0.09,
+              scrollTrigger: {
+                trigger: featCards[0].closest('.online__features') || featCards[0],
+                start: 'top 82%',
+                once: true
+              }
+            }
+          );
+          /* Icon wrap bounce on entrance */
+          gsap.fromTo(gsap.utils.toArray('.online__feat-icon-wrap'),
+            { scale: 0.6, opacity: 0 },
+            {
+              scale: 1, opacity: 1,
+              duration: 0.45,
+              ease: 'back.out(1.8)',
+              stagger: 0.09,
+              delay: 0.12,
+              scrollTrigger: {
+                trigger: featCards[0].closest('.online__features') || featCards[0],
+                start: 'top 82%',
+                once: true
+              }
+            }
+          );
+        }
+
+        /* ── Stat counter animation ── */
+        const statNums = gsap.utils.toArray('.stat-item__num[data-count]');
+        statNums.forEach((el) => {
+          const target = parseInt(el.dataset.count, 10);
+          const suffix = el.dataset.suffix || '';
+          const obj = { val: 0 };
+          gsap.to(obj, {
+            val: target,
+            duration: 1.6,
+            ease: 'power2.out',
+            onUpdate() {
+              el.textContent = Math.round(obj.val) + suffix;
+            },
+            scrollTrigger: {
+              trigger: el.closest('.stats-row') || el,
+              start: 'top 88%',
+              once: true
             }
           });
         });
