@@ -192,10 +192,9 @@ async function appendToGoogleSheets({ fullName, email, phone, language, city, pi
     courseInterested || '',
     profession || '',
     experienceLevel || '',
-    message || '',
     new Date().toISOString()
   ]];
-  let targetRange = process.env.GOOGLE_SHEETS_RANGE || 'Sheet1!A:K';
+  let targetRange = process.env.GOOGLE_SHEETS_RANGE || 'Sheet1!A:J';
 
   try {
     return await sheets.spreadsheets.values.append({
@@ -219,7 +218,7 @@ async function appendToGoogleSheets({ fullName, email, phone, language, city, pi
       throw error;
     }
 
-    targetRange = `${firstTitle}!A:K`;
+    targetRange = `${firstTitle}!A:J`;
     return await sheets.spreadsheets.values.append({
       spreadsheetId: process.env.GOOGLE_SHEETS_ID,
       range: targetRange,
