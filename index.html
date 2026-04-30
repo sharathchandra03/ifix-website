@@ -600,7 +600,7 @@
     ════════════════════════════════════════ */
     .features-laptop {
       position: relative;
-      min-height: 180vh;
+      min-height: 210vh;
       background: linear-gradient(180deg, #ece9e2 0%, #e5e1d8 100%);
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
@@ -621,8 +621,8 @@
     }
 
     .features-laptop__scene {
-      width: min(1180px, 95vw);
-      min-height: clamp(380px, calc(100dvh - 20rem), 480px);
+      width: min(1380px, 97vw);
+      min-height: clamp(580px, calc(100dvh - 6rem), 760px);
       position: relative;
       border-radius: 2.5rem;
       background: transparent;
@@ -724,48 +724,20 @@
     .mockup-image__frame {
       position: absolute;
       inset: 0;
-      border-radius: 2.5rem;
-      overflow: hidden;
       box-shadow: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .mockup-image__img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
       display: block;
     }
 
     .mockup-laptop__inside {
-      position: absolute;
-      border-radius: 1rem;
-      border: 1px solid rgba(23, 20, 30, 0.12);
-      background: rgba(255, 255, 255, 0.90);
-      color: #2a2537;
-      font-size: 0.88rem;
-      font-weight: 600;
-      backdrop-filter: blur(8px);
-      padding: 0.8rem 1rem;
-      box-shadow: 0 10px 20px rgba(11, 8, 20, 0.14);
-    }
-
-    .inside-1 {
-      left: 9%;
-      top: 16%;
-    }
-
-    .inside-2 {
-      right: 8%;
-      top: 24%;
-    }
-
-    .inside-3 {
-      left: 18%;
-      bottom: 18%;
-    }
-
-    .inside-4 {
-      right: 20%;
-      bottom: 22%;
+      display: none;
     }
 
     .mockup-float {
@@ -798,55 +770,23 @@
       color: #5f4b88;
     }
 
-    .mf-1 {
-      left: 3%;
-      top: 18%;
-    }
+    @keyframes fl-a { 0%,100%{translate:0 0}  50%{translate:0 -10px} }
+    @keyframes fl-b { 0%,100%{translate:0 0}  50%{translate:0 -7px}  }
+    @keyframes fl-c { 0%,100%{translate:0 0}  50%{translate:0 -13px} }
 
-    .mf-2 {
-      right: 4%;
-      top: 22%;
-    }
+    /* Left column — 5 badges, evenly spaced, slight x-stagger for depth */
+    .mf-1  { left: 1%;  top:  6%; animation: fl-a 3.2s ease-in-out infinite; }
+    .mf-7  { left: 4%;  top: 24%; animation: fl-a 3.7s ease-in-out infinite 2.0s; }
+    .mf-3  { left: 1%;  top: 43%; animation: fl-c 3.5s ease-in-out infinite 1.1s; }
+    .mf-9  { left: 4%;  top: 62%; animation: fl-c 3.4s ease-in-out infinite 1.4s; }
+    .mf-5  { left: 1%;  top: 80%; animation: fl-b 3.3s ease-in-out infinite 1.6s; }
 
-    .mf-3 {
-      left: 2%;
-      top: 46%;
-    }
-
-    .mf-4 {
-      right: 4%;
-      top: 50%;
-    }
-
-    .mf-5 {
-      left: 13%;
-      top: 76%;
-    }
-
-    .mf-6 {
-      right: 13%;
-      top: 78%;
-    }
-
-    .mf-7 {
-      left: 11%;
-      top: 32%;
-    }
-
-    .mf-8 {
-      right: 11%;
-      top: 36%;
-    }
-
-    .mf-9 {
-      left: 6%;
-      top: 62%;
-    }
-
-    .mf-10 {
-      right: 6%;
-      top: 64%;
-    }
+    /* Right column — mirror of left */
+    .mf-2  { right: 1%; top:  6%; animation: fl-b 3.8s ease-in-out infinite 0.5s; }
+    .mf-8  { right: 4%; top: 24%; animation: fl-b 4.3s ease-in-out infinite 0.4s; }
+    .mf-4  { right: 1%; top: 43%; animation: fl-a 4.1s ease-in-out infinite 0.3s; }
+    .mf-10 { right: 4%; top: 62%; animation: fl-a 3.9s ease-in-out infinite 0.9s; }
+    .mf-6  { right: 1%; top: 80%; animation: fl-c 4.0s ease-in-out infinite 0.8s; }
 
     .mockup-bg-pill {
       position: absolute;
@@ -2366,7 +2306,7 @@
       }
 
       .features-laptop__scene {
-        min-height: clamp(320px, calc(100dvh - 14rem), 480px);
+        min-height: clamp(420px, calc(100dvh - 10rem), 580px);
       }
 
       .features-laptop__header {
@@ -2637,7 +2577,7 @@
 
         <div class="features-laptop__mockup" feature-mockup>
           <div class="mockup-image__frame">
-            <img src="Assets/Table image.webp" class="mockup-image__img" alt="iFix repair lab" loading="lazy">
+            <img src="Assets/Table without background.png" class="mockup-image__img" alt="iFix repair lab" loading="lazy">
             <div class="mockup-laptop__inside inside-1" mockup-in-1>Logic Board Diagnostics</div>
             <div class="mockup-laptop__inside inside-2" mockup-in-2>Live Troubleshoot Sessions</div>
             <div class="mockup-laptop__inside inside-3" mockup-in-3>Micro Solder Practice</div>
