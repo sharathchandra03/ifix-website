@@ -515,7 +515,7 @@
     }
 
     .courses-preview__top .section-label {
-      color: #FF9100;
+      color: #0F044A;
     }
 
     .course-badge {
@@ -1017,15 +1017,15 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: radial-gradient(820px 380px at 75% 15%, rgba(52, 120, 246, 0.08) 0%, rgba(52, 120, 246, 0) 72%);
+      background: none;
       pointer-events: none;
     }
 
     .training-cta__card {
       position: relative;
       z-index: 1;
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 255, 0.96));
-      border: 1px solid rgba(52, 120, 246, 0.14);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.96));
+      border: 1px solid rgba(23, 20, 30, 0.08);
       border-radius: 2rem;
       box-shadow: 0 16px 42px rgba(31, 20, 46, 0.08);
       padding: clamp(1.7rem, 3.8vw, 3rem);
@@ -1041,9 +1041,7 @@
       content: '';
       position: absolute;
       inset: 0;
-      background:
-        radial-gradient(180px circle at 20% 20%, rgba(52, 120, 246, 0.12) 0%, rgba(52, 120, 246, 0) 70%),
-        radial-gradient(180px circle at 82% 75%, rgba(52, 120, 246, 0.08) 0%, rgba(52, 120, 246, 0) 72%);
+      background: none;
       pointer-events: none;
       opacity: 0.9;
     }
@@ -1115,7 +1113,7 @@
       position: absolute;
       aspect-ratio: 1;
       width: 200px;
-      background: linear-gradient(to left, #3478f6, #7dd3fc, transparent);
+      background: linear-gradient(to left, #FF9100, #ffcc80, transparent);
       animation: borderBeam 5s infinite linear;
       offset-anchor: 90% 50%;
       offset-path: rect(0 auto auto 0 round 2rem);
@@ -1522,9 +1520,9 @@
     .why-orbit {
       position: absolute;
       border-radius: 999px;
-      border: 1px solid rgba(52, 120, 246, 0.22);
+      border: 1px solid rgba(255, 145, 0, 0.35);
       transform-style: preserve-3d;
-      box-shadow: inset 0 0 24px rgba(52, 120, 246, 0.09);
+      box-shadow: inset 0 0 24px rgba(255, 145, 0, 0.12);
     }
 
     .why-orbit--a {
@@ -1541,15 +1539,11 @@
       right: 70px;
       top: 285px;
       transform: rotate(10deg) perspective(800px) rotateX(66deg);
-      border-color: rgba(52, 120, 246, 0.18);
+      border-color: rgba(255, 145, 0, 0.28);
     }
 
     .why-pulse {
-      position: absolute;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(52, 120, 246, 0.35) 0%, rgba(52, 120, 246, 0.08) 48%, rgba(52, 120, 246, 0) 70%);
-      filter: blur(0.4px);
-      animation: whyPulse 4.6s ease-in-out infinite;
+      display: none;
     }
 
     .why-pulse--1 {
@@ -1673,6 +1667,61 @@
       opacity: 0.72;
     }
 
+    .why-orb {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle at 34% 30%, #ffd080 0%, #FF9100 45%, #e07800 100%);
+      box-shadow:
+        0 10px 30px rgba(255, 145, 0, 0.35),
+        inset 0 -4px 12px rgba(180, 80, 0, 0.3);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .why-orb::after {
+      content: '';
+      position: absolute;
+      left: 15%;
+      right: 15%;
+      bottom: -10px;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255, 145, 0, 0.25);
+      filter: blur(6px);
+    }
+
+    .why-orb--1 {
+      width: 28px;
+      height: 28px;
+      right: 42%;
+      top: 110px;
+      animation-delay: -0.8s;
+    }
+
+    .why-orb--2 {
+      width: 18px;
+      height: 18px;
+      right: 8%;
+      top: 320px;
+      animation-delay: -2.2s;
+    }
+
+    .why-orb--3 {
+      width: 22px;
+      height: 22px;
+      right: 26%;
+      top: 380px;
+      animation-delay: -1.4s;
+    }
+
+    .why-orb--4 {
+      width: 24px;
+      height: 24px;
+      right: 3%;
+      top: 180px;
+      animation-delay: -3.1s;
+    }
+
     .why__head {
       max-width: 620px;
       margin-bottom: 2.75rem;
@@ -1692,8 +1741,8 @@
     .why-card {
       --cx: 50%;
       --cy: 50%;
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.88) 0%, rgba(247, 248, 252, 0.94) 100%);
-      border: 1px solid rgba(52, 120, 246, 0.14);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.88) 0%, rgba(255, 252, 247, 0.94) 100%);
+      border: 1px solid rgba(23, 20, 30, 0.08);
       border-radius: 1.7rem;
       padding: 1.5rem;
       transition: transform 0.35s var(--ease-expo), box-shadow 0.35s ease, border-color 0.28s ease;
@@ -1708,7 +1757,7 @@
       content: '';
       position: absolute;
       inset: -1px;
-      background: radial-gradient(170px circle at var(--cx) var(--cy), rgba(52, 120, 246, 0.16) 0%, rgba(52, 120, 246, 0.03) 34%, rgba(52, 120, 246, 0) 70%);
+      background: radial-gradient(170px circle at var(--cx) var(--cy), rgba(255, 145, 0, 0.18) 0%, rgba(255, 145, 0, 0.04) 34%, rgba(255, 145, 0, 0) 70%);
       opacity: 0;
       transition: opacity 0.24s ease;
       pointer-events: none;
@@ -1722,14 +1771,14 @@
       top: 0;
       height: 3px;
       border-radius: 0 0 999px 999px;
-      background: linear-gradient(90deg, transparent, rgba(52, 120, 246, 0.72), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255, 145, 0, 0.72), transparent);
       opacity: 0.52;
     }
 
     .why-card:hover {
       transform: translateY(-9px) rotateX(1deg);
-      box-shadow: 0 20px 38px rgba(32, 74, 152, 0.16);
-      border-color: rgba(52, 120, 246, 0.3);
+      box-shadow: 0 20px 40px rgba(255, 145, 0, 0.18), 0 0 0 1px rgba(255, 145, 0, 0.28), 0 6px 20px rgba(255, 145, 0, 0.10);
+      border-color: rgba(255, 145, 0, 0.45);
     }
 
     .why-card:hover::before {
@@ -1740,8 +1789,8 @@
       width: 46px;
       height: 46px;
       border-radius: 0.85rem;
-      background: linear-gradient(180deg, rgba(52, 120, 246, 0.16) 0%, rgba(52, 120, 246, 0.08) 100%);
-      border: 1px solid rgba(52, 120, 246, 0.18);
+      background: linear-gradient(180deg, rgba(255, 145, 0, 0.12) 0%, rgba(255, 145, 0, 0.06) 100%);
+      border: 1px solid rgba(255, 145, 0, 0.18);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -2439,6 +2488,39 @@
         width: 100%;
       }
     }
+
+    /* ── Flow Button Arrow Effect ── */
+    .btn.flow-btn {
+      position: relative;
+      overflow: hidden;
+      padding-left: 2.25rem;
+      padding-right: 2.25rem;
+    }
+    .flow-arr {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 1rem;
+      height: 1rem;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .flow-arr--left  { left: -1.5rem; }
+    .flow-arr--right { right: 0.75rem; }
+    .flow-text {
+      position: relative;
+      z-index: 1;
+      transform: translateX(-0.5rem);
+      transition: transform 0.8s ease-out;
+      display: inline-block;
+    }
+    .btn.flow-btn:hover .flow-arr--left  { left: 0.75rem; }
+    .btn.flow-btn:hover .flow-arr--right { right: -1.5rem; }
+    .btn.flow-btn:hover .flow-text       { transform: translateX(0.5rem); }
   </style>
 </head>
 
@@ -2463,9 +2545,17 @@
         increase their income.
       </p>
       <div class="hero__ctas" id="heroCtas">
-        <a href="contact.html#contact-form" class="btn btn--primary"
-          style="padding:0.75rem 1.75rem;font-size:0.95rem;">Book Free Demo Class</a>
-        <a href="Our Story.html" class="btn btn--ghost" style="padding:0.75rem 1.75rem;font-size:0.95rem;">Our Story</a>
+        <a href="contact.html#contact-form" class="btn btn--primary flow-btn"
+          style="padding:0.75rem 2.25rem;font-size:0.95rem;">
+          <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          <span class="flow-text">Book Free Demo Class</span>
+          <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a href="Our Story.html" class="btn btn--ghost flow-btn" style="padding:0.75rem 2.25rem;font-size:0.95rem;">
+          <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          <span class="flow-text">Our Story</span>
+          <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
       </div>
       <div class="hero__stats" id="heroStats">
         <div class="hero__stat"><span class="hero__stat-num">2,400+</span><span class="hero__stat-lbl">Students
@@ -2572,7 +2662,11 @@
         </div>
       </div>
       <div style="text-align:center;margin-top:3rem;" class="reveal">
-        <a href="courses.html" class="btn btn--outline" style="padding:0.75rem 2rem;">View All Programs →</a>
+        <a href="courses.html" class="btn btn--outline flow-btn" style="padding:0.75rem 2.25rem;">
+          <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          <span class="flow-text">View All Programs</span>
+          <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
       </div>
     </div>
   </section>
@@ -2629,7 +2723,7 @@
         <div class="online__left">
           <span class="section-label reveal">Offline Practical Training</span>
           <h2 class="section-heading reveal d1" style="margin-bottom:1.25rem; font-size: clamp(1.7rem, 3vw, 2.45rem);">
-            Learn Advanced Repair — With Real Hands-On Training</h2>
+            Learn Advanced Repair - With Real Hands-On Training</h2>
           <p class="section-sub reveal d2" style="margin-bottom:0;">Serious skills require real practice. Our
             offline training in Bangalore is designed for technicians who want to master chip-level repair through
             hands-on experience.</p>
@@ -2751,7 +2845,11 @@
             repair scenarios. Build confidence by working on actual repair cases during training.</p>
         </div>
         <div class="training-cta__action">
-          <a href="/contact#contact-form" class="btn btn--primary">Enroll Now</a>
+          <a href="/contact#contact-form" class="btn btn--primary flow-btn">
+            <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            <span class="flow-text">Enroll Now</span>
+            <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
         </div>
       </div>
     </div>
@@ -2771,6 +2869,10 @@
       <div class="why-chip why-chip--4" why-chip-d>Premium Lab</div>
       <div class="why-chip why-chip--5" why-chip-e>Business Assistance</div>
       <div class="why-prism" why-prism-a></div>
+      <div class="why-orb why-orb--1" aria-hidden="true" why-orb-1></div>
+      <div class="why-orb why-orb--2" aria-hidden="true" why-orb-2></div>
+      <div class="why-orb why-orb--3" aria-hidden="true" why-orb-3></div>
+      <div class="why-orb why-orb--4" aria-hidden="true" why-orb-4></div>
     </div>
     <div class="container">
       <div class="why__head">
@@ -2839,8 +2941,12 @@
       <p class="section-sub">Our students don’t just learn - they start handling complex repairs, increase their income
         and grow their business with confidence.</p>
       <a href="https://www.google.com/search?client=safari&hs=Dp5U&sca_esv=eab6250d847a03c3&authuser=2&hl=en-in&cs=0&sxsrf=ANbL-n7pIPeOES25yM0AN9OFUFsEAOH9JQ:1776925619901&si=AL3DRZEsmMGCryMMFSHJ3StBhOdZ2-6yYkXd_doETEE1OR-qOcnclJ3-tEA_Vv548R1CLpjzMaRDO5RPPLloAGg5WyKAcH5miuiUQGzrUX0pjxljh88vYhBlq3H2nU9A_vjMhkWtddeNY7Rt5N1HkvJ0YW3k-J2h6A%3D%3D&q=iFix+India+Training+Academy+Reviews&sa=X&ved=2ahUKEwjZ-vbiq4OUAxUMyzgGHXLeKDEQ0bkNegQIMRAH&biw=1255&bih=617&dpr=1.53"
-        target="_blank" rel="noopener noreferrer" class="btn btn--outline" id="successStoriesCta"
-        style="align-self:flex-start;">View All Stories →</a>
+        target="_blank" rel="noopener noreferrer" class="btn btn--outline flow-btn" id="successStoriesCta"
+        style="align-self:flex-start;">
+          <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          <span class="flow-text">View All Stories</span>
+          <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
     </div>
     <div class="testimonials__track-wrap">
       <div class="testimonials__track" id="tTrack1"></div>
@@ -2860,9 +2966,17 @@
             confidence.</p>
         </div>
         <div style="display:flex;gap:1rem;flex-wrap:wrap;">
-          <a href="courses.html" class="btn btn--white">Book Free Demo Class</a>
+          <a href="courses.html" class="btn btn--white flow-btn">
+            <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            <span class="flow-text">Book Free Demo Class</span>
+            <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
           <a href="https://wa.me/916364429494?text=Hi%20iFix%20Academy,%20I%20want%20to%20know%20more%20about%20the%20training%20programs."
-            target="_blank" rel="noopener noreferrer" class="btn btn--white-outline">Chat on WhatsApp</a>
+            target="_blank" rel="noopener noreferrer" class="btn btn--white-outline flow-btn">
+            <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            <span class="flow-text">Chat on WhatsApp</span>
+            <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
         </div>
       </div>
     </div>
@@ -3134,6 +3248,45 @@
             duration: 3.3,
             repeat: -1,
             yoyo: true,
+            ease: 'sine.inOut'
+          });
+
+          gsap.to('[why-orb-1]', {
+            y: -14,
+            x: 4,
+            duration: 2.8,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut'
+          });
+
+          gsap.to('[why-orb-2]', {
+            y: -10,
+            x: -5,
+            duration: 3.6,
+            repeat: -1,
+            yoyo: true,
+            delay: 0.7,
+            ease: 'sine.inOut'
+          });
+
+          gsap.to('[why-orb-3]', {
+            y: -8,
+            x: 6,
+            duration: 3.1,
+            repeat: -1,
+            yoyo: true,
+            delay: 1.4,
+            ease: 'sine.inOut'
+          });
+
+          gsap.to('[why-orb-4]', {
+            y: -12,
+            x: -4,
+            duration: 2.5,
+            repeat: -1,
+            yoyo: true,
+            delay: 2.0,
             ease: 'sine.inOut'
           });
 

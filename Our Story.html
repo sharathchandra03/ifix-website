@@ -111,9 +111,13 @@
     }
     .mission-card {
       background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-xl);
-      padding: 1.5rem; box-shadow: var(--shadow-sm); transition: transform 0.3s var(--ease-expo), box-shadow 0.3s;
+      padding: 1.5rem; box-shadow: var(--shadow-sm); transition: transform 0.3s var(--ease-expo), box-shadow 0.35s ease, border-color 0.28s ease;
     }
-    .mission-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+    .mission-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 40px rgba(255,145,0,0.16), 0 0 0 1px rgba(255,145,0,0.22), 0 6px 18px rgba(255,145,0,0.10);
+      border-color: rgba(255,145,0,0.42);
+    }
     .mission-card__title { font-weight: 700; font-size: 1rem; color: var(--text); margin-bottom: 0.4rem; }
     .mission-card__desc { font-size: 0.9rem; line-height: 1.65; color: var(--text-2); }
 
@@ -231,9 +235,13 @@
     }
     .exp-card {
       background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--r-xl);
-      padding: 1.5rem; transition: transform 0.3s var(--ease-expo), box-shadow 0.3s;
+      padding: 1.5rem; transition: transform 0.3s var(--ease-expo), box-shadow 0.35s ease, border-color 0.28s ease;
     }
-    .exp-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+    .exp-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 40px rgba(255,145,0,0.16), 0 0 0 1px rgba(255,145,0,0.22), 0 6px 18px rgba(255,145,0,0.10);
+      border-color: rgba(255,145,0,0.42);
+    }
     .exp-card__title { font-weight: 700; font-size: 1rem; color: var(--text); margin-bottom: 0.4rem; }
     .exp-card__desc { font-size: 0.88rem; color: var(--text-2); line-height: 1.6; }
 
@@ -328,12 +336,20 @@
           to bridge the gap between basic mobile repair skills and real-world advanced repair expertise.
         </p>
         <div class="page-hero__actions">
-          <a href="courses.html" class="btn btn--primary" style="padding:0.8rem 1.9rem;">Explore Courses</a>
-          <a href="contact.html" class="btn btn--ghost" style="padding:0.8rem 1.9rem;">Talk to Us</a>
+          <a href="courses.html" class="btn btn--primary flow-btn" style="padding:0.8rem 2.25rem;">
+            <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            <span class="flow-text">Explore Courses</span>
+            <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a href="contact.html" class="btn btn--ghost flow-btn" style="padding:0.8rem 2.25rem;">
+            <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            <span class="flow-text">Talk to Us</span>
+            <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
         </div>
         <div class="hero-chips">
           <span class="hero-chip">Est. 2009</span>
-          <span class="hero-chip">Delhi · Patna</span>
+          <span class="hero-chip">Bangalore</span>
           <span class="hero-chip">Online &amp; Offline</span>
         </div>
         <div class="hero-stats">
@@ -453,59 +469,39 @@
   </section>
 
   <!-- ═══════════════════════════════════════════════════
-       HORIZONTAL SCROLL — How We Train (4 steps)
+       HOW WE TRAIN — Static 4-step layout
   ════════════════════════════════════════════════════ -->
   <style>
-    /* ── Outer section acts as scroll-height donor ── */
+    /* ── Section wrapper ── */
     .hs-section {
       position: relative;
       background:
         radial-gradient(900px circle at 18% 20%, rgba(52,120,246,0.10) 0%, rgba(52,120,246,0.03) 36%, transparent 70%),
         linear-gradient(180deg, #f7faff 0%, #f4f8ff 100%);
-      /* Height set by JS: 100vh + maxTranslate; fallback keeps layout intact */
-      height: 100vh;
-    }
-    .hs-section::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background: linear-gradient(90deg, rgba(52,120,246,0.03) 0%, rgba(52,120,246,0.01) 32%, rgba(52,120,246,0.03) 100%);
-      opacity: 0.9;
-    }
-
-    /* ── Sticky wrapper: stays in view while section scrolls ── */
-    .hs-pin {
-      position: sticky;
-      top: 58px;              /* navbar height */
-      height: calc(100vh - 58px);
-      overflow: hidden;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(244,248,255,0.98));
       border-top: 1px solid var(--border);
     }
 
-    /* ── LEFT: Intro panel ── */
+    /* ── Two-column grid ── */
+    .hs-pin {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: 44% 56%;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    /* ── LEFT: Sticky intro — stays centered in viewport ── */
     .hs-intro {
+      position: sticky;
+      top: 58px;
+      height: calc(100vh - 58px);
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 3.5rem 2.5rem;
-      border-right: 1px solid var(--border);
-      position: relative;
-      z-index: 2;
-      flex-shrink: 0;
-      background: linear-gradient(180deg, rgba(52,120,246,0.05), rgba(52,120,246,0.015));
-    }
-    /* Subtle vertical glow on the left panel */
-    .hs-intro::after {
-      content: '';
-      position: absolute;
-      top: 15%; left: -40px;
-      width: 200px; height: 200px;
-      background: radial-gradient(circle, rgba(52,120,246,0.18) 0%, transparent 70%);
-      pointer-events: none;
+      padding: 2rem 2rem 2rem 0;
+      max-width: 480px;
     }
     .hs-intro__eyebrow {
       font-size: .8rem; font-weight: 700; text-transform: uppercase;
@@ -513,146 +509,59 @@
       margin-bottom: 1.25rem; display: block;
     }
     .hs-intro__heading {
-      font-size: clamp(2rem, 3vw, 2.75rem);
-      font-weight: 800; line-height: 1.1;
+      font-size: clamp(1.9rem, 2.4vw, 2.75rem);
+      font-weight: 800; line-height: 1.08;
       letter-spacing: -.03em; color: var(--text);
       margin-bottom: 1.25rem;
     }
     .hs-intro__heading span { color: var(--accent); }
     .hs-intro__sub {
-      font-size: 1rem; line-height: 1.75;
-      color: var(--text-2); margin-bottom: 2.5rem;
+      font-size: 1.05rem; line-height: 1.75;
+      color: var(--text-2);
     }
 
-    /* ── Progress bar ── */
-    .hs-progress-wrap {
-      height: 2px; background: rgba(0,0,0,.08);
-      border-radius: 999px; overflow: hidden; margin-bottom: 1rem;
-    }
-    .hs-progress-bar {
-      height: 100%; width: 0%; background: var(--accent);
-      border-radius: 999px;
-      transition: width .1s linear;
-    }
-    .hs-step-counter {
-      font-size: .9rem; font-weight: 700;
-      color: var(--text-3); letter-spacing: .06em;
-    }
-    .hs-step-counter span { color: var(--accent); font-size: 1.1rem; }
-
-    /* Scroll hint arrow */
-    .hs-scroll-hint {
-      display: flex; align-items: center; gap: .5rem;
-      margin-top: 2rem; font-size: .68rem; font-weight: 600;
-      text-transform: uppercase; letter-spacing: .1em;
-      color: var(--text-3);
-    }
-    .hs-scroll-hint__arrow {
-      width: 28px; height: 28px;
-      border: 1px solid var(--border);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: .75rem;
-      animation: arrowBounce 1.8s ease-in-out infinite;
-      background: #fff;
-    }
-    @keyframes arrowBounce {
-      0%,100% { transform: translateY(0); }
-      50%      { transform: translateY(5px); }
-    }
-
-    /* ── RIGHT: Vertical card display ── */
+    /* ── RIGHT: Cards grid ── */
     .hs-track-wrap {
-      overflow: hidden;
-      position: relative;
       display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    /* Subtle vertical fade edges */
-    .hs-track-wrap::before,
-    .hs-track-wrap::after {
-      content: '';
-      position: absolute;
-      left: 0; right: 0;
-      height: 80px;
-      z-index: 10;
-      pointer-events: none;
-    }
-    .hs-track-wrap::before {
-      top: 0;
-      background: linear-gradient(to bottom, rgba(248,249,251,0.85), transparent);
-    }
-    .hs-track-wrap::after {
-      bottom: 0;
-      background: linear-gradient(to top, rgba(248,249,251,0.85), transparent);
+      flex-direction: column;
+      gap: 1.5rem;
+      padding: 5rem 0 6rem;
     }
 
     .hs-track {
-      position: relative;
-      width: 100%;
-      height: 100%;
-    }
-
-    /* ── Individual cards ── */
-    .hs-card {
-      width: 520px;
-      max-width: calc(100% - 4rem);
-      background: #fff;
-      border: 1px solid rgba(0,0,0,.08);
-      border-radius: 28px;
-      padding: 3rem 2.75rem;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, calc(-50% + 50px));
-      opacity: 0;
+      gap: 1.5rem;
+    }
+
+    /* ── Individual cards — all static & visible ── */
+    .hs-card {
+      background: #fff;
+      border: 1px solid rgba(0,0,0,.08);
+      border-radius: 24px;
+      padding: 2.25rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
       overflow: hidden;
-      box-shadow: 0 10px 30px rgba(31,20,46,0.06);
-      transition: opacity 0.55s cubic-bezier(0.4,0,0.2,1),
-                  transform 0.55s cubic-bezier(0.4,0,0.2,1),
-                  border-color .35s ease, background .35s ease, box-shadow .35s ease;
+      position: relative;
+      box-shadow: 0 4px 18px rgba(31,20,46,0.05);
+      border-color: rgba(52,120,246,.18);
+      background: linear-gradient(180deg, rgba(52,120,246,0.025), rgba(255,255,255,1));
       isolation: isolate;
+      transition: box-shadow .3s ease, transform .3s ease;
     }
-    .hs-card.is-above {
-      opacity: 0;
-      transform: translate(-50%, calc(-50% - 50px));
+    .hs-card:hover {
+      box-shadow: 0 12px 32px rgba(31,20,46,0.10);
+      transform: translateY(-2px);
     }
-    .hs-card.is-active {
-      opacity: 1;
-      transform: translate(-50%, -50%);
-      border-color: rgba(52,120,246,.22);
-      background: linear-gradient(180deg, rgba(52,120,246,0.035), rgba(255,255,255,1));
-      box-shadow: 0 14px 38px rgba(31,20,46,0.08);
-    }
-    /* Gradient border shimmer (top-right corner) */
-    .hs-card::before {
-      content: '';
-      position: absolute; inset: 0;
-      padding: 1px;
-      border-radius: inherit;
-      background: linear-gradient(135deg,
-        rgba(52,120,246,0) 0%,
-        rgba(52,120,246,0) 45%,
-        rgba(52,120,246,.05) 70%,
-        rgba(52,120,246,.12) 100%);
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      pointer-events: none;
-      z-index: 1;
-    }
-    /* Active card inner glow */
-    .hs-card.is-active::after {
+    /* Corner glow */
+    .hs-card::after {
       content: '';
       position: absolute;
       top: -60px; right: -60px;
-      width: 200px; height: 200px;
-      background: radial-gradient(circle, rgba(52,120,246,.16) 0%, transparent 70%);
+      width: 180px; height: 180px;
+      background: radial-gradient(circle, rgba(52,120,246,.12) 0%, transparent 70%);
       pointer-events: none;
       z-index: 0;
     }
@@ -660,106 +569,113 @@
     .hs-card__step {
       font-size: .78rem; font-weight: 700; text-transform: uppercase;
       letter-spacing: .14em; color: var(--accent);
-      margin-bottom: 1rem; display: block;
+      margin-bottom: .75rem; display: block;
     }
     .hs-card__num {
-      font-size: 7rem; font-weight: 800; line-height: 1;
+      font-size: 6rem; font-weight: 800; line-height: 1;
       letter-spacing: -.05em;
-      color: rgba(52,120,246,.04);
-      position: absolute; top: -1rem; right: 1rem;
+      color: rgba(52,120,246,.10);
+      position: absolute; top: -1rem; right: 0;
       pointer-events: none;
-      transition: color .35s ease;
     }
-    .hs-card.is-active .hs-card__num { color: rgba(52,120,246,.12); }
     .hs-card__title {
-      font-size: 1.65rem; font-weight: 800;
+      font-size: 1.45rem; font-weight: 800;
       letter-spacing: -.025em; color: var(--text);
-      margin-bottom: 1rem; line-height: 1.2;
+      margin-bottom: .75rem; line-height: 1.2;
     }
     .hs-card__desc {
-      font-size: 1rem; line-height: 1.75;
+      font-size: .95rem; line-height: 1.7;
       color: var(--text-2);
-      margin-bottom: 2rem;
     }
     .hs-card__bottom {
       position: relative; z-index: 2;
-      display: flex; flex-direction: column; gap: .8rem;
+      display: flex; flex-direction: column; gap: .6rem;
     }
     .hs-card__bullet {
       display: flex; align-items: center; gap: .75rem;
-      font-size: .95rem; color: var(--text);
+      font-size: .9rem; color: var(--text);
     }
     .hs-card__bullet::before {
       content: '';
       width: 6px; height: 6px; border-radius: 50%;
-      background: var(--accent); opacity: .85; flex-shrink: 0;
-      transition: opacity .3s ease;
-    }
-    .hs-card.is-active .hs-card__bullet::before { opacity: 1; }
-
-    /* Connectors hidden in desktop vertical layout */
-    .hs-connector {
-      display: none;
-    }
-    .hs-connector__line {
-      width: 100%; height: 1px;
-      background: linear-gradient(to right,
-        rgba(52,120,246,.28), rgba(52,120,246,.08));
+      background: var(--accent); opacity: .9; flex-shrink: 0;
     }
 
-    /* ── Mobile: stack cards in normal flow ── */
+    /* Connectors hidden */
+    .hs-connector { display: none; }
+
+    /* ── Mobile ── */
     @media (max-width: 900px) {
-      .hs-section { height: auto !important; }
       .hs-pin {
-        position: relative; top: 0;
-        height: auto; overflow: visible;
         grid-template-columns: 1fr;
-        background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(248,249,251,1));
+        gap: 2.5rem;
+        padding: 0 1.25rem;
       }
-      .hs-intro { border-right: none; border-bottom: 1px solid var(--border); padding: 3rem 1.5rem 2rem; }
-      .hs-scroll-hint { display: none; }
-      .hs-track-wrap::before, .hs-track-wrap::after { display: none; }
-      .hs-track-wrap { overflow: visible; display: block; padding: 1.75rem 1rem; }
-      .hs-track { position: static; width: auto; height: auto; display: flex; flex-direction: column; gap: 1.25rem; }
-      .hs-card {
-        position: static; top: auto; left: auto;
-        transform: none !important; opacity: 1 !important;
-        width: 100%; max-width: 100%;
+      .hs-intro {
+        position: static;
+        height: auto;
+        padding: 3.5rem 0 0;
       }
-      .hs-card__title { color: var(--text); }
+      .hs-track-wrap { padding: 2rem 0 3.5rem; }
     }
+    @media (max-width: 600px) {
+      .hs-card { padding: 1.75rem 1.5rem; }
+    }
+
+    /* ── Flow Button Arrow Effect ── */
+    .btn.flow-btn {
+      position: relative;
+      overflow: hidden;
+      padding-left: 2.25rem !important;
+      padding-right: 2.25rem !important;
+    }
+    .flow-arr {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 1rem;
+      height: 1rem;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .flow-arr--left  { left: -1.5rem; }
+    .flow-arr--right { right: 0.75rem; }
+    .flow-text {
+      position: relative;
+      z-index: 1;
+      transform: translateX(-0.5rem);
+      transition: transform 0.8s ease-out;
+      display: inline-block;
+    }
+    .btn.flow-btn:hover .flow-arr--left  { left: 0.75rem; }
+    .btn.flow-btn:hover .flow-arr--right { right: -1.5rem; }
+    .btn.flow-btn:hover .flow-text       { transform: translateX(0.5rem); }
   </style>
 
   <section class="hs-section" id="hsProcess">
     <div class="hs-pin">
 
-      <!-- ── LEFT: Sticky intro ── -->
+      <!-- ── LEFT: Intro ── -->
       <div class="hs-intro">
         <span class="hs-intro__eyebrow">How We Train</span>
         <h2 class="hs-intro__heading">
-          A clear path from <span>beginner</span><br>to advanced technician.
+          A clear path from<br><span>beginner</span> to advanced<br>technician.
         </h2>
         <p class="hs-intro__sub">
           Our training is built around real repair workflows - not classroom theory. You learn by doing, progressing from fundamentals to complex repairs step-by-step.
         </p>
-        <div class="hs-progress-wrap">
-          <div class="hs-progress-bar" id="hsProgressBar"></div>
-        </div>
-        <div class="hs-step-counter">
-          Step <span id="hsCurStep">1</span> of 4
-        </div>
-        <div class="hs-scroll-hint">
-          <div class="hs-scroll-hint__arrow">↓</div>
-          Scroll to explore
-        </div>
       </div>
 
-      <!-- ── RIGHT: Horizontal track ── -->
-      <div class="hs-track-wrap" id="hsTrackWrap">
-        <div class="hs-track" id="hsTrack">
+      <!-- ── RIGHT: All 4 cards static ── -->
+      <div class="hs-track-wrap">
+        <div class="hs-track">
 
           <!-- Card 1 -->
-          <div class="hs-card is-active" data-step="1">
+          <div class="hs-card">
             <div class="hs-card__top">
               <span class="hs-card__step">Step 01</span>
               <div class="hs-card__num">01</div>
@@ -774,11 +690,8 @@
             </div>
           </div>
 
-          <!-- Connector -->
-          <div class="hs-connector"><div class="hs-connector__line"></div></div>
-
           <!-- Card 2 -->
-          <div class="hs-card" data-step="2">
+          <div class="hs-card">
             <div class="hs-card__top">
               <span class="hs-card__step">Step 02</span>
               <div class="hs-card__num">02</div>
@@ -793,11 +706,8 @@
             </div>
           </div>
 
-          <!-- Connector -->
-          <div class="hs-connector"><div class="hs-connector__line"></div></div>
-
           <!-- Card 3 -->
-          <div class="hs-card" data-step="3">
+          <div class="hs-card">
             <div class="hs-card__top">
               <span class="hs-card__step">Step 03</span>
               <div class="hs-card__num">03</div>
@@ -812,11 +722,8 @@
             </div>
           </div>
 
-          <!-- Connector -->
-          <div class="hs-connector"><div class="hs-connector__line"></div></div>
-
           <!-- Card 4 -->
-          <div class="hs-card" data-step="4">
+          <div class="hs-card">
             <div class="hs-card__top">
               <span class="hs-card__step">Step 04</span>
               <div class="hs-card__num">04</div>
@@ -836,62 +743,6 @@
 
     </div><!-- /.hs-pin -->
   </section>
-
-  <script>
-  (function () {
-    'use strict';
-
-    var section = document.getElementById('hsProcess');
-    var track   = document.getElementById('hsTrack');
-    var bar     = document.getElementById('hsProgressBar');
-    var stepEl  = document.getElementById('hsCurStep');
-    var cards   = track ? Array.from(track.querySelectorAll('.hs-card')) : [];
-
-    if (!section || !track || cards.length === 0) return;
-
-    /* Each card gets ~600px of scroll dwell time */
-    var CARD_SCROLL = 600;
-
-    function setup() {
-      if (window.innerWidth <= 900) {
-        section.style.height = '';
-        cards.forEach(function (c) {
-          c.classList.remove('is-active', 'is-above');
-        });
-        return;
-      }
-      section.style.height = (window.innerHeight + cards.length * CARD_SCROLL + 200) + 'px';
-      onScroll();
-    }
-
-    function onScroll() {
-      if (window.innerWidth <= 900) return;
-      var sTop      = section.getBoundingClientRect().top + window.pageYOffset;
-      var maxScroll = section.offsetHeight - window.innerHeight;
-      var raw       = window.pageYOffset - sTop;
-      var progress  = Math.max(0, Math.min(1, raw / maxScroll));
-
-      if (bar) bar.style.width = (progress * 100) + '%';
-
-      var activeIdx = Math.min(cards.length - 1, Math.floor(progress * cards.length));
-      if (stepEl) stepEl.textContent = activeIdx + 1;
-
-      cards.forEach(function (c, i) {
-        c.classList.remove('is-active', 'is-above');
-        if (i === activeIdx) {
-          c.classList.add('is-active');
-        } else if (i < activeIdx) {
-          c.classList.add('is-above');
-        }
-        /* cards with i > activeIdx stay in default state (below, waiting) */
-      });
-    }
-
-    setup();
-    window.addEventListener('resize', function () { setup(); }, { passive: true });
-    window.addEventListener('scroll', onScroll, { passive: true });
-  })();
-  </script>
 
   <section class="experience">
     <div class="container">
@@ -929,8 +780,16 @@
           <p class="cta-banner__sub">Join 2,400+ graduates who chose hands-on learning and real career outcomes.</p>
         </div>
         <div style="display:flex;gap:1rem;flex-wrap:wrap;">
-          <a href="courses.html" class="btn btn--white">View Courses</a>
-          <a href="contact.html" class="btn btn--white-outline">Contact Us</a>
+          <a href="courses.html" class="btn btn--white flow-btn">
+            <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            <span class="flow-text">View Courses</span>
+            <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a href="contact.html" class="btn btn--white-outline flow-btn">
+            <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            <span class="flow-text">Contact Us</span>
+            <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
         </div>
       </div>
     </div>
@@ -952,7 +811,7 @@
       var particles = [];
       var frameCount = 0;
       var isRunning = false;
-      var words = ['Join Ifix Today'];
+      var words = ['Join ifix Today'];
       var wordIndex = 0;
       var pixelSteps = 5;
 

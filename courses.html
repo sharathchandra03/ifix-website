@@ -202,14 +202,14 @@
       position: absolute;
       inset: -1px;
       pointer-events: none;
-      background: radial-gradient(180px circle at var(--mx) var(--my), rgba(52,120,246,0.18) 0%, rgba(52,120,246,0.06) 30%, rgba(52,120,246,0) 72%);
+      background: radial-gradient(180px circle at var(--mx) var(--my), rgba(255,145,0,0.18) 0%, rgba(255,145,0,0.06) 30%, rgba(255,145,0,0) 72%);
       opacity: 0;
       transition: opacity 0.25s ease;
     }
     .online-feat:hover {
       transform: translateY(-6px);
-      box-shadow: var(--shadow-md);
-      border-color: rgba(52,120,246,0.28);
+      box-shadow: 0 18px 40px rgba(255,145,0,0.16), 0 0 0 1px rgba(255,145,0,0.22), 0 6px 18px rgba(255,145,0,0.10);
+      border-color: rgba(255,145,0,0.42);
     }
     .online-feat:hover::before { opacity: 1; }
     .online-feat__icon { font-size: 1.75rem; margin-bottom: 1rem; }
@@ -527,6 +527,39 @@
       .phone-device { width:186px; height:382px; }
       .tabs-nav__label { flex-basis: auto; justify-content: flex-start; text-align: left; }
     }
+
+    /* ── Flow Button Arrow Effect ── */
+    .btn.flow-btn {
+      position: relative;
+      overflow: hidden;
+      padding-left: 2.25rem !important;
+      padding-right: 2.25rem !important;
+    }
+    .flow-arr {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 1rem;
+      height: 1rem;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .flow-arr--left  { left: -1.5rem; }
+    .flow-arr--right { right: 0.75rem; }
+    .flow-text {
+      position: relative;
+      z-index: 1;
+      transform: translateX(-0.5rem);
+      transition: transform 0.8s ease-out;
+      display: inline-block;
+    }
+    .btn.flow-btn:hover .flow-arr--left  { left: 0.75rem; }
+    .btn.flow-btn:hover .flow-arr--right { right: -1.5rem; }
+    .btn.flow-btn:hover .flow-text       { transform: translateX(0.5rem); }
   </style>
 
   <div class="scroll-showcase" id="courseShowcase">
@@ -708,8 +741,16 @@
             <div><div class="course-outcome__lbl">You'll Earn</div><div class="course-outcome__val">Certified Mobile Repair Technician</div></div>
           </div>
           <div class="course-ctas">
-            <a href="contact.html#contact-form" class="btn btn--primary">Enroll Now</a>
-            <a href="contact.html" class="btn btn--ghost">Ask a Question</a>
+            <a href="contact.html#contact-form" class="btn btn--primary flow-btn">
+              <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              <span class="flow-text">Enroll Now</span>
+              <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+            <a href="contact.html" class="btn btn--ghost flow-btn">
+              <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              <span class="flow-text">Ask a Question</span>
+              <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
           </div>
         </div>
       </section>
@@ -743,8 +784,16 @@
             <div><div class="course-outcome__lbl">You'll Earn</div><div class="course-outcome__val">Certified Laptop Technician</div></div>
           </div>
           <div class="course-ctas">
-            <a href="contact.html#contact-form" class="btn btn--primary">Enroll Now</a>
-            <a href="contact.html" class="btn btn--ghost">Ask a Question</a>
+            <a href="contact.html#contact-form" class="btn btn--primary flow-btn">
+              <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              <span class="flow-text">Enroll Now</span>
+              <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+            <a href="contact.html" class="btn btn--ghost flow-btn">
+              <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              <span class="flow-text">Ask a Question</span>
+              <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
           </div>
         </div>
       </section>
@@ -778,8 +827,16 @@
             <div><div class="course-outcome__lbl">You'll Earn</div><div class="course-outcome__val">Display Repair Specialist</div></div>
           </div>
           <div class="course-ctas">
-            <a href="contact.html#contact-form" class="btn btn--primary">Enroll Now</a>
-            <a href="contact.html" class="btn btn--ghost">Ask a Question</a>
+            <a href="contact.html#contact-form" class="btn btn--primary flow-btn">
+              <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              <span class="flow-text">Enroll Now</span>
+              <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+            <a href="contact.html" class="btn btn--ghost flow-btn">
+              <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              <span class="flow-text">Ask a Question</span>
+              <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
           </div>
         </div>
       </section>
@@ -813,8 +870,16 @@
             <div><div class="course-outcome__lbl">You'll Earn</div><div class="course-outcome__val">Certified iPhone Repair Technician</div></div>
           </div>
           <div class="course-ctas">
-            <a href="contact.html#contact-form" class="btn btn--primary">Enroll Now</a>
-            <a href="contact.html" class="btn btn--ghost">Ask a Question</a>
+            <a href="contact.html#contact-form" class="btn btn--primary flow-btn">
+              <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              <span class="flow-text">Enroll Now</span>
+              <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+            <a href="contact.html" class="btn btn--ghost flow-btn">
+              <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              <span class="flow-text">Ask a Question</span>
+              <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
           </div>
         </div>
       </section>
@@ -944,8 +1009,16 @@
         <div class="online-feat reveal d2"><div class="online-feat__icon">🚀</div><div class="online-feat__title">Business Setup Guidance</div><div class="online-feat__desc">Learn how to set up your own repair shop: tools, pricing, marketing &amp; suppliers.</div></div>
       </div>
       <div style="margin-top:3rem;display:flex;gap:1rem;flex-wrap:wrap;" class="reveal">
-        <a href="contact.html" class="btn btn--primary" style="padding:0.85rem 2rem;">Enroll Online</a>
-        <a href="contact.html" class="btn btn--ghost"   style="padding:0.85rem 2rem;">Ask a Question</a>
+        <a href="contact.html" class="btn btn--primary flow-btn" style="padding:0.85rem 2.25rem;">
+          <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          <span class="flow-text">Enroll Online</span>
+          <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a href="contact.html" class="btn btn--ghost flow-btn" style="padding:0.85rem 2.25rem;">
+          <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          <span class="flow-text">Ask a Question</span>
+          <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
       </div>
     </div>
   </section>
@@ -958,8 +1031,16 @@
           <p class="enroll-cta__sub">Join 2,400+ graduates who chose hands-on training. Enroll today or visit our nearest centre.</p>
         </div>
         <div style="display:flex;gap:1rem;flex-wrap:wrap;">
-          <a href="contact.html" class="btn btn--w">Get Free Demo</a>
-          <a href="contact.html" class="btn btn--wo">Contact Us</a>
+          <a href="contact.html" class="btn btn--w flow-btn">
+            <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            <span class="flow-text">Get Free Demo</span>
+            <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a href="contact.html" class="btn btn--wo flow-btn">
+            <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            <span class="flow-text">Contact Us</span>
+            <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
         </div>
       </div>
     </div>
