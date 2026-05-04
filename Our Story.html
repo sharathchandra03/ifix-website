@@ -386,7 +386,7 @@
           </p>
         </div>
         <div class="particle-canvas-container">
-          <canvas id="joinIfixCanvas" width="800" height="200"></canvas>
+          <canvas id="joinIfixCanvas" width="800" height="260"></canvas>
         </div>
       </div>
       <div class="mission__grid">
@@ -816,8 +816,8 @@
       var pixelSteps = 5;
 
       var palette = [
-        { r: 52,  g: 120, b: 246 },
-        { r: 29,  g: 29,  b: 31  }
+        { r: 255, g: 145, b: 0   },
+        { r: 20,  g: 20,  b: 20  }
       ];
 
       function Particle() {
@@ -831,7 +831,7 @@
         this.particleSize = 10;
         this.isKilled = false;
         this.startColor = { r: 0, g: 0, b: 0 };
-        this.targetColor = { r: 52, g: 120, b: 246 };
+        this.targetColor = { r: 255, g: 145, b: 0 };
         this.colorWeight = 0;
         this.colorBlendRate = 0.01;
       }
@@ -899,10 +899,18 @@
         off.width = canvas.width; off.height = canvas.height;
         var offCtx = off.getContext('2d');
         offCtx.fillStyle = 'white';
-        offCtx.font = 'bold 80px "DM Sans", sans-serif';
-        offCtx.textAlign = 'center';
+        offCtx.font = 'bold 105px "DM Sans", sans-serif';
+        offCtx.textAlign = 'left';
         offCtx.textBaseline = 'middle';
-        offCtx.fillText(word, canvas.width / 2, canvas.height / 2);
+        var words = word.split(' ');
+        var gap = 28;
+        var totalWidth = words.reduce(function(sum, w) { return sum + offCtx.measureText(w).width; }, 0) + gap * (words.length - 1);
+        var startX = (canvas.width - totalWidth) / 2;
+        var cy = canvas.height / 2;
+        words.forEach(function(w) {
+          offCtx.fillText(w, startX, cy);
+          startX += offCtx.measureText(w).width + gap;
+        });
 
         var imageData = offCtx.getImageData(0, 0, canvas.width, canvas.height);
         var pixels = imageData.data;
