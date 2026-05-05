@@ -21,16 +21,6 @@
 
   <style>
     /* ════════════════════════════════════════
-       HEADER OVERRIDE
-    ════════════════════════════════════════ */
-    .navbar {
-      background: #0F044A !important;
-    }
-    .navbar.scrolled {
-      background: #0F044A !important;
-    }
-
-    /* ════════════════════════════════════════
        HERO
     ════════════════════════════════════════ */
     .hero {
@@ -231,8 +221,8 @@
       aspect-ratio: 1/1;
       border-radius: var(--r-2xl);
       overflow: hidden;
-      box-shadow: 0 0 0 1px #FF9100;
-      background: #FF9100;
+      box-shadow: 0 0 0 1px #0F044A;
+      background: #0F044A;
     }
 
     .hero__video-wrap::after {
@@ -1142,8 +1132,8 @@
       align-items: center;
       justify-content: space-between;
       padding: 0.85rem 1.25rem;
-      border-bottom: 1px solid rgba(52,120,246,0.1);
-      background: linear-gradient(135deg, #f0f5ff 0%, #f8faff 100%);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      background: linear-gradient(135deg, #1e1060 0%, #2a1580 100%);
     }
 
     .industry-panel__title {
@@ -1151,7 +1141,7 @@
       font-weight: 800;
       letter-spacing: 0.16em;
       text-transform: uppercase;
-      color: var(--text);
+      color: #ffffff;
       margin: 0;
     }
 
@@ -1163,9 +1153,9 @@
       font-weight: 800;
       letter-spacing: 0.13em;
       text-transform: uppercase;
-      color: #16a34a;
-      background: rgba(22, 163, 74, 0.09);
-      border: 1px solid rgba(22, 163, 74, 0.2);
+      color: #ffffff;
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.4);
       padding: 0.26rem 0.6rem;
       border-radius: 100px;
     }
@@ -1174,10 +1164,10 @@
       width: 6px;
       height: 6px;
       border-radius: 50%;
-      background: #16a34a;
+      background: #ffffff;
       flex-shrink: 0;
       animation: livePulse 1.9s ease-in-out infinite;
-      box-shadow: 0 0 0 0 rgba(22,163,74,0.4);
+      box-shadow: 0 0 0 0 rgba(255,255,255,0.5);
     }
 
     @keyframes livePulse {
@@ -1241,9 +1231,9 @@
     }
 
     .industry-panel__item:hover {
-      background: #eef4ff;
-      border-color: rgba(52, 120, 246, 0.25);
-      box-shadow: 0 3px 16px rgba(52, 120, 246, 0.1);
+      background: #fff5eb;
+      border-color: rgba(255, 145, 0, 0.35);
+      box-shadow: 0 3px 16px rgba(255, 145, 0, 0.12);
       transform: translateX(3px);
     }
 
@@ -2581,16 +2571,6 @@
           <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
       </div>
-      <div class="hero__stats" id="heroStats">
-        <div class="hero__stat"><span class="hero__stat-num">2,400+</span><span class="hero__stat-lbl">Students
-            Trained</span></div>
-        <div class="hero__stat-div"></div>
-        <div class="hero__stat"><span class="hero__stat-num">94%</span><span class="hero__stat-lbl">Placement
-            Rate</span></div>
-        <div class="hero__stat-div"></div>
-        <div class="hero__stat"><span class="hero__stat-num">14+</span><span class="hero__stat-lbl">Courses
-            Offered</span></div>
-      </div>
     </div>
 
     <div class="hero__right" id="heroRight">
@@ -2638,7 +2618,7 @@
     <div class="container">
       <div class="courses-preview__top">
         <div>
-          <span class="section-label reveal">ADVANCED REPAIR TRAINING PROGRAMS</span>
+          <span class="section-label reveal" style="color:var(--accent);">ADVANCED REPAIR TRAINING PROGRAMS</span>
           <h2 class="section-heading reveal d1">Skills That Actually Increase Your Repair Income.</h2>
         </div>
         <p class="section-sub section-sub--single-line reveal d2">

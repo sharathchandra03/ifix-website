@@ -143,6 +143,11 @@
     .story__stat {
       background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--r-lg);
       padding: 1.25rem; text-align: center;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+    .story__stat:hover {
+      border-color: #FF9100;
+      box-shadow: 0 4px 14px rgba(255,145,0,0.15);
     }
     .story__stat-num { display: block; font-weight: 800; font-size: 1.7rem; color: var(--accent); letter-spacing: -0.02em; }
     .story__stat-lbl { font-size: 0.7rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; display: block; }
@@ -193,8 +198,8 @@
       transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
     }
     .loc-card:hover {
-      border-color: rgba(52,120,246,0.32);
-      box-shadow: 0 4px 14px rgba(52,120,246,0.10);
+      border-color: #FF9100;
+      box-shadow: 0 4px 14px rgba(255,145,0,0.18);
       transform: translateY(-2px);
     }
     .loc-card__pin {
@@ -249,7 +254,7 @@
     .cta-banner {
       --cta-shift: 0px;
       --cta-glow: 0;
-      background: var(--accent);
+      background: #0F044A;
       padding: 6rem 0;
       position: relative;
       overflow: hidden;
@@ -436,9 +441,9 @@
                 <span class="story__loc-title-dot"></span>
                 Training Centers
               </div>
-              <span class="story__loc-badge">2 Locations</span>
+              <span class="story__loc-badge">1 Location</span>
             </div>
-            <div class="story__loc-list">
+            <div class="story__loc-list" style="grid-template-columns: 1fr;">
               <div class="loc-card">
                 <div class="loc-card__pin">
                   <svg width="13" height="16" viewBox="0 0 13 16" fill="none" aria-hidden="true">
@@ -448,17 +453,6 @@
                 <div>
                   <div class="loc-card__name">Indiranagar</div>
                   <div class="loc-card__sub">Bangalore, Karnataka</div>
-                </div>
-              </div>
-              <div class="loc-card">
-                <div class="loc-card__pin">
-                  <svg width="13" height="16" viewBox="0 0 13 16" fill="none" aria-hidden="true">
-                    <path d="M6.5 0C2.91 0 0 2.91 0 6.5c0 4.875 6.5 9.5 6.5 9.5S13 11.375 13 6.5C13 2.91 10.09 0 6.5 0zm0 8.75a2.25 2.25 0 1 1 0-4.5 2.25 2.25 0 0 1 0 4.5z" fill="currentColor"/>
-                  </svg>
-                </div>
-                <div>
-                  <div class="loc-card__name">Bangalore</div>
-                  <div class="loc-card__sub">Karnataka, India</div>
                 </div>
               </div>
             </div>
@@ -939,10 +933,12 @@
               p = new Particle();
               var rp = randPos();
               p.pos.x = rp.x; p.pos.y = rp.y;
-              p.maxSpeed = Math.random() * 6 + 4;
+              // slightly reduced speeds so motion is a bit slower (tweaked further)
+              p.maxSpeed = Math.random() * 2 + 2.5; // slightly lower for gentler motion
               p.maxForce = p.maxSpeed * 0.05;
               p.particleSize = Math.random() * 6 + 6;
-              p.colorBlendRate = Math.random() * 0.0275 + 0.0025;
+              // slow down color blending slightly for gentler transitions (tweaked)
+              p.colorBlendRate = Math.random() * 0.012 + 0.0009; // reduced for slower blend
               particles.push(p);
             }
             p.startColor = {

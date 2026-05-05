@@ -273,7 +273,7 @@
     .visit-banner {
       --cta-shift: 0px;
       --cta-glow: 0;
-      background: var(--accent);
+      background: #0F044A;
       padding:5rem 0;
       position: relative;
       overflow: hidden;
@@ -351,7 +351,7 @@
       background: linear-gradient(to left, #ffd080, #FF9100, transparent);
       offset-path: rect(0 auto auto 0 round 40px);
       offset-anchor: 90% 50%;
-      animation: cform-border-beam 12s infinite linear;
+      animation: cform-border-beam 5s infinite linear;
       pointer-events: none;
     }
     @keyframes cform-border-beam {
@@ -420,9 +420,13 @@
       transition: transform 0.8s ease-out;
       display: inline-block;
     }
+    .btn.btn--primary.flow-btn .flow-text {
+      transform: none;
+    }
     .btn.flow-btn:hover .flow-arr--left  { left: 0.75rem; }
     .btn.flow-btn:hover .flow-arr--right { right: -1.5rem; }
     .btn.flow-btn:hover .flow-text       { transform: translateX(0.5rem); }
+    .btn.btn--primary.flow-btn:hover .flow-text { transform: translateX(0.5rem); }
   </style>
 </head>
 <body>
@@ -468,7 +472,7 @@
         <div style="display:flex;gap:1rem;flex-wrap:wrap;">
           <a href="tel:+916364429494" class="btn btn--primary flow-btn" style="padding:0.9rem 2.25rem;font-size:1rem;">
             <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-            <span class="flow-text">📞 Call Us Now</span>
+            <span class="flow-text">Call Us Now</span>
             <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
           <a href="#contact-form" class="btn btn--outline flow-btn" style="padding:0.9rem 2.25rem;font-size:1rem;">
@@ -524,7 +528,10 @@
             </div>
             <div class="fg"><label class="flbl" for="prof">Profession</label><input class="finput" type="text" id="prof" placeholder="e.g. Student, Technician..."></div>
           </div>
-          <button type="submit" class="btn btn--primary fsub btn-send-message" id="fsub"><span>Send Message →</span></button>
+          <button type="submit" class="btn btn--primary fsub btn-send-message" id="fsub">
+            <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            <span class="flow-text">Send Message</span>
+          </button>
         </form>
         <div id="formOk" style="display:none;margin-top:1.5rem;text-align:center;padding:1.5rem;background:rgba(52,199,89,0.08);border:1px solid rgba(52,199,89,0.25);border-radius:var(--r-lg);">
           <div style="font-size:2rem;margin-bottom:0.5rem;">✅</div>
@@ -585,7 +592,7 @@
           </a>
           <a href="tel:+916364429494" class="btn btn--ghost flow-btn" style="padding:0.85rem 2.25rem;color:#fff;border-color:rgba(255,255,255,0.45);">
             <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-            <span class="flow-text">📞 Call Now</span>
+            <span class="flow-text">Call Now</span>
             <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
         </div>
@@ -828,7 +835,7 @@
         console.error('Error:', error);
         document.getElementById('error-text').textContent = error.message || 'Connection error. Please try again.';
         document.getElementById('formError').style.display='block';
-        b.innerHTML='<span>Send Message →</span>'; b.disabled=false; b.style.opacity='1';
+        b.innerHTML='<svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg><span class="flow-text">Send Message</span>'; b.disabled=false; b.style.opacity='1';
         window.IFIX_UI?.attachGlowBlobs?.('.btn-send-message');
       }
     }

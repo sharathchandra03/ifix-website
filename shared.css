@@ -42,12 +42,12 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 /* ═══ NAVBAR ═══════════════════════════════════════════════ */
 .navbar {
   position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-  background: #227FEF;
+  background: #0F044A;
   box-shadow: 0 1px 0 rgba(11, 54, 132, 0.14);
   transition: background 0.45s var(--ease-io), box-shadow 0.45s var(--ease-io);
 }
 .navbar.scrolled {
-  background: #227FEF;
+  background: #0F044A;
   box-shadow: 0 1px 0 rgba(11, 54, 132, 0.16);
 }
 .navbar__inner {
@@ -197,6 +197,9 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   border: none;
   cursor: pointer;
   text-decoration: none;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
   transition: transform 0.25s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.25s ease;
 }
 
@@ -204,6 +207,30 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   transform: translateY(-2px) scale(1.02);
   box-shadow: 0 12px 40px rgba(34, 127, 239, 0.45);
 }
+
+/* Flow arrow effect on Send Message */
+.btn-send-message .flow-arr {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px; height: 18px;
+  stroke: currentColor; fill: none;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.btn-send-message .flow-arr--left  { left: -1.5rem; }
+.btn-send-message .flow-arr--right { right: 0.75rem; }
+.btn-send-message .flow-text {
+  position: relative;
+  z-index: 1;
+  transform: translateX(-0.5rem);
+  transition: transform 0.8s ease-out;
+  display: inline-block;
+}
+.btn-send-message:hover .flow-arr--left  { left: 0.75rem; }
+.btn-send-message:hover .flow-arr--right { right: -1.5rem; }
+.btn-send-message:hover .flow-text       { transform: translateX(0.5rem); }
+
 
 .btn-send-message .glow-blob {
   position: absolute !important;
@@ -356,26 +383,81 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
 .call-float {
   position: fixed;
-  right: 20px;
-  bottom: 110px;
-  width: 55px;
-  height: 55px;
-  background: #227FEF;
-  color: #fff;
-  font-size: 22px;
-  display: flex;
+  right: 1.15rem;
+  /* place the call button above the WhatsApp float with a slightly smaller gap */
+  bottom: calc(1.15rem + 62px + 0.35rem);
+  z-index: 260;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  box-shadow: 0 6px 20px rgba(34, 127, 239, 0.4);
-  z-index: 999;
-  transition: transform 0.3s ease;
+  gap: 0.55rem;
+  color: #fff;
 }
-.call-float:hover { transform: scale(1.1); }
+.call-float__hint {
+  background: #0f1720;
+  color: #e8f0fb;
+  border: 1px solid rgba(255,255,255,0.16);
+  border-radius: 999px;
+  padding: 0.42rem 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  opacity: 0;
+  transform: translateX(8px);
+  pointer-events: none;
+  transition: opacity 0.25s var(--ease-io), transform 0.25s var(--ease-io);
+}
+.call-float__icon {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: linear-gradient(145deg, #1e5fd8 0%, #0F044A 100%);
+  border: 1px solid rgba(11, 7, 58, 0.24);
+  box-shadow: 0 10px 28px rgba(15, 4, 74, 0.32);
+  transition: transform 0.3s var(--ease-expo), box-shadow 0.3s var(--ease-expo), filter 0.25s ease;
+}
+.call-float__icon::before {
+  content: '';
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 1px solid rgba(30, 95, 216, 0.35);
+  animation: waPulse 2.1s ease-out infinite;
+}
+.call-float:hover .call-float__hint,
+.call-float:focus-visible .call-float__hint {
+  opacity: 1;
+  transform: translateX(0);
+}
+.call-float:hover .call-float__icon,
+.call-float:focus-visible .call-float__icon {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 15px 34px rgba(15, 4, 74, 0.4);
+  filter: saturate(1.08);
+}
+.call-float:focus-visible {
+  outline: none;
+}
+.call-float:focus-visible .call-float__icon {
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.92), 0 0 0 6px rgba(52, 120, 246, 0.5);
+}
 
 @media (max-width: 640px) {
   .nav-tabs-indicator { display: none; }
-  .call-float { right: 1rem; bottom: 6.2rem; }
+  /* on small screens keep a slightly larger gap and avoid the bottom edge */
+  .wa-float { right: 0.9rem; bottom: calc(0.9rem + env(safe-area-inset-bottom, 0px)); }
+  .call-float { right: 0.9rem; bottom: calc(0.9rem + 48px + 0.35rem + env(safe-area-inset-bottom, 0px)); }
+  .call-float__icon {
+    width: 52px;
+    height: 52px;
+  }
+  .call-float__hint {
+    display: none;
+  }
 }
 
 /* ═══ REVEAL ANIMATION ══════════════════════════════════════ */
@@ -416,5 +498,52 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   .wa-float__hint {
     display: none;
   }
+}
+
+/* Ensure CTA sections align with navbar spacing and match across pages */
+.enroll-cta > .container,
+.cta-banner > .container,
+.visit-banner > .container {
+  padding-left: clamp(2rem, 7vw, 6rem);
+  padding-right: clamp(2rem, 7vw, 6rem);
+}
+
+/* Normalize CTA button heights inside CTA bands so they match visually */
+.enroll-cta .btn,
+.cta-banner .btn,
+.visit-banner .btn {
+  padding: 0.95rem 2rem;
+  font-size: 1rem;
+  line-height: 1;
+  border-radius: var(--r-xl);
+}
+
+/* Normalize CTA typography and exact vertical sizing across CTA sections */
+.enroll-cta .btn--w,
+.enroll-cta .btn--wo,
+.enroll-cta .btn--white,
+.enroll-cta .btn--white-outline,
+.cta-banner .btn--w,
+.cta-banner .btn--wo,
+.cta-banner .btn--white,
+.cta-banner .btn--white-outline,
+.visit-banner .btn--w,
+.visit-banner .btn--wo,
+.visit-banner .btn--white,
+.visit-banner .btn--white-outline {
+  font-size: 1rem;           /* ensure same type scale */
+  line-height: 1;           /* collapse to single-line height */
+  padding: 0.95rem 2rem;    /* equal vertical rhythm */
+  min-height: 48px;         /* force consistent vertical size */
+  box-sizing: border-box;   /* include borders in height calculation */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Slightly increase outline button inner gap so text doesn't look cramped */
+.enroll-cta .btn--wo, .cta-banner .btn--white-outline, .visit-banner .btn--wo {
+  padding-left: 1.9rem;
+  padding-right: 1.9rem;
 }
 
