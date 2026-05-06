@@ -321,11 +321,97 @@
     .fi__item-lbl { font-size:0.68rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-3); }
     .fi__item-val { font-weight:600; color:var(--text); margin-top:2px; }
 
-    /* Experienced / Fresher toggle */
-    .exp-toggle { display:grid; grid-template-columns:1fr 1fr; background:var(--bg-2); border:1px solid var(--border); border-radius:var(--r-md); padding:3px; gap:0; }
-    .exp-toggle input[type="radio"] { display:none; }
-    .exp-toggle label { display:block; text-align:center; padding:0.52rem 0.5rem; font-size:0.82rem; font-weight:600; color:var(--text-2); border-radius:calc(var(--r-md) - 3px); cursor:pointer; transition:all 0.22s; user-select:none; }
-    .exp-toggle input[type="radio"]:checked + label { background:var(--accent); color:#fff; box-shadow:0 2px 10px rgba(52,120,246,0.28); }
+    /* ── Experience Toggle — morphing pill ── */
+    .exp-toggle {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 3px;
+      gap: 0;
+      isolation: isolate;
+    }
+    .exp-toggle input[type="radio"] { display: none; }
+
+    /* sliding pill — driven by JS via --pill-x */
+    .exp-toggle__pill {
+      position: absolute;
+      top: 3px; left: 3px;
+      width: calc(50% - 3px);
+      height: calc(100% - 6px);
+      background: var(--accent);
+      border-radius: calc(var(--r-md) - 3px);
+      box-shadow: 0 2px 14px rgba(52,120,246,0.32);
+      transform: translateX(var(--pill-x, 0px));
+      transition: transform 0.42s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  background 0.25s ease;
+      z-index: 0;
+      pointer-events: none;
+      will-change: transform;
+    }
+
+    /* ripple burst */
+    .exp-toggle__pill::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: rgba(255,255,255,0.55);
+      opacity: 0;
+      transform: scale(0.85);
+      pointer-events: none;
+    }
+    .exp-toggle.did-ripple .exp-toggle__pill::after {
+      animation: pill-ripple 0.45s ease-out forwards;
+    }
+    @keyframes pill-ripple {
+      0%   { opacity: 0.55; transform: scale(0.85); }
+      100% { opacity: 0;    transform: scale(1.15); }
+    }
+
+    .exp-toggle label {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4em;
+      padding: 0.52rem 0.5rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-2);
+      border-radius: calc(var(--r-md) - 3px);
+      cursor: pointer;
+      user-select: none;
+      transition: color 0.22s ease;
+    }
+    .exp-toggle input[type="radio"]:checked + label { color: #fff; }
+
+    /* emoji bounce on the active label */
+    .exp-toggle label .tog-icon {
+      display: inline-block;
+      transition: transform 0.18s ease;
+    }
+    .exp-toggle input[type="radio"]:checked + label .tog-icon {
+      animation: icon-bounce 0.42s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    @keyframes icon-bounce {
+      0%   { transform: scale(1)    rotate(0deg);  }
+      35%  { transform: scale(1.45) rotate(-8deg); }
+      65%  { transform: scale(0.9)  rotate(4deg);  }
+      100% { transform: scale(1)    rotate(0deg);  }
+    }
+
+    /* label text crossfade */
+    .exp-toggle label .tog-text {
+      display: inline-block;
+      transition: opacity 0.18s ease, transform 0.18s ease;
+    }
+    .exp-toggle input[type="radio"]:not(:checked) + label .tog-text {
+      opacity: 0.72;
+    }
 
     /* form */
     .cform { background:var(--bg); border:1px solid var(--border); border-radius:var(--r-2xl); padding:1.75rem 1.85rem; box-shadow:var(--shadow-md); position:relative; overflow:hidden; }
@@ -448,7 +534,7 @@
     </div>
     <div class="page-hero__inner" style="position:relative;z-index:1;">
       <div style="margin-top:-4rem;">
-        <span class="section-label" style="font-size:0.78rem;letter-spacing:0.12em;">iFix Academy · Contact</span>
+        <span class="section-label" style="font-size:0.78rem;letter-spacing:0.12em;margin-left:0.3rem;">Contact Us</span>
         <h1 class="page-hero__heading">Get in Touch<br>with <span>iFix</span></h1>
         <p class="page-hero__sub">Visit our academy centre in Indiranagar, Bengaluru. Don't have time to visit? Drop us a message and we'll get back to you promptly.</p>
         <span class="gooey-wrap">
@@ -488,11 +574,12 @@
         <p class="cform__sub">Fill out the form and we'll reach out within 24 hours.</p>
         <div class="fg" style="margin-bottom:1.25rem;">
           <label class="flbl">Experience Level *</label>
-          <div class="exp-toggle">
+          <div class="exp-toggle" id="expToggle">
+            <div class="exp-toggle__pill" aria-hidden="true"></div>
             <input type="radio" name="exp" id="exp-fresher" value="Fresher" checked>
-            <label for="exp-fresher">🎓 Fresher</label>
+            <label for="exp-fresher"><span class="tog-icon">🎓</span><span class="tog-text">Fresher</span></label>
             <input type="radio" name="exp" id="exp-experienced" value="Experienced">
-            <label for="exp-experienced">💼 Experienced</label>
+            <label for="exp-experienced"><span class="tog-icon">💼</span><span class="tog-text">Experienced</span></label>
           </div>
         </div>
         <form id="cForm" onsubmit="handleSubmit(event)">
@@ -777,6 +864,36 @@
         if (!frame) frame = requestAnimationFrame(tick);
       });
     }
+
+    /* ── Experience toggle: pill slide + ripple ── */
+    (function () {
+      const toggle = document.getElementById('expToggle');
+      if (!toggle) return;
+      const pill = toggle.querySelector('.exp-toggle__pill');
+      const radios = toggle.querySelectorAll('input[type="radio"]');
+
+      function updatePill(animate) {
+        const checked = toggle.querySelector('input[type="radio"]:checked');
+        if (!checked) return;
+        const idx = Array.from(radios).indexOf(checked);
+        const halfW = toggle.offsetWidth / 2 - 3;
+        pill.style.setProperty('--pill-x', idx === 0 ? '0px' : halfW + 'px');
+      }
+
+      radios.forEach(radio => {
+        radio.addEventListener('change', () => {
+          updatePill(true);
+          /* ripple burst */
+          toggle.classList.remove('did-ripple');
+          void toggle.offsetWidth; /* reflow to restart animation */
+          toggle.classList.add('did-ripple');
+          toggle.addEventListener('animationend', () => toggle.classList.remove('did-ripple'), { once: true });
+        });
+      });
+
+      updatePill(false);
+      window.addEventListener('resize', () => updatePill(false));
+    }());
 
     window.addEventListener('scroll', () => {
       document.querySelectorAll('.blue-cta-motion.is-in-view').forEach((cta) => {

@@ -190,7 +190,7 @@
     }
     .story__loc-list { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; }
     .loc-card {
-      display: flex; align-items: center; gap: 0.7rem;
+      display: flex; align-items: flex-start; gap: 0.7rem;
       background: var(--bg);
       border: 1px solid var(--border);
       border-radius: var(--r-lg);
@@ -213,7 +213,16 @@
       font-weight: 700; font-size: 0.88rem; color: var(--text); line-height: 1.2;
     }
     .loc-card__sub {
-      font-size: 0.7rem; color: var(--text-3); margin-top: 2px; letter-spacing: 0.01em;
+      font-size: 0.72rem; color: var(--text-3); margin-top: 5px; letter-spacing: 0.01em; line-height: 1.65;
+    }
+    .loc-card__body { flex: 1; min-width: 0; }
+    .story__loc-badge {
+      transition: color 0.22s ease, background 0.22s ease, border-color 0.22s ease;
+    }
+    .story__loc-badge:hover {
+      background: rgba(255,145,0,0.14) !important;
+      color: #FF9100 !important;
+      border-color: rgba(255,145,0,0.45) !important;
     }
 
     /* ── TRAINING FLOW ── */
@@ -334,7 +343,7 @@
     <div class="hero-overlay"></div>
     <div class="container page-hero__inner">
       <div>
-        <span class="section-label" id="osHeroLabel">About Ifix India Training Academy </span>
+        <span class="section-label" id="osHeroLabel" style="margin-left: 0.1rem;"> About Us</span>
         <h1 class="page-hero__heading" id="osHeroHeading">Built by industry experts to help technicians upgrade from basic repairs to <span>advanced chip-level expertise</span>.</h1>
         <p class="page-hero__sub" id="osHeroSub">
           Backed by iFix India, a trusted name in Apple device repair since 2009, the academy is designed
@@ -397,7 +406,7 @@
       <div class="mission__grid">
         <div class="mission-card">
           <div class="mission-card__title">Hands-On Training</div>
-          <div class="mission-card__desc">Our practical modules include real devices, guided practice, and supervised lab sessions so you learn by doing.</div>
+          <div class="mission-card__desc">Real devices, guided practice, and supervised lab sessions - so you learn by doing.</div>
         </div>
         <div class="mission-card">
           <div class="mission-card__title">Industry-Tested Methods</div>
@@ -441,7 +450,10 @@
                 <span class="story__loc-title-dot"></span>
                 Training Centers
               </div>
-              <span class="story__loc-badge">1 Location</span>
+              <a href="https://maps.app.goo.gl/WZCHqrY6tDa4midC9" target="_blank" rel="noopener" class="story__loc-badge" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.3rem;">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
+                Get Directions
+              </a>
             </div>
             <div class="story__loc-list" style="grid-template-columns: 1fr;">
               <div class="loc-card">
@@ -450,9 +462,9 @@
                     <path d="M6.5 0C2.91 0 0 2.91 0 6.5c0 4.875 6.5 9.5 6.5 9.5S13 11.375 13 6.5C13 2.91 10.09 0 6.5 0zm0 8.75a2.25 2.25 0 1 1 0-4.5 2.25 2.25 0 0 1 0 4.5z" fill="currentColor"/>
                   </svg>
                 </div>
-                <div>
+                <div class="loc-card__body">
                   <div class="loc-card__name">Indiranagar</div>
-                  <div class="loc-card__sub">Bangalore, Karnataka</div>
+                  <div class="loc-card__sub">4th Floor, Pillar No. 87, 35, Chinmaya Mission Hospital Rd, Stage 2, Eshwara Layout, Bengaluru, Karnataka 560008</div>
                 </div>
               </div>
             </div>
@@ -546,7 +558,8 @@
       transition: box-shadow .3s ease, transform .3s ease;
     }
     .hs-card:hover {
-      box-shadow: 0 12px 32px rgba(31,20,46,0.10);
+      box-shadow: 0 18px 40px rgba(255,145,0,0.16), 0 0 0 1px rgba(255,145,0,0.22), 0 6px 18px rgba(255,145,0,0.10);
+      border-color: rgba(255,145,0,0.42);
       transform: translateY(-2px);
     }
     /* Corner glow */
@@ -805,7 +818,7 @@
       var particles = [];
       var frameCount = 0;
       var isRunning = false;
-      var words = ['Join ifix Today'];
+      var words = ['Join iFix Today'];
       var wordIndex = 0;
       var pixelSteps = 5;
 

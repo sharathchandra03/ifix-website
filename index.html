@@ -50,7 +50,8 @@
     .hero__left {
       position: relative;
       z-index: 1;
-      align-self: start;
+      align-self: center;
+      margin-top: 4rem;
       padding: clamp(1.25rem, 3vw, 2.6rem) clamp(2rem, 4vw, 3rem) clamp(2.5rem, 6vw, 6rem) clamp(2rem, 7vw, 6rem);
     }
 
@@ -173,6 +174,7 @@
       gap: 2rem;
       border-top: 1px solid var(--border);
       padding-top: 2rem;
+      margin-top: 3rem;
       opacity: 0;
     }
 
@@ -649,7 +651,7 @@
     .features-laptop__header {
       width: min(760px, 90%);
       text-align: center;
-      padding: 0 2rem 0.25rem;
+      padding: 3rem 2rem 0.25rem;
       flex-shrink: 0;
     }
 
@@ -861,8 +863,8 @@
     .online__inner {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 5rem;
-      align-items: start;
+      gap: 4rem;
+      align-items: end;
       position: relative;
       z-index: 1;
     }
@@ -871,14 +873,14 @@
       display: flex;
       flex-direction: column;
       gap: 1.25rem;
-      padding-top: 3rem;
+      padding-top: 0;
     }
 
     .online__features {
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
-      margin-top: 1.75rem;
+      gap: 0.65rem;
+      margin-top: 0rem;
     }
 
     /* ── Feature card — redesigned ─────────────────────────── */
@@ -1115,6 +1117,8 @@
        INDUSTRY PANEL — Premium redesign
     ════════════════════════════════════════ */
     .industry-panel {
+      position: relative;
+      top: 3rem;
       background: #fff;
       border: 1px solid rgba(52, 120, 246, 0.15);
       border-radius: 20px;
@@ -1282,9 +1286,12 @@
 
     /* ── Stats row — standalone card ─────────────────────── */
     .stats-row {
+      position: relative;
+      top: 1.03rem;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 0;
+      margin-top: 3rem;
       background: linear-gradient(135deg, #f0f5ff 0%, #f8faff 100%);
       border-radius: 20px;
       border: 1px solid rgba(52,120,246,0.15);
@@ -2599,7 +2606,7 @@
           </div>
           <div class="trust-strip__item">
             <div class="trust-strip__icon">👨‍🏫</div>
-            <div class="trust-strip__text"><span>Learn from Industry Experts</span>Real technicians, real workflows
+            <div class="trust-strip__text"><span>Learn from Experts</span>Real technicians, real workflows
             </div>
           </div>
           <div class="trust-strip__item">
@@ -2622,14 +2629,13 @@
           <h2 class="section-heading reveal d1">Skills That Actually Increase Your Repair Income.</h2>
         </div>
         <p class="section-sub section-sub--single-line reveal d2">
-          Every course is built around real repair scenarios. 100% hands-on training from Day 1 - no theory-only
-          sessions.
+          Every course is built around real repair Scenarios, preparing you for real world experiences and hand skills.
         </p>
       </div>
       <div class="courses-grid">
         <div class="course-card">
           <span class="course-badge b-popular">MOST POPULAR</span>
-          <h3 class="course-card__title">Advanced Mobile Repair (L3)</h3>
+          <h3 class="course-card__title">Android Master Course</h3>
           <p class="course-card__desc">Upgrade from basic repairs to advanced diagnostics. Learn fault finding, circuit
             understanding, and real-world troubleshooting in this <strong>L3</strong> track used by professional
             technicians.</p>
@@ -2638,7 +2644,7 @@
         </div>
         <div class="course-card">
           <span class="course-badge b-demand">HIGH DEMAND</span>
-          <h3 class="course-card__title">Laptop Chip-Level Repair (L4)</h3>
+          <h3 class="course-card__title">Laptop Master Course</h3>
           <p class="course-card__desc">Master motherboard diagnostics, micro-soldering, and GPU reballing in this
             <strong>L4</strong> pathway. Handle complex laptop <strong>Chip-Level</strong> repairs that most technicians
             avoid - and charge premium prices.
@@ -2648,7 +2654,7 @@
         </div>
         <div class="course-card">
           <span class="course-badge b-new">NEW COURSE</span>
-          <h3 class="course-card__title">Display Refurbishing &amp; Repair</h3>
+          <h3 class="course-card__title">iPhone Master Course</h3>
           <p class="course-card__desc">Learn LCD/AMOLED repair, OCA lamination, and display refurbishment. Turn damaged
             screens into profit instead of replacements.</p>
           <div class="course-card__meta"><span>8 Weeks</span><span>Refurb Lab</span></div>
@@ -2656,7 +2662,7 @@
         </div>
         <div class="course-card">
           <span class="course-badge b-premium">PREMIUM</span>
-          <h3 class="course-card__title">Advanced Apple Inc. Repair (L4)</h3>
+          <h3 class="course-card__title">Macbook Master Course</h3>
           <p class="course-card__desc">Specialize in iPhone &amp; MacBook <strong>Chip-Level</strong> repair in this
             <strong>L4</strong> track. Learn motherboard diagnostics, IC replacement, and advanced Apple-specific
             repairs.
@@ -2681,7 +2687,7 @@
       <div class="features-laptop__header">
         <div class="features-laptop__label" feature-heading>Hands-On Tracks</div>
         <h2 class="features-laptop__heading" feature-heading>Every repair flow<br>inside one system.</h2>
-        <p class="features-laptop__sub" feature-sub>Explore IFIX training modules flowing through a real-world repair
+        <p class="features-laptop__sub" feature-sub>Explore iFix training modules flowing through a real-world repair
           workflow as you scroll.</p>
       </div>
 
@@ -2740,7 +2746,7 @@
               <div class="online__feat-body">
                 <div class="online__feat-text">
                   <strong>Live Hands-On Training</strong>
-                  Work on real faulty iPhones &amp; MacBooks — not just demonstrations.
+                  Work on real faulty devices - not just demonstrations.
                 </div>
               </div>
             </div>
@@ -2900,29 +2906,27 @@
         <div class="why-card">
           <div class="why-card__icon">&#x1F5E3;&#xFE0F;</div>
           <h3 class="why-card__title">Multi-Lingual Training</h3>
-          <p class="why-card__desc">All courses taught in Hindi and English, making technical education accessible for
-            every Indian student.</p>
+          <p class="why-card__desc">All courses are taught in native languages, making education accessible for every Indian student.</p>
         </div>
         <div class="why-card">
           <div class="why-card__icon">📜</div>
           <h3 class="why-card__title">Small Batch Training</h3>
-          <p class="why-card__desc">Limited students per batch for focused, hands-on learning.</p>
+          <p class="why-card__desc">Limited students per batch for more attention, focused & hands-on learning.</p>
         </div>
         <div class="why-card">
           <div class="why-card__icon">💼</div>
           <h3 class="why-card__title">Professional Lab Setup</h3>
-          <p class="why-card__desc">Train using industry-grade tools and machines.</p>
+          <p class="why-card__desc">Train using industry-grade tools, machines, and real devices used by professionals.</p>
         </div>
         <div class="why-card">
           <div class="why-card__icon">💰</div>
           <h3 class="why-card__title">Affordable Fee Structure</h3>
-          <p class="why-card__desc">Best-in-class education at transparent, affordable fees. EMI options and
-            scholarships available.</p>
+          <p class="why-card__desc">Get best-in-class mobile repairing classes at transparent & affordable course fees with expert guidance.</p>
         </div>
         <div class="why-card">
           <div class="why-card__icon">🌐</div>
           <h3 class="why-card__title">Post-Training Support</h3>
-          <p class="why-card__desc">Get guidance and support even after course completion.</p>
+          <p class="why-card__desc">Get guidance, job referrals, and support even after course completion.</p>
         </div>
         <div class="why-card">
           <div class="why-card__icon">🔄</div>

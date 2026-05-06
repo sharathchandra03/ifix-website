@@ -90,7 +90,6 @@
               <li><a href="/courses#laptop"  class="footer__link">Laptop Master</a></li>
               <li><a href="/courses#display" class="footer__link">iPhone Master</a></li>
               <li><a href="/courses#iphone" class="footer__link">Macbook Master</a></li>
-              <li><a href="/courses#online"  class="footer__link">Online Learning</a></li>
             </ul>
           </div>
           <div class="footer__col">
