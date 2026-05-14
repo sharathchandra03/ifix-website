@@ -293,7 +293,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   display: grid; grid-template-columns: 2fr 1fr 1fr 1.4fr; gap: 3rem;
   padding-bottom: 3.5rem;
 }
-.footer__logo-img { height: 56px; width: auto; margin-left: -22px; }
+.footer__logo-img { height: 80px; width: auto; margin-left: -35px; }
 .footer__tagline { font-size: 0.875rem; color: var(--text-2); line-height: 1.7; margin-top: 1rem; margin-bottom: 1.5rem; }
 .footer__social { display: flex; gap: 0.6rem; }
 .footer__social-link { width: 34px; height: 34px; border-radius: var(--r-sm); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--text-3); transition: color 0.2s, border-color 0.2s, background 0.2s; }

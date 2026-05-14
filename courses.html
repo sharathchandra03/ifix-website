@@ -102,7 +102,7 @@
     /* ── COURSE SECTION ── */
     .course-section { padding: 5.5rem 0; border-bottom: 1px solid var(--border); }
     .course-section:nth-child(even) { background: var(--bg-2); }
-    .course-detail { display: grid; grid-template-columns: 1.15fr 1fr; gap: 5rem; align-items: start; }
+    .course-detail { display: grid; grid-template-columns: 1.15fr 1fr; gap: 3rem; align-items: start; }
     .course-detail--rev { direction: rtl; }
     .course-detail--rev > * { direction: ltr; }
 
@@ -119,8 +119,8 @@
     .course-info__title { font-weight: 800; font-size: clamp(1.75rem,3vw,2.75rem); letter-spacing: -0.035em; color: var(--text); line-height: 1.0; margin-bottom: 1.25rem; }
     .course-info__desc { font-size: 1rem; line-height: 1.8; color: var(--text-2); margin-bottom: 1.75rem; }
 
-    .course-chips { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.75rem; }
-    .chip { font-size: 0.75rem; padding: 5px 13px; border-radius: 999px; border: 1px solid var(--border); color: var(--text-2); background: var(--bg); }
+    .course-chips { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 1.75rem; }
+    .chip { font-size: 0.72rem; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border); color: var(--text-2); background: var(--bg); white-space: nowrap; }
 
     .skills-title { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3); margin-bottom: 1rem; }
     .skills-grid {
@@ -302,9 +302,9 @@
     </video>
     <div class="hero-overlay"></div>
     <div class="page-hero__inner">
-      <span class="section-label" id="cHeroLabel" style="margin-left:0.2rem;">Our Courses</span>
+      <span class="section-label" id="cHeroLabel" style="margin-left:0.2rem;">OUR TRAINING PROGRAMS</span>
       <h1 class="page-hero__heading" id="cHeroHeading">Professional<br><span>Repairing</span> Courses</h1>
-      <p class="page-hero__sub" id="cHeroSub">Every course is built around real-world repair scenarios. Hands-on from Day 1 - taught by instructors who've spent years in the field. Offline classroom training available at our academy in Bengaluru.</p>
+      <p class="page-hero__sub" id="cHeroSub">Industry-focused training programs built around real repair workflows, practical diagnostics, and hands-on learning from day one.</p>
     </div>
   </section>
 
@@ -361,6 +361,7 @@
       pointer-events: none;
       z-index: 0;
     }
+
 
     /* ── Phone device shell ──────────────────────────────── */
     .phone-device {
@@ -726,6 +727,7 @@
 
       <div class="phone-glow" id="phoneGlow" style="background:#3478F6;"></div>
 
+
       <div class="ph-dots" id="phDots">
         <span class="ph-dot active" data-idx="0" title="Android Master"></span>
         <span class="ph-dot" data-idx="1" title="Laptop Master"></span>
@@ -743,39 +745,39 @@
       <section class="course-scroll-item" id="mobile" data-course-idx="0">
         <div class="csi__inner">
           <div class="csi__step">Course 01 · Android Master</div>
-          <span class="course-badge-lg bg-popular">⭐ Most Popular</span>
+          <span class="course-badge-lg bg-popular">⭐ FOUNDATION PROGRAM</span>
           <h2 class="course-info__title">Android Master Course</h2>
-          <p class="course-info__desc">The foundation of every repair technician's career. Learn complete hardware &amp; software troubleshooting for all Android and feature phone brands — from screen replacements to PCB-level diagnostics. Immediate employment or self-employment ready.</p>
+          <p class="course-info__desc">Build a strong foundation in Android hardware and software repair through hands-on practical training, real-device diagnostics, and PCB-level troubleshooting workflows.</p>
           <div class="course-chips">
-            <span class="chip">⏱ 6 Weeks</span>
+            <span class="chip">⏱ 12 Weeks</span>
             <span class="chip">📍 Bangalore - Indiranagar </span>
-            <span class="chip">🌐 All Native Languages</span>
-            <span class="chip">📜 Certificate</span>
+            <span class="chip">🌐 Multi-Language Support</span>
+            <span class="chip">📜 Industry Certified</span>
           </div>
           <div class="skills-title">What You'll Learn</div>
           <div class="skills-grid">
-            <div class="skill-item"><span class="skill-dot"></span>Screen Replacement (All Brands)</div>
-            <div class="skill-item"><span class="skill-dot"></span>Battery &amp; Charging Port Repair</div>
-            <div class="skill-item"><span class="skill-dot"></span>PCB-Level Diagnosis</div>
+            <div class="skill-item"><span class="skill-dot"></span>Display & Screen Replacement</div>
+            <div class="skill-item"><span class="skill-dot"></span>Charging & Power Diagnostics</div>
+            <div class="skill-item"><span class="skill-dot"></span>PCB-Level Fault Finding</div>
             <div class="skill-item"><span class="skill-dot"></span>Software Flashing &amp; Unlocking</div>
-            <div class="skill-item"><span class="skill-dot"></span>Water Damage Recovery</div>
-            <div class="skill-item"><span class="skill-dot"></span>Camera &amp; Speaker Module Fix</div>
-            <div class="skill-item"><span class="skill-dot"></span>Micro-Soldering Basics</div>
-            <div class="skill-item"><span class="skill-dot"></span>Business Setup Guidance</div>
+            <div class="skill-item"><span class="skill-dot"></span>Water Damage Diagnostics</div>
+            <div class="skill-item"><span class="skill-dot"></span>Camera &amp; Audio Module Repairs</div>
+            <div class="skill-item"><span class="skill-dot"></span>Micro-Soldering Fundamentals</div>
+            <div class="skill-item"><span class="skill-dot"></span>Repair Workflow & Business Guidance</div>
           </div>
           <div class="course-outcome">
             <div class="course-outcome__icon">🎓</div>
-            <div><div class="course-outcome__lbl">You'll Earn</div><div class="course-outcome__val">Certified Mobile Repair Technician</div></div>
+            <div><div class="course-outcome__lbl">Certification Outcome</div><div class="course-outcome__val">Certified Mobile Repair Technician</div></div>
           </div>
           <div class="course-ctas">
             <a href="contact.html#contact-form" class="btn btn--primary flow-btn">
               <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-              <span class="flow-text">Enroll Now</span>
+              <span class="flow-text">Explore Enrollment</span>
               <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </a>
             <a href="contact.html" class="btn btn--ghost flow-btn">
               <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-              <span class="flow-text">Ask a Question</span>
+              <span class="flow-text">Speak With an Expert</span>
               <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </a>
           </div>
@@ -788,37 +790,37 @@
           <div class="csi__step">Course 02 · Laptop Master</div>
           <span class="course-badge-lg bg-demand">🔥 High Demand</span>
           <h2 class="course-info__title">Laptop Master Course</h2>
-          <p class="course-info__desc">Windows laptops are everywhere — in homes, offices, colleges. From basic diagnostics to advanced chip-level motherboard repair. GPU re-balling alone earns ₹2,000+ per device. Master the skill that keeps businesses running.</p>
+          <p class="course-info__desc">Advanced laptop repair training focused on diagnostics, motherboard troubleshooting, BIOS workflows, and chip-level repair techniques used in professional service environments.</p>
           <div class="course-chips">
             <span class="chip">⏱ 7 Weeks</span>
             <span class="chip">📍Bangalore - Indiranagar</span>
-            <span class="chip">🌐 All Native Languages</span>
-            <span class="chip">📜 Certificate</span>
+            <span class="chip">🌐 Multi-Language Support</span>
+            <span class="chip">📜 Industry Certified</span>
           </div>
           <div class="skills-title">What You'll Learn</div>
           <div class="skills-grid">
             <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Laptop assembly &amp; Disassembly</div>
-            <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Basic Electronics</div>
-            <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Deep Understanding of Schematics &amp; Boardview</div>
-            <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Motherboard Diagnosis</div>
+            <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Electronics Fundamentals</div>
+            <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Schematics &amp; Boardview Analysis</div>
+            <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Motherboard Diagnostics</div>
             <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Embedded Controller &amp; BIOS Flashing</div>
-            <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Troubleshooting of Not Powering On, Voltage Tripping, No Display Etc.</div>
-            <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Handskill Development</div>
-            <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Live Practicals</div>
+            <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Power, Voltage & No-Display Troubleshooting</div>
+            <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Chip-Level Repair Techniques</div>
+            <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Live Practical Repair Workflows</div>
           </div>
           <div class="course-outcome">
             <div class="course-outcome__icon">🎓</div>
-            <div><div class="course-outcome__lbl">You'll Earn</div><div class="course-outcome__val">Certified Laptop Technician</div></div>
+            <div><div class="course-outcome__lbl">Certification Outcome</div><div class="course-outcome__val">Certified Laptop Repair Technician</div></div>
           </div>
           <div class="course-ctas">
             <a href="contact.html#contact-form" class="btn btn--primary flow-btn">
               <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-              <span class="flow-text">Enroll Now</span>
+              <span class="flow-text">Explore Enrollment</span>
               <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </a>
             <a href="contact.html" class="btn btn--ghost flow-btn">
               <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-              <span class="flow-text">Ask a Question</span>
+              <span class="flow-text">Speak With an Expert</span>
               <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </a>
           </div>
@@ -833,10 +835,10 @@
           <h2 class="course-info__title">iPhone Master Course</h2>
           <p class="course-info__desc">LCD and AMOLED displays are the most expensive components in any smartphone. Mastering OCA lamination, bonding, and refurbishment means you can restore cracked screens to factory condition. High value, high demand, high earning potential.</p>
           <div class="course-chips">
-            <span class="chip">⏱ 5 Weeks</span>
+            <span class="chip">⏱ 8 Weeks</span>
             <span class="chip">📍 Bangalore - Indiranagar</span>
-            <span class="chip">🌐 All Native Languages</span>
-            <span class="chip">📜 Certificate</span>
+            <span class="chip">🌐 Multi-Language Support</span>
+            <span class="chip">📜 Industry Certified</span>
           </div>
           <div class="skills-title">What You'll Learn</div>
           <div class="skills-grid">
@@ -851,17 +853,17 @@
           </div>
           <div class="course-outcome">
             <div class="course-outcome__icon">🎓</div>
-            <div><div class="course-outcome__lbl">You'll Earn</div><div class="course-outcome__val">Display Repair Specialist</div></div>
+            <div><div class="course-outcome__lbl">Certification Outcome</div><div class="course-outcome__val">Display Repair Specialist</div></div>
           </div>
           <div class="course-ctas">
             <a href="contact.html#contact-form" class="btn btn--primary flow-btn">
               <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-              <span class="flow-text">Enroll Now</span>
+              <span class="flow-text">Explore Enrollment</span>
               <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </a>
             <a href="contact.html" class="btn btn--ghost flow-btn">
               <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-              <span class="flow-text">Ask a Question</span>
+              <span class="flow-text">Speak With an Expert</span>
               <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </a>
           </div>
@@ -876,10 +878,10 @@
           <h2 class="course-info__title">Macbook Master Course</h2>
           <p class="course-info__desc">The most premium skill in the mobile repair industry. iPhone technicians who can work on chip-level Apple hardware earn the most in the field. Learn Face ID repair, Apple-specific IC diagnosis, and deep motherboard work very few shops in India can offer.</p>
           <div class="course-chips">
-            <span class="chip">⏱ 8 Weeks</span>
+            <span class="chip">⏱ 16 Weeks</span>
             <span class="chip">📍 Bangalore - Indiranagar</span>
-            <span class="chip">🌐 All Native Languages</span>
-            <span class="chip">📜 Certificate</span>
+            <span class="chip">🌐 Multi-Language Support</span>
+            <span class="chip">📜 Industry Certified</span>
           </div>
           <div class="skills-title">What You'll Learn</div>
           <div class="skills-grid">
@@ -894,17 +896,17 @@
           </div>
           <div class="course-outcome">
             <div class="course-outcome__icon">🎓</div>
-            <div><div class="course-outcome__lbl">You'll Earn</div><div class="course-outcome__val">Certified iPhone Repair Technician</div></div>
+            <div><div class="course-outcome__lbl">Certification Outcome</div><div class="course-outcome__val">Certified iPhone Repair Technician</div></div>
           </div>
           <div class="course-ctas">
             <a href="contact.html#contact-form" class="btn btn--primary flow-btn">
               <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-              <span class="flow-text">Enroll Now</span>
+              <span class="flow-text">Explore Enrollment</span>
               <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </a>
             <a href="contact.html" class="btn btn--ghost flow-btn">
               <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-              <span class="flow-text">Ask a Question</span>
+              <span class="flow-text">Speak With an Expert</span>
               <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </a>
           </div>
@@ -920,9 +922,9 @@
           <p class="course-info__desc">The most premium skill in the mobile repair industry. iPhone technicians who can work on chip-level Apple hardware earn the most in the field. Learn Face ID repair, Apple-specific IC diagnosis, and deep motherboard work very few shops in India can offer.</p>
           <div class="course-chips">
             <span class="chip">⏱ 8 Weeks</span>
-            <span class="chip">📍 Delhi · Patna · Online</span>
-            <span class="chip">🌐 Hindi &amp; English</span>
-            <span class="chip">📜 Certificate</span>
+            <span class="chip">📍Bengaluru · Indiranagar</span>
+            <span class="chip">🌐 Multi-Language Support</span>
+            <span class="chip">📜 Industry Certified</span>
           </div>
           <div class="skills-title">What You'll Learn</div>
           <div class="skills-grid">
@@ -937,17 +939,17 @@
           </div>
           <div class="course-outcome">
             <div class="course-outcome__icon">🎓</div>
-            <div><div class="course-outcome__lbl">You'll Earn</div><div class="course-outcome__val">Certified iPhone Repair Technician</div></div>
+            <div><div class="course-outcome__lbl">Certification Outcome</div><div class="course-outcome__val">Certified iPhone Repair Technician</div></div>
           </div>
           <div class="course-ctas">
             <a href="contact.html#contact-form" class="btn btn--primary flow-btn">
               <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-              <span class="flow-text">Enroll Now</span>
+              <span class="flow-text">Explore Enrollment</span>
               <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </a>
             <a href="contact.html" class="btn btn--ghost flow-btn">
               <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-              <span class="flow-text">Ask a Question</span>
+              <span class="flow-text">Speak With an Expert</span>
               <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </a>
           </div>
