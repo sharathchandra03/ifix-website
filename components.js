@@ -15,10 +15,17 @@
   ];
 
   function isActive(href) {
+    const normalizedPath = currentPath.replace(/\.html$/, '').replace(/\/index$/, '/') || '/';
+    // Map filenames that don't match their route (e.g. "Our Story.html" → "/about")
+    const fileToRoute = {
+      '/our story':   '/about',
+      '/our%20story': '/about',
+    };
+    const resolved = fileToRoute[normalizedPath.toLowerCase()] || normalizedPath;
     if (href === '/blog') {
-      return currentPath === '/blog' || currentPath.startsWith('/blog/');
+      return resolved === '/blog' || resolved.startsWith('/blog/');
     }
-    return currentPath === href;
+    return resolved === href;
   }
 
   function buildNavHTML() {
@@ -76,24 +83,25 @@
             <h4 class="footer__col-title">Quick Links</h4>
             <ul class="footer__list">
               <li><a href="/"         class="footer__link">Home</a></li>
-              <li><a href="/courses"  class="footer__link">All Courses</a></li>
+              <li><a href="/courses"  class="footer__link">Training</a></li>
               <li><a href="/shop"     class="footer__link">Shop</a></li>
-              <li><a href="/blog"     class="footer__link">Blog</a></li>
-              <li><a href="/about"    class="footer__link">About Us</a></li>
+              <li><a href="/blog"     class="footer__link">Blogs</a></li>
+              <li><a href="/about"    class="footer__link">Our Story</a></li>
               <li><a href="/contact"  class="footer__link">Contact Us</a></li>
             </ul>
           </div>
           <div class="footer__col">
             <h4 class="footer__col-title">Courses</h4>
             <ul class="footer__list">
-              <li><a href="/courses#mobile"  class="footer__link">Android Master</a></li>
-              <li><a href="/courses#laptop"  class="footer__link">Laptop Master</a></li>
-              <li><a href="/courses#display" class="footer__link">iPhone Master</a></li>
-              <li><a href="/courses#iphone" class="footer__link">Macbook Master</a></li>
+              <li><a href="courses.html#display"     class="footer__link">iPhone Master</a></li>
+              <li><a href="courses.html#iphone"      class="footer__link">Macbook Master</a></li>
+              <li><a href="courses.html#laptop"      class="footer__link">Windows Master</a></li>
+              <li><a href="courses.html#mobile"      class="footer__link">Android Master</a></li>
+              <li><a href="courses.html#customised"  class="footer__link">Customised Learning</a></li>
             </ul>
           </div>
           <div class="footer__col">
-            <h4 class="footer__col-title">Contact</h4>
+            <h4 class="footer__col-title">Contact Us</h4>
             <ul class="footer__list">
               <li class="footer__contact-item">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.66A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>

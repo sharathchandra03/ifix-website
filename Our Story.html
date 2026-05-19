@@ -20,7 +20,7 @@
       border-bottom: 1px solid var(--border);
       position: relative; overflow: hidden;
       display: flex; align-items: center;
-      padding: 7.5rem 0 5rem;
+      padding: 7.5rem 0 7.5rem;
     }
     .page-hero::before {
       content: ''; position: absolute; top: -160px; right: -120px;
@@ -51,13 +51,6 @@
       opacity: 1;
       max-width: 640px; margin-bottom: 1.75rem;
     }
-    /* hero chips adapt to dark overlay */
-    .hero-chip {
-      font-size: 0.75rem; font-weight: 600; color: rgba(255,255,255,0.85);
-      border: 1px solid rgba(255,255,255,0.22); border-radius: 999px;
-      padding: 5px 12px; background: rgba(255,255,255,0.10);
-      backdrop-filter: blur(8px);
-    }
     /* ghost button visible on dark */
     .page-hero .btn--ghost {
       border-color: rgba(255,255,255,0.38); color: #ffffff;
@@ -67,7 +60,6 @@
     .page-hero > .container .section-label,
     .page-hero .section-label { color: #93c5fd; opacity: 1; letter-spacing: 0.14em; }
     .page-hero__actions { display: flex; gap: 0.9rem; flex-wrap: wrap; margin-bottom: 1.1rem; }
-    .hero-chips { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
 
     .hero-bg {
       position: absolute; inset: 0; z-index: 0;
@@ -82,14 +74,6 @@
         rgba(5,15,35,0.18) 65%,
         rgba(5,15,35,0.04) 100%);
     }
-    .hero-stats { display: grid; grid-template-columns: repeat(4, minmax(140px, 1fr)); gap: 0.75rem; margin-top: 1rem; }
-    .hero-stat {
-      background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-lg);
-      padding: 1rem; text-align: left; box-shadow: var(--shadow-sm);
-    }
-    .hero-stat__num { display: block; font-weight: 800; font-size: 1.4rem; color: var(--accent); letter-spacing: -0.02em; }
-    .hero-stat__lbl { font-size: 0.7rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; display: block; }
-
     /* ── MISSION ── */
     .mission { background: var(--bg-2); padding: 2.25rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
     .mission__inner { display: grid; grid-template-columns: 1fr 1.1fr; gap: 3rem; align-items: center; }
@@ -320,11 +304,9 @@
       .mission__inner, .story__inner { grid-template-columns: 1fr; }
       .mission__grid { grid-template-columns: repeat(2, 1fr); }
       .process__grid, .experience__grid { grid-template-columns: repeat(2, 1fr); }
-      .hero-stats { grid-template-columns: repeat(2, minmax(140px, 1fr)); }
     }
     @media (max-width: 600px) {
-      .page-hero { padding: 6rem 0 3.5rem; }
-      .hero-stats { grid-template-columns: 1fr; }
+      .page-hero { padding: 6rem 0 5rem; }
       .story__stats { grid-template-columns: 1fr; }
       .mission__grid { grid-template-columns: 1fr; }
       .process__grid, .experience__grid { grid-template-columns: 1fr; }
@@ -360,29 +342,6 @@
             <span class="flow-text">Talk to Us</span>
             <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
-        </div>
-        <div class="hero-chips">
-          <span class="hero-chip">Est. 2009</span>
-          <span class="hero-chip">Bangalore</span>
-          <span class="hero-chip">Online &amp; Offline</span>
-        </div>
-        <div class="hero-stats">
-          <div class="hero-stat">
-            <span class="hero-stat__num" data-count="2400" data-suffix="+">2,400+</span>
-            <span class="hero-stat__lbl">Students trained</span>
-          </div>
-          <div class="hero-stat">
-            <span class="hero-stat__num" data-count="94" data-suffix="%">94%</span>
-            <span class="hero-stat__lbl">Placement rate</span>
-          </div>
-          <div class="hero-stat">
-            <span class="hero-stat__num" data-count="14" data-suffix="+">14+</span>
-            <span class="hero-stat__lbl">Courses offered</span>
-          </div>
-          <div class="hero-stat">
-            <span class="hero-stat__num" data-count="15" data-suffix="+">15+</span>
-            <span class="hero-stat__lbl">Years of expertise</span>
-          </div>
         </div>
       </div>
     </div>
@@ -481,11 +440,33 @@
     /* ── Section wrapper ── */
     .hs-section {
       position: relative;
-      background:
-        radial-gradient(900px circle at 18% 20%, rgba(52,120,246,0.10) 0%, rgba(52,120,246,0.03) 36%, transparent 70%),
-        linear-gradient(180deg, #f7faff 0%, #f4f8ff 100%);
+      overflow: clip;
+      background: linear-gradient(180deg, #eef4ff 0%, #f0f5ff 60%, #f4f8ff 100%);
       border-top: 1px solid var(--border);
     }
+
+    /* ── WebGL wave canvas ── */
+    .hs-wave-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.70;
+    }
+    /* white wash — keeps wave behind text */
+    .hs-wave-wash {
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.70);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* keep all hs-section content above canvas */
+    .hs-pin { position: relative; z-index: 2; }
 
     /* ── Two-column grid ── */
     .hs-pin {
@@ -501,8 +482,8 @@
     /* ── LEFT: Sticky intro — stays centered in viewport ── */
     .hs-intro {
       position: sticky;
-      top: 58px;
-      height: calc(100vh - 58px);
+      top: 0;
+      height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -664,6 +645,8 @@
   </style>
 
   <section class="hs-section" id="hsProcess">
+    <canvas class="hs-wave-canvas" id="hsWaveCanvas" aria-hidden="true"></canvas>
+    <div class="hs-wave-wash" aria-hidden="true"></div>
     <div class="hs-pin">
 
       <!-- ── LEFT: Intro ── -->
@@ -750,6 +733,97 @@
 
     </div><!-- /.hs-pin -->
   </section>
+
+  <script>
+  (function () {
+    var canvas = document.getElementById('hsWaveCanvas');
+    if (!canvas) return;
+    var gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    if (!gl) return;
+
+    var vertSrc = [
+      'attribute vec2 position;',
+      'void main() {',
+      '  gl_Position = vec4(position, 0.0, 1.0);',
+      '}'
+    ].join('\n');
+
+    var fragSrc = [
+      '#ifdef GL_ES',
+      'precision mediump float;',
+      '#endif',
+      'uniform vec2 uResolution;',
+      'uniform float uTime;',
+      'vec3 lightPalette(float t) {',
+      '  return mix(',
+      '    vec3(0.88, 0.93, 1.0),',
+      '    vec3(0.20, 0.42, 0.85),',
+      '    0.5 + 0.5 * sin(6.2831 * t)',
+      '  );',
+      '}',
+      'float wave(vec2 uv, float speed, float offset) {',
+      '  return sin(uv.x * 3.0 + uTime * speed + offset) * 0.3 +',
+      '         cos(uv.y * 2.0 - uTime * speed * 0.5 + offset) * 0.2;',
+      '}',
+      'void main() {',
+      '  vec2 uv = gl_FragCoord.xy / uResolution.xy;',
+      '  uv = uv * 2.0 - 1.0;',
+      '  uv.x *= uResolution.x / uResolution.y;',
+      '  float w1 = wave(uv, 1.2, 0.0);',
+      '  float w2 = wave(uv, 0.8, 2.0);',
+      '  float w3 = wave(uv, 1.5, 4.0);',
+      '  float pattern = (w1 + w2 + w3) * 0.5;',
+      '  vec3 col = lightPalette(pattern + uTime * 0.05);',
+      '  gl_FragColor = vec4(col, 1.0);',
+      '}'
+    ].join('\n');
+
+    function compileShader(type, src) {
+      var s = gl.createShader(type);
+      gl.shaderSource(s, src);
+      gl.compileShader(s);
+      return s;
+    }
+
+    var prog = gl.createProgram();
+    gl.attachShader(prog, compileShader(gl.VERTEX_SHADER, vertSrc));
+    gl.attachShader(prog, compileShader(gl.FRAGMENT_SHADER, fragSrc));
+    gl.linkProgram(prog);
+    gl.useProgram(prog);
+
+    /* full-screen triangle */
+    var buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
+    var posLoc = gl.getAttribLocation(prog, 'position');
+    gl.enableVertexAttribArray(posLoc);
+    gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+
+    var uTime       = gl.getUniformLocation(prog, 'uTime');
+    var uResolution = gl.getUniformLocation(prog, 'uResolution');
+
+    var section = canvas.parentElement;
+    function resize() {
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var w = section.offsetWidth;
+      var h = section.offsetHeight;
+      canvas.width  = w * dpr;
+      canvas.height = h * dpr;
+      gl.viewport(0, 0, canvas.width, canvas.height);
+      gl.uniform2f(uResolution, w, h);
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    var start = performance.now();
+    function loop() {
+      gl.uniform1f(uTime, (performance.now() - start) / 1000);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+      requestAnimationFrame(loop);
+    }
+    loop();
+  })();
+  </script>
 
   <section class="experience">
     <div class="container">
@@ -1110,12 +1184,6 @@
     // Actions buttons stagger
     tl.from('.page-hero__actions .btn', { opacity: 0, y: 16, stagger: 0.1, duration: 0.5, clearProps: 'opacity,transform,y' }, 1.05);
 
-    // Hero chips stagger
-    tl.from('.hero-chip', { opacity: 0, y: 10, stagger: 0.08, duration: 0.45, clearProps: 'opacity,transform,y' }, 1.18);
-
-    // Stat cards stagger
-    tl.from('.hero-stat', { opacity: 0, y: 24, stagger: 0.1, duration: 0.55, clearProps: 'opacity,transform,y' }, 1.28);
-
     /* ─ Video parallax on scroll ─ */
     gsap.to('.page-hero .hero-bg', {
       yPercent: 22,
@@ -1126,30 +1194,6 @@
         end: 'bottom top',
         scrub: 1.2
       }
-    });
-
-    /* ─ Animated stat counters (scroll-triggered) ─ */
-    document.querySelectorAll('.hero-stat__num[data-count]').forEach(function (el) {
-      const target  = parseInt(el.dataset.count, 10);
-      const suffix  = el.dataset.suffix || '';
-      const isLarge = target >= 1000;
-
-      gsap.fromTo({ val: 0 }, { val: target }, {
-        duration: 2,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: el,
-          start: 'top 88%',
-          once: true
-        },
-        onUpdate: function () {
-          const v = Math.round(this.targets()[0].val);
-          el.textContent = isLarge ? v.toLocaleString() + suffix : v + suffix;
-        },
-        onComplete: function () {
-          el.textContent = isLarge ? target.toLocaleString() + suffix : target + suffix;
-        }
-      });
     });
 
     /* ─ Mission / story section reveals ─ */
@@ -1168,7 +1212,7 @@
   <script>
   /* Ensure hero elements are always visible (bfcache / reload safety) */
   window.addEventListener('pageshow', function (e) {
-    var selectors = ['.page-hero__actions .btn', '.hero-chip', '.hero-stat',
+    var selectors = ['.page-hero__actions .btn',
                      '#osHeroLabel', '#osHeroHeading', '#osHeroSub'];
     selectors.forEach(function (sel) {
       document.querySelectorAll(sel).forEach(function (el) {

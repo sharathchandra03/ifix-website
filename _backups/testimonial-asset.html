@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<!--
+  TESTIMONIALS SECTION — BACKUP ASSET
+  Removed from index.html on 2026-05-19.
+  Paste CSS into <style>, HTML into <body>, and JS into <script> to restore.
+-->
+
+<!-- ════════════════════════════════════════
+     CSS — paste inside <style> in index.html
+════════════════════════════════════════ -->
+<style>
+  /* ════════════════════════════════════════
+     TESTIMONIALS
+  ════════════════════════════════════════ */
+  .testimonials {
+    background: var(--bg-2);
+    padding: 7rem 0;
+    border-top: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .testimonials__head {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-bottom: 3.5rem;
+  }
+
+  .testimonials__track-wrap {
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+    -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+    mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  }
+
+  .testimonials__track {
+    display: flex;
+    gap: 1.25rem;
+    width: max-content;
+    animation: marqueeL 40s linear infinite;
+  }
+
+  .testimonials__track--rev {
+    animation: marqueeR 40s linear infinite;
+  }
+
+  @keyframes marqueeL {
+    from { transform: translateX(0) }
+    to   { transform: translateX(-50%) }
+  }
+
+  @keyframes marqueeR {
+    from { transform: translateX(-50%) }
+    to   { transform: translateX(0) }
+  }
+
+  .testimonials__track-wrap:hover .testimonials__track {
+    animation-play-state: paused;
+  }
+
+  .tcard {
+    flex-shrink: 0;
+    width: 320px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--r-xl);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.3s, border-color 0.3s;
+  }
+
+  .tcard:hover {
+    box-shadow: var(--shadow-md);
+    border-color: rgba(52, 120, 246, 0.2);
+  }
+
+  .tcard__stars {
+    color: #FF9500;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+  }
+
+  .tcard__quote {
+    font-size: 0.875rem;
+    line-height: 1.65;
+    color: var(--text-2);
+    font-style: italic;
+    flex: 1;
+  }
+
+  .tcard__foot {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding-top: 0.875rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .tcard__avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--accent-dim);
+    border: 1px solid rgba(52, 120, 246, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.7rem;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .tcard__name {
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: var(--text);
+  }
+
+  .tcard__meta {
+    font-size: 0.7rem;
+    color: var(--text-3);
+    margin-top: 1px;
+  }
+
+  .tcard__rev {
+    margin-left: auto;
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--green);
+    background: rgba(52, 199, 89, 0.1);
+    border: 1px solid rgba(52, 199, 89, 0.25);
+    padding: 3px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  /* Responsive overrides (from @media max-width: 600px) */
+  @media (max-width: 600px) {
+    .testimonials {
+      padding: 5.25rem 0;
+    }
+
+    .testimonials__head {
+      padding: 0 1rem;
+      margin-bottom: 2.4rem;
+    }
+
+    .tcard {
+      width: min(84vw, 320px);
+    }
+  }
+</style>
+
+<!-- ════════════════════════════════════════
+     HTML — paste between the courses-preview
+     section and the CTA banner in index.html
+════════════════════════════════════════ -->
+
+  <!-- ════════ TESTIMONIALS ════════ -->
+  <section class="testimonials" id="testimonials">
+    <div class="testimonials__head">
+      <div><span class="section-label">Real Stories. Real Skill Upgrade.</span>
+        <h2 class="section-heading">Success Stories</h2>
+      </div>
+      <p class="section-sub">Our students don't just learn - they start handling complex repairs, increase their income
+        and grow their business with confidence.</p>
+      <a href="https://www.google.com/search?client=safari&hs=Dp5U&sca_esv=eab6250d847a03c3&authuser=2&hl=en-in&cs=0&sxsrf=ANbL-n7pIPeOES25yM0AN9OFUFsEAOH9JQ:1776925619901&si=AL3DRZEsmMGCryMMFSHJ3StBhOdZ2-6yYkXd_doETEE1OR-qOcnclJ3-tEA_Vv548R1CLpjzMaRDO5RPPLloAGg5WyKAcH5miuiUQGzrUX0pjxljh88vYhBlq3H2nU9A_vjMhkWtddeNY7Rt5N1HkvJ0YW3k-J2h6A%3D%3D&q=iFix+India+Training+Academy+Reviews&sa=X&ved=2ahUKEwjZ-vbiq4OUAxUMyzgGHXLeKDEQ0bkNegQIMRAH&biw=1255&bih=617&dpr=1.53"
+        target="_blank" rel="noopener noreferrer" class="btn btn--outline flow-btn" id="successStoriesCta"
+        style="align-self:flex-start;">
+          <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          <span class="flow-text">View All Stories</span>
+          <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+    </div>
+    <div class="testimonials__track-wrap">
+      <div class="testimonials__track" id="tTrack1"></div>
+    </div>
+    <div class="testimonials__track-wrap" style="margin-top:0;">
+      <div class="testimonials__track testimonials__track--rev" id="tTrack2"></div>
+    </div>
+  </section>
+
+<!-- ════════════════════════════════════════
+     JAVASCRIPT — paste inside the main <script>
+     block in index.html (after the brands block)
+════════════════════════════════════════ -->
+<script>
+  /* ── TESTIMONIALS ── */
+  const testimonials = [
+    { name: "Arjun Mehta",     loc: "Mumbai",     course: "iPhone Repair",    rev: "₹85K/mo",  av: "AM", quote: "Before iFix Academy I was working a dead-end call center job. Six months later I own a repair shop with three employees. The hands-on training was nothing like I expected." },
+    { name: "Priya Nair",      loc: "Bangalore",  course: "MacBook Repair",   rev: null,        av: "PN", quote: "The instructors actually worked at Apple. When they explain why a logic board fails, they're talking from real experience. I passed my Apple certification on the first attempt." },
+    { name: "Ravi Shankar",    loc: "Chennai",    course: "Micro-Soldering",  rev: "₹1.2L/mo", av: "RS", quote: "Micro-soldering felt impossible before. They break it down so logically. I can now repair boards that other shops throw away. My waiting list is always full." },
+    { name: "Kavitha Reddy",   loc: "Hyderabad",  course: "Android Repair",   rev: null,        av: "KR", quote: "I was skeptical about an online + offline hybrid course. But the weekend lab sessions made everything click. Best investment I've made in myself." },
+    { name: "Dinesh Kumar",    loc: "Pune",       course: "Laptop Repair",    rev: null,        av: "DK", quote: "Got placed at an IT company two weeks after completing the course. The resume support and interview prep they provide is genuinely good." },
+    { name: "Sneha Patel",     loc: "Ahmedabad",  course: "iPhone & iPad",    rev: "₹60K+/mo", av: "SP", quote: "I document my repairs on YouTube now. iFix Academy gave me the confidence to work on camera. 47,000 subscribers and counting." },
+    { name: "Mohammed Farhan", loc: "Delhi",      course: "iPhone Repair",    rev: null,        av: "MF", quote: "I enrolled here because a friend insisted. Today I'm the only certified iPhone technician in my area - and my family couldn't be prouder." },
+    { name: "Lakshmi S.",      loc: "Coimbatore", course: "iWatch & iPad",    rev: "₹1.5L/mo", av: "LS", quote: "The franchise opportunity they offer to top performers is real. I graduated, interned, then opened my own outlet with their support. Life-changing." },
+  ];
+  function tc(t) {
+    return `<div class="tcard"><div class="tcard__stars">★★★★★</div><p class="tcard__quote">"${t.quote}"</p><div class="tcard__foot"><div class="tcard__avatar">${t.av}</div><div><div class="tcard__name">${t.name}</div><div class="tcard__meta">${t.loc} · ${t.course}</div></div>${t.rev ? `<span class="tcard__rev">${t.rev}</span>` : ''}</div></div>`;
+  }
+  const t1 = document.getElementById('tTrack1'), t2 = document.getElementById('tTrack2');
+  if (t1 && t2) {
+    [...testimonials.slice(0, 4), ...testimonials.slice(0, 4)].forEach(t => t1.insertAdjacentHTML('beforeend', tc(t)));
+    [...testimonials.slice(4), ...testimonials.slice(4)].forEach(t => t2.insertAdjacentHTML('beforeend', tc(t)));
+  }
+</script>
