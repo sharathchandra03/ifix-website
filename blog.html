@@ -111,17 +111,25 @@
 
   <!-- MAIN CONTENT -->
   <main style="min-height: 60vh;">
-    <section class="blog-section" id="blog-list-view">
+    <!-- Coming Soon -->
+    <section style="padding: 5rem 2rem; display: flex; align-items: center; justify-content: center;">
+      <div style="text-align: center; max-width: 560px;">
+        <div style="font-size: 4rem; margin-bottom: 1.5rem; line-height: 1;">✍️</div>
+        <h2 style="font-weight: 800; font-size: clamp(1.75rem, 4vw, 2.75rem); letter-spacing: -0.03em; color: var(--text); margin-bottom: 1rem;">Blogs Coming Soon</h2>
+        <p style="font-size: 1rem; line-height: 1.75; color: var(--text-2); margin-bottom: 2rem;">We're crafting repair guides, tech tips, and device maintenance tutorials. Stay tuned — great reads are on their way.</p>
+        <a href="/" style="display: inline-flex; align-items: center; gap: 0.5rem; background: var(--accent); color: white; font-weight: 600; font-size: 0.95rem; padding: 0.75rem 1.75rem; border-radius: var(--r-lg); text-decoration: none; transition: background 0.25s;" onmouseover="this.style.background='var(--accent-h)'" onmouseout="this.style.background='var(--accent)'">← Back to Home</a>
+      </div>
+    </section>
+
+    <!-- Hidden blog infrastructure (keep for future use) -->
+    <section class="blog-section" id="blog-list-view" style="display: none;">
       <div class="section__inner">
-        <!-- Search & Filters -->
         <div class="blog-controls">
           <div class="search-box">
             <span>🔍</span>
             <input type="text" id="search-input" placeholder="Search blogs..." onkeyup="searchBlogs()">
           </div>
         </div>
-
-        <!-- Blog Grid -->
         <div class="blog-grid" id="blog-grid"></div>
         <div class="empty-state" id="empty-state" style="display: none;">
           <div class="empty-state__icon">📝</div>
