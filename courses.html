@@ -360,9 +360,10 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 2rem 1.5rem 2.5rem;
-      overflow: hidden;
+      justify-content: flex-start;
+      /* centers when viewport is tall enough; falls back to 2rem so top never hides */
+      padding: max(1.2rem, calc((100vh - 836px) / 2)) 1.5rem 2.5rem;
+      overflow: visible;
       z-index: 2;
       background: #ffffff;
     }
@@ -382,51 +383,71 @@
     }
 
 
-    /* ── Phone device shell ──────────────────────────────── */
-    .phone-device {
-      width: 224px;
-      height: 460px;
-      background: #0c0c0c;
-      border-radius: 40px;
-      padding: 8px;
+    /* ── iPad scaler wrapper ─────────────────────────────── */
+    .ipad-scaler {
+      flex-shrink: 0;
+      transform-origin: top center;
+      transition: transform 0.25s ease, margin-bottom 0.25s ease;
+    }
+
+    /* ── iPad device shell ──────────────────────────────── */
+    @keyframes phoneFloat {
+      0%,100% { transform: translateY(0px);   }
+      50%      { transform: translateY(-10px); }
+    }
+    .showcase-ipad {
+      width: 390px;
+      height: 530px;
+      background: #252527;
+      border-radius: 30px;
+      padding: 36px 17px 54px;
       box-shadow:
-        0 0 0 1px rgba(255,255,255,0.10),
-        0 20px 40px rgba(0,0,0,0.15),
-        0 8px 16px rgba(0,0,0,0.10),
-        inset 0 0 0 1px rgba(255,255,255,0.05);
+        inset 0 1px 0 rgba(255,255,255,0.08),
+        inset 0 -1px 0 rgba(255,255,255,0.03),
+        0 0 0 1px rgba(0,0,0,0.9),
+        0 0 0 2px rgba(255,255,255,0.04),
+        0 32px 72px rgba(0,0,0,0.45),
+        0 12px 28px rgba(0,0,0,0.28);
       position: relative;
-      transform: translateY(0px);
       animation: phoneFloat 4s ease-in-out infinite;
-      transition: box-shadow 0.4s var(--ease-expo);
       flex-shrink: 0;
     }
-    .phone-device:hover {
-      animation-play-state: paused;
-      box-shadow:
-        0 0 0 1px rgba(255,255,255,0.14),
-        0 24px 50px rgba(0,0,0,0.18),
-        0 10px 20px rgba(0,0,0,0.12),
-        inset 0 0 0 1px rgba(255,255,255,0.07);
-    }
-    @keyframes phoneFloat {
-      0%,100% { transform: translateY(0px);    }
-      50%      { transform: translateY(-10px);  }
-    }
-    .phone-island {
+    /* Camera dot */
+    .showcase-cam {
       position: absolute;
-      top: 13px; left: 50%; transform: translateX(-50%);
-      width: 76px; height: 22px;
-      background: #000; border-radius: 30px; z-index: 30;
+      top: 14px; left: 50%; transform: translateX(-50%);
+      width: 8px; height: 8px;
+      background: #1a1a1c; border-radius: 50%; z-index: 30;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.05), inset 0 1px 2px rgba(0,0,0,0.8);
+    }
+    /* Home button */
+    .showcase-home {
+      position: absolute;
+      bottom: 10px; left: 50%; transform: translateX(-50%);
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: #1e1e20;
+      border: 1.5px solid rgba(255,255,255,0.10);
+      box-shadow:
+        inset 0 1px 3px rgba(0,0,0,0.7),
+        inset 0 -1px 1px rgba(255,255,255,0.04),
+        0 0 0 1px rgba(0,0,0,0.6);
+    }
+    .showcase-home::after {
+      content: '';
+      position: absolute; inset: 6px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.07);
     }
     .phone-screen-wrap {
       width: 100%; height: 100%;
-      border-radius: 34px; overflow: hidden; position: relative;
+      border-radius: 3px; overflow: hidden; position: relative;
     }
 
-    /* ── Individual phone screens ────────────────────────── */
+    /* ── Individual iPad screens ─────────────────────────── */
     .p-screen {
       position: absolute; inset: 0;
-      padding: 44px 14px 14px;
+      padding: 14px 18px 18px;
       display: flex; flex-direction: column;
       opacity: 0; transform: translateY(16px);
       transition: opacity 0.42s var(--ease-expo), transform 0.42s var(--ease-expo);
@@ -439,8 +460,8 @@
     .p-screen--iphone  { background: linear-gradient(158deg,#8B8FEE 0%,#5856D6 100%); }
     .p-screen--custom  { background: linear-gradient(158deg,#F59E0B 0%,#B45309 100%); }
 
-    .p-hdr  { font-size:.52rem; font-weight:600; color:rgba(255,255,255,.6); text-transform:uppercase; letter-spacing:.1em; margin-bottom:3px; }
-    .p-title{ font-size:1.08rem; font-weight:800; color:#fff; letter-spacing:-.025em; line-height:1.1; margin-bottom:11px; }
+    .p-hdr  { font-size:.8rem; font-weight:700; color:rgba(255,255,255,.9); text-transform:uppercase; letter-spacing:.12em; margin-bottom:8px; }
+    .p-title{ font-size:1.5rem; font-weight:800; color:#fff; letter-spacing:-.03em; line-height:1.18; margin-bottom:16px; }
     .p-profile{
       display:flex; align-items:center; justify-content:space-between;
       background:rgba(255,255,255,.16); backdrop-filter:blur(6px);
@@ -500,7 +521,7 @@
 
     /* ── Course label above phone ────────────────────────── */
     /* Keep all content above the dot-grid pseudo-element */
-    .phone-device, .phone-glow, .ph-dots { position: relative; z-index: 1; }
+    .showcase-ipad, .phone-glow, .ph-dots { position: relative; z-index: 1; }
 
     /* ── RIGHT: Scroll cards ─────────────────────────────── */
     .ss-right { background:var(--bg); }
@@ -539,7 +560,7 @@
     @media(max-width:600px){
       .ss-left { padding: 2rem 1rem 1.25rem; }
       .course-scroll-item { padding: 2.75rem 1rem; }
-      .phone-device { width:186px; height:382px; }
+      .showcase-ipad, .ipad-device { width:320px; height:460px; }
       .tabs-nav__label { flex-basis: auto; justify-content: flex-start; text-align: left; }
     }
 
@@ -575,6 +596,73 @@
     .btn.flow-btn:hover .flow-arr--left  { left: 0.75rem; }
     .btn.flow-btn:hover .flow-arr--right { right: -1.5rem; }
     .btn.flow-btn:hover .flow-text       { transform: translateX(0.5rem); }
+
+    /* ── iPad Screen 0: Course Points Ticker ─────────────────── */
+    .p-ticker {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: rgba(0,0,0,.2);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 0;
+      min-height: 0;
+    }
+    .p-ticker__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: rgba(0,0,0,.28);
+      flex-shrink: 0;
+    }
+    .p-ticker__title {
+      font-size: .78rem;
+      font-weight: 700;
+      color: rgba(255,255,255,.92);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .p-ticker__window {
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 12%, #000 88%, transparent 100%);
+      mask-image: linear-gradient(to bottom, transparent 0%, #000 12%, #000 88%, transparent 100%);
+    }
+    .p-ticker__track {
+      display: flex;
+      flex-direction: column;
+      animation: ptScrollUp 28s linear infinite;
+    }
+    .p-ticker:hover .p-ticker__track {
+      animation-play-state: paused;
+    }
+    @keyframes ptScrollUp {
+      0%   { transform: translateY(0); }
+      100% { transform: translateY(-50%); }
+    }
+    .p-ticker__item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 9px 14px;
+      font-size: .82rem;
+      font-weight: 500;
+      color: rgba(255,255,255,.92);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      white-space: normal;
+      flex-shrink: 0;
+      line-height: 1.4;
+    }
+    .p-ticker__item-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.65);
+      flex-shrink: 0;
+      margin-top: 5px;
+    }
   </style>
 
   <div class="scroll-showcase" id="courseShowcase">
@@ -582,167 +670,303 @@
     <!-- ════════════════ LEFT: STICKY PHONE VISUAL ════════ -->
     <div class="ss-left" id="ssLeft">
 
-      <div class="phone-device" id="phoneDevice">
-        <div class="phone-island"></div>
+      <div class="ipad-scaler" id="ipadScaler">
+      <div class="showcase-ipad" id="phoneDevice">
+        <div class="showcase-cam"></div>
         <div class="phone-screen-wrap">
 
-          <!-- Screen 0 – iPhone Master -->
+          <!-- Screen 0 – iPhone Master · Green -->
           <div class="p-screen p-screen--display active" id="pScreen0">
             <div class="p-hdr">iFix Academy · Course</div>
-            <div class="p-title">iPhone Chip-Level<br>Repair Expert</div>
-            <div class="p-profile">
-              <div class="p-profile__left">
-                <div class="p-avatar">🍎</div>
-                <div><div class="p-pname">iPhone Pro</div><div class="p-psub">Chip-Level Repair</div></div>
+            <div class="p-title">iPhone Chip-Level Repair Expert</div>
+
+            <!-- Course Points Ticker -->
+            <div class="p-ticker">
+              <div class="p-ticker__header">
+                <div class="p-ticker__title">What you will Learn</div>
               </div>
-              <div class="p-badge">
-                <span class="p-badge__lbl">Status</span>
-                <span class="p-badge__val">New</span>
+              <div class="p-ticker__window">
+                <div class="p-ticker__track">
+                  <!-- Set 1 -->
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Live Practical</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Assembly &amp; Disassembly</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Digital Electronics</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Complete Instruction on JCID &amp; LUBAN</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Removing Battery Error using JCID or W09</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Display Error Removing without Risk (Original &amp; Copy)</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Rear Camera Error Removal</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Face ID Repair up to Latest Model*</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Replacing the Front Camera without Affecting Face ID</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Track Rebuild and Layer Separation</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>EEPROM Testing</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Baseband Repair</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>NAND Errors, Programming &amp; Upgradation</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Use of OG, Bitmap &amp; Schematics</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Detailed Explanation of Voltage Lines</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Identifying and Diagnosing Primary and Secondary Shorts</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Complete Knowledge of Board Swapping &amp; Components</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>CPU Internal Pad Repair</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Understanding of Panic Reports</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>SPI PROGRAMMING USING CH341A</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Protocols: i2C, SPI, MIPI, LPDP &amp; UART</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Hand Skill Development</div>
+                  <!-- Set 2 — seamless loop duplicate -->
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Live Practical</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Assembly &amp; Disassembly</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Digital Electronics</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Complete Instruction on JCID &amp; LUBAN</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Removing Battery Error using JCID or W09</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Display Error Removing without Risk (Original &amp; Copy)</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Rear Camera Error Removal</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Face ID Repair up to Latest Model*</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Replacing the Front Camera without Affecting Face ID</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Track Rebuild and Layer Separation</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>EEPROM Testing</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Baseband Repair</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>NAND Errors, Programming &amp; Upgradation</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Use of OG, Bitmap &amp; Schematics</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Detailed Explanation of Voltage Lines</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Identifying and Diagnosing Primary and Secondary Shorts</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Complete Knowledge of Board Swapping &amp; Components</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>CPU Internal Pad Repair</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Understanding of Panic Reports</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>SPI PROGRAMMING USING CH341A</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Protocols: i2C, SPI, MIPI, LPDP &amp; UART</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Hand Skill Development</div>
+                </div>
               </div>
             </div>
-            <div class="p-actions-row">
-              <div class="p-act"><div class="p-act__icon">⚡</div><div class="p-act__lbl">Diagnose</div></div>
-              <div class="p-act"><div class="p-act__icon">🔧</div><div class="p-act__lbl">Repair</div></div>
-              <div class="p-act"><div class="p-act__icon">📜</div><div class="p-act__lbl">Certify</div></div>
-            </div>
-            <div class="p-stats-row">Course Duration &amp; Coverage</div>
-            <div class="p-stats-val">6 Weeks · Chip-Level</div>
-            <div class="p-visa-row">
-              <span class="p-visa-nfc">◎))</span>
-              <span class="p-visa-brand">CERTIFIED</span>
-            </div>
-            <div class="p-bottom">
-              <div><div class="p-bl">Skills</div><div class="p-bv">8 Modules</div></div>
-              <div><div class="p-bl">Avg. Monthly</div><div class="p-bv">₹35,000</div></div>
-            </div>
+
           </div>
 
-          <!-- Screen 1 – Macbook Master -->
+          <!-- Screen 1 – Macbook Master · Purple -->
           <div class="p-screen p-screen--iphone" id="pScreen1">
             <div class="p-hdr">iFix Academy · Course</div>
-            <div class="p-title">Macbook &amp; Apple<br>Logic Board Expert</div>
-            <div class="p-profile">
-              <div class="p-profile__left">
-                <div class="p-avatar">💻</div>
-                <div><div class="p-pname">Macbook Pro</div><div class="p-psub">Apple Hardware</div></div>
+            <div class="p-title">MacBook Logic Board Expert</div>
+            <div class="p-ticker">
+              <div class="p-ticker__header">
+                <div class="p-ticker__title">What you will Learn</div>
               </div>
-              <div class="p-badge">
-                <span class="p-badge__lbl">Tier</span>
-                <span class="p-badge__val">💎</span>
+              <div class="p-ticker__window">
+                <div class="p-ticker__track">
+                  <!-- Set 1 -->
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Live Practical</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>MacBook Assembly &amp; Disassembly</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>MacBook in Recovery Mode/ DFU Mode Repair Process &amp; OS Installation</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>DFU Mode Restore Error Code 6, 9, 35, 4010, 4014, 4017, 4042, etc</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Basic &amp; Digital Electronics</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Explanation of Operation Amplifier &amp; Current Sensor</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Explanation of PWM Buck &amp; Boost Converter</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Logic Board Architecture</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Explanation of Data Communication Bus: I2C, I3C, SPI, UART, etc.</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Schematics &amp; Board View Explanation</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Logic-Board Explanation of all Section</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>SMC Chip Explanation</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>BIOS Chip Programming</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Explanation of 5v to 20v Power Delivery Sequence</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Explanation of MacBook Logic Board Power on Sequence</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>How to Diagnose MacBook not Powering on</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>MacBook Powering on but no Logo</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Onboard NAND Chip Replacement &amp; Upgradation</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Onboard RAM Chip Replacement &amp; Upgradation</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Explanation of Oscilloscope Function Keys &amp; Configuration</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>M Series Wi-Fi Module Unbinding &amp; Programming</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Hand Skill Development</div>
+                  <!-- Set 2 — seamless loop duplicate -->
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Live Practical</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>MacBook Assembly &amp; Disassembly</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>MacBook in Recovery Mode/ DFU Mode Repair Process &amp; OS Installation</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>DFU Mode Restore Error Code 6, 9, 35, 4010, 4014, 4017, 4042, etc</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Basic &amp; Digital Electronics</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Explanation of Operation Amplifier &amp; Current Sensor</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Explanation of PWM Buck &amp; Boost Converter</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Logic Board Architecture</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Explanation of Data Communication Bus: I2C, I3C, SPI, UART, etc.</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Schematics &amp; Board View Explanation</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Logic-Board Explanation of all Section</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>SMC Chip Explanation</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>BIOS Chip Programming</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Explanation of 5v to 20v Power Delivery Sequence</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Explanation of MacBook Logic Board Power on Sequence</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>How to Diagnose MacBook not Powering on</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>MacBook Powering on but no Logo</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Onboard NAND Chip Replacement &amp; Upgradation</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Onboard RAM Chip Replacement &amp; Upgradation</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Explanation of Oscilloscope Function Keys &amp; Configuration</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>M Series Wi-Fi Module Unbinding &amp; Programming</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Hand Skill Development</div>
+                </div>
               </div>
-            </div>
-            <div class="p-actions-row">
-              <div class="p-act"><div class="p-act__icon">⚙️</div><div class="p-act__lbl">Board</div></div>
-              <div class="p-act"><div class="p-act__icon">🔍</div><div class="p-act__lbl">Diagnose</div></div>
-              <div class="p-act"><div class="p-act__icon">📜</div><div class="p-act__lbl">Certify</div></div>
-            </div>
-            <div class="p-stats-row">Course Duration &amp; Coverage</div>
-            <div class="p-stats-val">8 Weeks · All Macbooks</div>
-            <div class="p-visa-row">
-              <span class="p-visa-nfc">◎))</span>
-              <span class="p-visa-brand">CERTIFIED</span>
-            </div>
-            <div class="p-bottom">
-              <div><div class="p-bl">Skills</div><div class="p-bv">8 Modules</div></div>
-              <div><div class="p-bl">Avg. Monthly</div><div class="p-bv">₹45,000</div></div>
             </div>
           </div>
 
-          <!-- Screen 2 – Android Master -->
+          <!-- Screen 2 – Android Master · Blue -->
           <div class="p-screen p-screen--mobile" id="pScreen2">
             <div class="p-hdr">iFix Academy · Course</div>
-            <div class="p-title">Android &amp; Mobile<br>Repair Expert</div>
-            <div class="p-profile">
-              <div class="p-profile__left">
-                <div class="p-avatar">📱</div>
-                <div><div class="p-pname">Mobile Tech</div><div class="p-psub">Android Ecosystem</div></div>
+            <div class="p-title">Android &amp; Mobile Repair Expert</div>
+            <div class="p-ticker">
+              <div class="p-ticker__header">
+                <div class="p-ticker__title">What you will Learn</div>
               </div>
-              <div class="p-badge">
-                <span class="p-badge__lbl">Success Rate</span>
-                <span class="p-badge__val">100%</span>
+              <div class="p-ticker__window">
+                <div class="p-ticker__track">
+                  <!-- Set 1 -->
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Live Practical Training</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Precision Hand Skill Development</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>CPU Repair from Double Decker to Latest Models</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Black Pasted CPU &amp; EMMC Repair on Live Boards</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>CPU Replacement with RPMB Understanding</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>RAM Upgradation Techniques (6GB to 8GB, 8GB to 12GB &amp; More)</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Latest Sandwich Board Layer Reballing</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Complete Booting Sequence Analysis</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Primary &amp; Secondary Short Detection</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>5G Network Section Diagnostics</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Advanced Audio IC Troubleshooting</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>No Display Light Fault Solutions</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Charging &amp; Power Error Diagnostics</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Borneo, Bitmap &amp; Schematic Reading</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>In-Depth Component-Level Understanding</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Online &amp; Offline Software Unlocking Solutions</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Safe Board Swapping without Data Loss</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>F64, EasyTag &amp; UFI Tool Training</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Storage Replacement &amp; Programming</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Stuck on Logo &amp; Auto Restart Solutions</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Oscilloscope Usage &amp; Signal Analysis</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Wi-Fi, Bluetooth &amp; GPS Fault Troubleshooting</div>
+                  <!-- Set 2 — seamless loop duplicate -->
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Live Practical Training</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Precision Hand Skill Development</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>CPU Repair from Double Decker to Latest Models</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Black Pasted CPU &amp; EMMC Repair on Live Boards</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>CPU Replacement with RPMB Understanding</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>RAM Upgradation Techniques (6GB to 8GB, 8GB to 12GB &amp; More)</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Latest Sandwich Board Layer Reballing</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Complete Booting Sequence Analysis</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Primary &amp; Secondary Short Detection</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>5G Network Section Diagnostics</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Advanced Audio IC Troubleshooting</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>No Display Light Fault Solutions</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Charging &amp; Power Error Diagnostics</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Borneo, Bitmap &amp; Schematic Reading</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>In-Depth Component-Level Understanding</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Online &amp; Offline Software Unlocking Solutions</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Safe Board Swapping without Data Loss</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>F64, EasyTag &amp; UFI Tool Training</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Storage Replacement &amp; Programming</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Stuck on Logo &amp; Auto Restart Solutions</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Oscilloscope Usage &amp; Signal Analysis</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Wi-Fi, Bluetooth &amp; GPS Fault Troubleshooting</div>
+                </div>
               </div>
-            </div>
-            <div class="p-actions-row">
-              <div class="p-act"><div class="p-act__icon">🔧</div><div class="p-act__lbl">Repair</div></div>
-              <div class="p-act"><div class="p-act__icon">📚</div><div class="p-act__lbl">Learn</div></div>
-              <div class="p-act"><div class="p-act__icon">📜</div><div class="p-act__lbl">Certify</div></div>
-            </div>
-            <div class="p-stats-row">Course Duration &amp; Coverage</div>
-            <div class="p-stats-val">6 Weeks · 50+ Brands</div>
-            <div class="p-visa-row">
-              <span class="p-visa-nfc">◎))</span>
-              <span class="p-visa-brand">CERTIFIED</span>
-            </div>
-            <div class="p-bottom">
-              <div><div class="p-bl">Skills</div><div class="p-bv">8 Modules</div></div>
-              <div><div class="p-bl">Avg. Monthly</div><div class="p-bv">₹25,000</div></div>
             </div>
           </div>
 
-          <!-- Screen 3 – Windows Master -->
+          <!-- Screen 3 – Windows Master · Orange -->
           <div class="p-screen p-screen--laptop" id="pScreen3">
             <div class="p-hdr">iFix Academy · Course</div>
-            <div class="p-title">Laptop &amp; PC<br>Repair Specialist</div>
-            <div class="p-profile">
-              <div class="p-profile__left">
-                <div class="p-avatar">💻</div>
-                <div><div class="p-pname">Laptop Pro</div><div class="p-psub">PC Repair Ecosystem</div></div>
+            <div class="p-title">Laptop &amp; PC Repair Specialist</div>
+            <div class="p-ticker">
+              <div class="p-ticker__header">
+                <div class="p-ticker__title">What you will Learn</div>
               </div>
-              <div class="p-badge">
-                <span class="p-badge__lbl">Demand</span>
-                <span class="p-badge__val">High</span>
+              <div class="p-ticker__window">
+                <div class="p-ticker__track">
+                  <!-- Set 1 -->
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Live Practical</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>MacBook Assembly &amp; Disassembly</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>MacBook in Recovery Mode/ DFU Mode Repair Process &amp; OS Installation</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>DFU Mode Restore Error Code 6, 9, 35, 4010, 4014, 4017, 4042, etc</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Basic &amp; Digital Electronics</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Explanation of Operation Amplifier &amp; Current Sensor</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Explanation of PWM Buck &amp; Boost Converter</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Logic Board Architecture</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Explanation of Data Communication Bus: I2C, I3C, SPI, UART, etc.</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Schematics &amp; Board View Explanation</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Logic-Board Explanation of all Section</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>SMC Chip Explanation</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>BIOS Chip Programming</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Explanation of 5v to 20v Power Delivery Sequence</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Explanation of MacBook Logic Board Power on Sequence</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>How to Diagnose MacBook not Powering on</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>MacBook Powering on but no Logo</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Onboard NAND Chip Replacement &amp; Upgradation</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Onboard RAM Chip Replacement &amp; Upgradation</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Explanation of Oscilloscope Function Keys &amp; Configuration</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>M Series Wi-Fi Module Unbinding &amp; Programming</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Hand Skill Development</div>
+                  <!-- Set 2 — seamless loop duplicate -->
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Live Practical</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>MacBook Assembly &amp; Disassembly</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>MacBook in Recovery Mode/ DFU Mode Repair Process &amp; OS Installation</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>DFU Mode Restore Error Code 6, 9, 35, 4010, 4014, 4017, 4042, etc</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Basic &amp; Digital Electronics</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Explanation of Operation Amplifier &amp; Current Sensor</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Explanation of PWM Buck &amp; Boost Converter</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Logic Board Architecture</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Explanation of Data Communication Bus: I2C, I3C, SPI, UART, etc.</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Schematics &amp; Board View Explanation</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Logic-Board Explanation of all Section</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>SMC Chip Explanation</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>BIOS Chip Programming</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Explanation of 5v to 20v Power Delivery Sequence</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Explanation of MacBook Logic Board Power on Sequence</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>How to Diagnose MacBook not Powering on</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>MacBook Powering on but no Logo</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Onboard NAND Chip Replacement &amp; Upgradation</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Onboard RAM Chip Replacement &amp; Upgradation</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Explanation of Oscilloscope Function Keys &amp; Configuration</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>M Series Wi-Fi Module Unbinding &amp; Programming</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Hand Skill Development</div>
+                </div>
               </div>
-            </div>
-            <div class="p-actions-row">
-              <div class="p-act"><div class="p-act__icon">⚡</div><div class="p-act__lbl">Diagnose</div></div>
-              <div class="p-act"><div class="p-act__icon">🛠️</div><div class="p-act__lbl">Repair</div></div>
-              <div class="p-act"><div class="p-act__icon">📜</div><div class="p-act__lbl">Certify</div></div>
-            </div>
-            <div class="p-stats-row">Course Duration &amp; Coverage</div>
-            <div class="p-stats-val">7 Weeks · 15+ Brands</div>
-            <div class="p-visa-row">
-              <span class="p-visa-nfc">◎))</span>
-              <span class="p-visa-brand">CERTIFIED</span>
-            </div>
-            <div class="p-bottom">
-              <div><div class="p-bl">Skills</div><div class="p-bv">8 Modules</div></div>
-              <div><div class="p-bl">Earn/Device</div><div class="p-bv">₹2,000+</div></div>
             </div>
           </div>
 
-          <!-- Screen 4 – Customised Learning -->
+          <!-- Screen 4 – Customised · Amber -->
           <div class="p-screen p-screen--custom" id="pScreen4">
             <div class="p-hdr">iFix Academy · Course</div>
-            <div class="p-title">Customised<br>Learning Plan</div>
-            <div class="p-profile">
-              <div class="p-profile__left">
-                <div class="p-avatar">🎯</div>
-                <div><div class="p-pname">Your Path</div><div class="p-psub">Tailored Curriculum</div></div>
+            <div class="p-title">Customised Learning Plan</div>
+            <div class="p-ticker">
+              <div class="p-ticker__header">
+                <div class="p-ticker__title">What you will Learn</div>
               </div>
-              <div class="p-badge">
-                <span class="p-badge__lbl">Type</span>
-                <span class="p-badge__val">💎</span>
+              <div class="p-ticker__window">
+                <div class="p-ticker__track">
+                  <!-- Set 1 -->
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Personalised Curriculum Design</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>One-on-One Mentorship Sessions</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Flexible Timings &amp; Duration</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Choose Your Device Specialisation</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>iPhone, MacBook, Android or Windows</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Chip-Level Repair on Your Target Device</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Real Lab Practice on Live Boards</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Tool Usage &amp; Hands-On Skill Building</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Schematics &amp; Diagnostics Training</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Industry-Certified on Completion</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Career Guidance &amp; Business Setup Help</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Suitable for All Skill Levels</div>
+                  <!-- Set 2 — seamless loop duplicate -->
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Personalised Curriculum Design</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>One-on-One Mentorship Sessions</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Flexible Timings &amp; Duration</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Choose Your Device Specialisation</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>iPhone, MacBook, Android or Windows</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Chip-Level Repair on Your Target Device</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Real Lab Practice on Live Boards</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Tool Usage &amp; Hands-On Skill Building</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Schematics &amp; Diagnostics Training</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Industry-Certified on Completion</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Career Guidance &amp; Business Setup Help</div>
+                  <div class="p-ticker__item"><span class="p-ticker__item-dot"></span>Suitable for All Skill Levels</div>
+                </div>
               </div>
-            </div>
-            <div class="p-actions-row">
-              <div class="p-act"><div class="p-act__icon">🗺️</div><div class="p-act__lbl">Plan</div></div>
-              <div class="p-act"><div class="p-act__icon">📖</div><div class="p-act__lbl">Learn</div></div>
-              <div class="p-act"><div class="p-act__icon">🏆</div><div class="p-act__lbl">Earn</div></div>
-            </div>
-            <div class="p-stats-row">Mode &amp; Level</div>
-            <div class="p-stats-val">Flexible · All Levels</div>
-            <div class="p-visa-row">
-              <span class="p-visa-nfc">◎))</span>
-              <span class="p-visa-brand">CERTIFIED</span>
-            </div>
-            <div class="p-bottom">
-              <div><div class="p-bl">Format</div><div class="p-bv">Custom</div></div>
-              <div><div class="p-bl">Avg. Monthly</div><div class="p-bv">₹45,000+</div></div>
             </div>
           </div>
 
         </div><!-- /.phone-screen-wrap -->
-      </div><!-- /.phone-device -->
+        <div class="showcase-home"></div>
+      </div><!-- /.showcase-ipad -->
+      </div><!-- /.ipad-scaler -->
 
       <div class="phone-glow" id="phoneGlow" style="background:#00C896;"></div>
 
@@ -765,7 +989,7 @@
         <div class="csi__inner">
           <div class="csi__step">Course 01 · iPhone Master</div>
           <span class="course-badge-lg bg-new"> 🔥High Demand</span>
-          <h2 class="course-info__title">iPhone Master Course</h2>
+          <h2 class="course-info__title">iPhone Chip-Level Course</h2>
           <p class="course-info__desc">Learn the premium skill in the repair industry with advanced iPhone motherboard training. Master Face ID repair, Apple power sequence, IC diagnostics, and complex chip-level repairs few technicians can perform.</p>
           <div class="course-chips">
             <span class="chip">⏱ 30 Days </span>
@@ -784,10 +1008,7 @@
             <div class="skill-item"><span class="skill-dot" style="background:var(--green);"></span>Motherboard swapping without data loss</div>
             <div class="skill-item"><span class="skill-dot" style="background:var(--green);"></span>Storage Upgradation</div>
           </div>
-          <div class="course-outcome">
-            <div class="course-outcome__icon">🎓</div>
-            <div><div class="course-outcome__lbl">Certification Outcome</div><div class="course-outcome__val">Display Repair Specialist</div></div>
-          </div>
+          
           <div class="course-ctas">
             <a href="contact.html#contact-form" class="btn btn--primary flow-btn">
               <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -808,7 +1029,7 @@
         <div class="csi__inner">
           <div class="csi__step">Course 02 · Macbook Master</div>
           <span class="course-badge-lg bg-premium">💎 Premium</span>
-          <h2 class="course-info__title">Macbook Master Course</h2>
+          <h2 class="course-info__title">MacBook Chip-Level Course</h2>
           <p class="course-info__desc">Modern MacBooks require advanced logic board knowledge. Learn charging circuits, power rails, schematic reading, no-display troubleshooting, and professional MacBook motherboard repair from basic to advanced.</p>
           <div class="course-chips">
             <span class="chip">⏱ 45 Days</span>
@@ -827,10 +1048,8 @@
             <div class="skill-item"><span class="skill-dot" style="background:#5856D6;"></span>Hand Skill Development</div>
             <div class="skill-item"><span class="skill-dot" style="background:#5856D6;"></span>Live Practical</div>
           </div>
-          <div class="course-outcome">
-            <div class="course-outcome__icon">🎓</div>
-            <div><div class="course-outcome__lbl">Certification Outcome</div><div class="course-outcome__val">Certified iPhone Repair Technician</div></div>
-          </div>
+        
+
           <div class="course-ctas">
             <a href="contact.html#contact-form" class="btn btn--primary flow-btn">
               <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -851,7 +1070,7 @@
         <div class="csi__inner">
           <div class="csi__step">Course 03 · Android Master</div>
           <span class="course-badge-lg bg-popular">⭐ New Course</span>
-          <h2 class="course-info__title">Android Master Course</h2>
+          <h2 class="course-info__title">Android Chip-Level Course</h2>
           <p class="course-info__desc">Master the skill behind modern smartphone repair. Learn Android motherboard diagnostics, power sequence, IC replacement, short detection, and advanced chip-level troubleshooting through real practical training.</p>
           <div class="course-chips">
             <span class="chip">⏱ 30 Days</span>
@@ -870,10 +1089,7 @@
             <div class="skill-item"><span class="skill-dot"></span>Booting Sequence</div>
             <div class="skill-item"><span class="skill-dot"></span>Retracking Mother Board Layers</div>
           </div>
-          <div class="course-outcome">
-            <div class="course-outcome__icon">🎓</div>
-            <div><div class="course-outcome__lbl">Certification Outcome</div><div class="course-outcome__val">Certified Mobile Repair Technician</div></div>
-          </div>
+          
           <div class="course-ctas">
             <a href="contact.html#contact-form" class="btn btn--primary flow-btn">
               <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -894,7 +1110,7 @@
         <div class="csi__inner">
           <div class="csi__step">Course 04 · Windows Master</div>
           <span class="course-badge-lg bg-demand">📈 Most Popular</span>
-          <h2 class="course-info__title">Windows Master Course</h2>
+          <h2 class="course-info__title">Windows Laptop Chip-Level Course</h2>
           <p class="course-info__desc">Windows laptops are everywhere - and skilled motherboard technicians are always in demand. Learn BIOS, power sequence, short detection, schematic reading, and advanced laptop chip-level diagnostics through hands-on training.</p>
           <div class="course-chips">
             <span class="chip">⏱ 45 Days</span>
@@ -912,10 +1128,6 @@
             <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Power, Voltage & No-Display Troubleshooting</div>
             <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Chip-Level Repair Techniques</div>
             <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Live Practical Repair Workflows</div>
-          </div>
-          <div class="course-outcome">
-            <div class="course-outcome__icon">🎓</div>
-            <div><div class="course-outcome__lbl">Certification Outcome</div><div class="course-outcome__val">Certified Laptop Repair Technician</div></div>
           </div>
           <div class="course-ctas">
             <a href="contact.html#contact-form" class="btn btn--primary flow-btn">
@@ -955,10 +1167,6 @@
             <div class="skill-item"><span class="skill-dot" style="background:#B45309;"></span>Learn at Your Own Pace</div>
             <div class="skill-item"><span class="skill-dot" style="background:#B45309;"></span>Custom Training Based on Your Skill Level</div>
             <div class="skill-item"><span class="skill-dot" style="background:#B45309;"></span>Specialised Learning for Specific Faults</div>
-          </div>
-          <div class="course-outcome">
-            <div class="course-outcome__icon">🎓</div>
-            <div><div class="course-outcome__lbl">Certification Outcome</div><div class="course-outcome__val">Certified iPhone Repair Technician</div></div>
           </div>
           <div class="course-ctas">
             <a href="contact.html#contact-form" class="btn btn--primary flow-btn">
@@ -1085,6 +1293,7 @@
     if (firstInner) firstInner.classList.add('visible');
   })();
   </script>
+
 
   <!-- ONLINE -->
   <section class="online-section" id="online">

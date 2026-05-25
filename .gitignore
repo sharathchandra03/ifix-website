@@ -18,3 +18,7 @@ Thumbs.db
 
 # Runtime uploads and temporary files
 backend/uploads/blogs/
+
+# Database files
+*.db
+ruvector.db
