@@ -42,19 +42,15 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      opacity: 0.92;
+      object-position: top center;
+      opacity: 0.72;
     }
     .hero-overlay {
       position: absolute;
       inset: 0;
       z-index: 1;
       pointer-events: none;
-      /* cinematic left-to-right dark fade — text area dark, right edge shows full video */
-      background: linear-gradient(105deg,
-        rgba(5,15,35,0.72) 0%,
-        rgba(5,15,35,0.50) 38%,
-        rgba(5,15,35,0.18) 65%,
-        rgba(5,15,35,0.04) 100%);
+      background: rgba(5,15,35,0.50);
     }
 
     /* ── TABS NAV ── */
@@ -316,9 +312,7 @@
   <div id="nav-root"></div>
 
   <section class="page-hero">
-    <video class="hero-bg" autoplay muted loop playsinline>
-      <source src="Video Assets/Training Section video.mp4" type="video/mp4">
-    </video>
+    <img class="hero-bg" src="Assets/Training Image for course 1png.png" alt="" aria-hidden="true">
     <div class="hero-overlay"></div>
     <div class="page-hero__inner">
       <span class="section-label" id="cHeroLabel" style="margin-left:0.2rem;">OUR TRAINING PROGRAMS</span>
