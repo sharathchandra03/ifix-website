@@ -16,8 +16,8 @@
   <style>
     /* ── PAGE HERO ── */
     .page-hero {
-      background: var(--bg); min-height: 100vh;
-      border-bottom: 1px solid var(--border);
+      background: #0A0E1A;
+      min-height: 100vh;
       position: relative; overflow: hidden;
       display: flex; align-items: center;
       padding: 7.5rem 0 7.5rem;
@@ -58,21 +58,18 @@
     .page-hero .btn--ghost:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.65); }
     /* section label on dark */
     .page-hero > .container .section-label,
-    .page-hero .section-label { color: #93c5fd; opacity: 1; letter-spacing: 0.14em; }
+    .page-hero .section-label { color: #7dd3fc !important; opacity: 1; letter-spacing: 0.14em; }
     .page-hero__actions { display: flex; gap: 0.9rem; flex-wrap: wrap; margin-bottom: 1.1rem; }
 
     .hero-bg {
       position: absolute; inset: 0; z-index: 0;
       width: 100%; height: 100%; object-fit: cover;
+      object-position: top center;
       opacity: 0.72;
     }
     .hero-overlay {
       position: absolute; inset: 0; z-index: 1; pointer-events: none;
-      background: linear-gradient(105deg,
-        rgba(5,15,35,0.88) 0%,
-        rgba(5,15,35,0.70) 38%,
-        rgba(5,15,35,0.40) 65%,
-        rgba(5,15,35,0.18) 100%);
+      background: rgba(5,15,35,0.50);
     }
     /* ── MISSION ── */
     .mission { background: var(--bg-2); padding: 2.25rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
