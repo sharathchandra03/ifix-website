@@ -1,16 +1,17 @@
 {
   "name": "ifix-experiment",
   "version": "1.0.0",
-  "description": "",
-  "main": "components.js",
+  "description": "IFIX Academy - Full Stack Website",
+  "main": "backend/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npm install --prefix backend",
+    "start": "node backend/server.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sharathchandra03/ifix-website.git"
   },
-  "keywords": [],
+  "keywords": ["ifix", "academy", "repair"],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
