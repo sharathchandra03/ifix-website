@@ -18,6 +18,7 @@ const path = require('path');
 
 const app = express();
 const frontendRoot = path.join(__dirname, '..');
+const initializeDatabase = require('./database/init');
 
 // Respect reverse-proxy headers (Hostinger uses a proxy)
 app.set('trust proxy', 1);
@@ -225,6 +226,9 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log(`📊 Database: ${mysqlConfig.database}`);
   console.log(`🔗 Allowed origin: ${allowedOrigins[0] || 'ALL (no FRONTEND_URL set)'}`);
 
+  initializeDatabase().catch(err =>
+    console.error('⚠️ DB init failed:', err.message)
+  );
   logDatabaseStatus().catch(err =>
     console.error('⚠️ DB status check failed:', err.message)
   );
