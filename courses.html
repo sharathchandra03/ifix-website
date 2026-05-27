@@ -627,10 +627,14 @@
     .p-ticker__track {
       display: flex;
       flex-direction: column;
-      animation: ptScrollUp 28s linear infinite;
+      animation: ptScrollUp 22s linear infinite;
     }
     .p-ticker:hover .p-ticker__track {
       animation-play-state: paused;
+    }
+    /* Customised Learning has 12 items vs 22 in other courses — shorten duration to match px/s */
+    #pScreen4 .p-ticker__track {
+      animation-duration: 10s;
     }
     @keyframes ptScrollUp {
       0%   { transform: translateY(0); }
@@ -1006,7 +1010,7 @@
           <div class="course-ctas">
             <a href="contact.html#contact-form" class="btn btn--primary flow-btn">
               <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-              <span class="flow-text">Explore Enrollment</span>
+              <span class="flow-text">Download Brochure</span>
               <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </a>
             <a href="contact.html" class="btn btn--ghost flow-btn">
@@ -1047,7 +1051,7 @@
           <div class="course-ctas">
             <a href="contact.html#contact-form" class="btn btn--primary flow-btn">
               <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-              <span class="flow-text">Explore Enrollment</span>
+              <span class="flow-text">Download Brochure</span>
               <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </a>
             <a href="contact.html" class="btn btn--ghost flow-btn">
@@ -1087,7 +1091,7 @@
           <div class="course-ctas">
             <a href="contact.html#contact-form" class="btn btn--primary flow-btn">
               <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-              <span class="flow-text">Explore Enrollment</span>
+              <span class="flow-text">Download Brochure</span>
               <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </a>
             <a href="contact.html" class="btn btn--ghost flow-btn">
@@ -1126,7 +1130,7 @@
           <div class="course-ctas">
             <a href="contact.html#contact-form" class="btn btn--primary flow-btn">
               <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-              <span class="flow-text">Explore Enrollment</span>
+              <span class="flow-text">Download Brochure</span>
               <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </a>
             <a href="contact.html" class="btn btn--ghost flow-btn">
@@ -1165,7 +1169,7 @@
           <div class="course-ctas">
             <a href="contact.html#contact-form" class="btn btn--primary flow-btn">
               <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-              <span class="flow-text">Explore Enrollment</span>
+              <span class="flow-text">Download Brochure</span>
               <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </a>
             <a href="contact.html" class="btn btn--ghost flow-btn">
@@ -1349,7 +1353,16 @@
     }, { threshold:0.1, rootMargin:'0px 0px -40px 0px' });
     document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el => obs.observe(el));
 
-    const tabBtns = document.querySelectorAll('.tab-btn');
+    // Keep tabs-nav sticky top aligned with actual navbar height so it never overlaps or shrinks
+    function syncTabsNavTop() {
+      const nav = document.getElementById('navbar');
+      const tabs = document.getElementById('tabsNav');
+      if (nav && tabs) tabs.style.top = nav.offsetHeight + 'px';
+    }
+    syncTabsNavTop();
+    window.addEventListener('resize', syncTabsNavTop, { passive: true });
+
+const tabBtns = document.querySelectorAll('.tab-btn');
     const sections = ['display', 'iphone', 'mobile', 'laptop', 'customised', 'online']
       .map(id => document.getElementById(id))
       .filter(Boolean);
@@ -1357,7 +1370,7 @@
     const getStickyOffset = () => {
       const nav = document.querySelector('.navbar');
       const tabs = document.getElementById('tabsNav');
-      return (nav ? nav.offsetHeight : 58) + (tabs ? tabs.offsetHeight : 56) + 8;
+      return (nav ? nav.offsetHeight : 58) + (tabs ? tabs.offsetHeight : 56);
     };
 
     const setActiveTab = (id) => {

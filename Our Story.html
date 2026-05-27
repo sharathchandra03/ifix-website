@@ -885,11 +885,14 @@
       if (!canvas) return;
       var ctx = canvas.getContext('2d');
       var particles = [];
-      var frameCount = 0;
       var isRunning = false;
       var words = ['Join iFix Today'];
       var wordIndex = 0;
       var pixelSteps = 5;
+      var phase = 'forming';   // 'forming' | 'holding'
+      var phaseStart = 0;
+      var FORM_DURATION = 2000;  // ms for particles to assemble
+      var HOLD_DURATION = 6000;  // ms to pause once text is formed
 
       var palette = [
         { r: 255, g: 145, b: 0   },
@@ -1040,6 +1043,7 @@
       function loop() {
         if (!isRunning) return;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        var now = performance.now();
 
         for (var i = particles.length - 1; i >= 0; i--) {
           particles[i].move();
@@ -1052,8 +1056,14 @@
           }
         }
 
-        frameCount++;
-        if (frameCount % 320 === 0) {
+        if (phase === 'forming' && now - phaseStart >= FORM_DURATION) {
+          // Text is assembled — pause here
+          phase = 'holding';
+          phaseStart = now;
+        } else if (phase === 'holding' && now - phaseStart >= HOLD_DURATION) {
+          // Hold done — disperse and reform
+          phase = 'forming';
+          phaseStart = now;
           wordIndex = (wordIndex + 1) % words.length;
           showWord(words[wordIndex]);
         }
@@ -1065,6 +1075,8 @@
         entries.forEach(function (entry) {
           if (entry.isIntersecting && !isRunning) {
             isRunning = true;
+            phase = 'forming';
+            phaseStart = performance.now();
             showWord(words[0]);
             loop();
           } else if (!entry.isIntersecting && isRunning) {
