@@ -392,46 +392,19 @@
     .showcase-ipad {
       width: 390px;
       height: 530px;
-      background: #252527;
-      border-radius: 30px;
-      padding: 36px 17px 54px;
+      background: #1c1c1e;
+      border-radius: 20px;
+      padding: 20px;
       box-shadow:
-        inset 0 1px 0 rgba(255,255,255,0.08),
-        inset 0 -1px 0 rgba(255,255,255,0.03),
+        inset 0 0 0 1px rgba(255,255,255,0.08),
         0 0 0 1px rgba(0,0,0,0.9),
-        0 0 0 2px rgba(255,255,255,0.04),
-        0 32px 72px rgba(0,0,0,0.45),
+        0 0 0 2px rgba(255,255,255,0.05),
+        0 0 0 3px rgba(0,0,0,0.85),
+        0 32px 72px rgba(0,0,0,0.48),
         0 12px 28px rgba(0,0,0,0.28);
       position: relative;
       animation: phoneFloat 4s ease-in-out infinite;
       flex-shrink: 0;
-    }
-    /* Camera dot */
-    .showcase-cam {
-      position: absolute;
-      top: 14px; left: 50%; transform: translateX(-50%);
-      width: 8px; height: 8px;
-      background: #1a1a1c; border-radius: 50%; z-index: 30;
-      box-shadow: 0 0 0 1px rgba(255,255,255,0.05), inset 0 1px 2px rgba(0,0,0,0.8);
-    }
-    /* Home button */
-    .showcase-home {
-      position: absolute;
-      bottom: 10px; left: 50%; transform: translateX(-50%);
-      width: 34px; height: 34px;
-      border-radius: 50%;
-      background: #1e1e20;
-      border: 1.5px solid rgba(255,255,255,0.10);
-      box-shadow:
-        inset 0 1px 3px rgba(0,0,0,0.7),
-        inset 0 -1px 1px rgba(255,255,255,0.04),
-        0 0 0 1px rgba(0,0,0,0.6);
-    }
-    .showcase-home::after {
-      content: '';
-      position: absolute; inset: 6px;
-      border-radius: 50%;
-      border: 1px solid rgba(255,255,255,0.07);
     }
     .phone-screen-wrap {
       width: 100%; height: 100%;
@@ -554,7 +527,7 @@
     @media(max-width:600px){
       .ss-left { padding: 2rem 1rem 1.25rem; }
       .course-scroll-item { padding: 2.75rem 1rem; }
-      .showcase-ipad, .ipad-device { width:320px; height:460px; }
+      .showcase-ipad { width:300px; height:450px; border-radius:16px; padding:16px; }
       .tabs-nav__label { flex-basis: auto; justify-content: flex-start; text-align: left; }
     }
 
@@ -670,7 +643,6 @@
 
       <div class="ipad-scaler" id="ipadScaler">
       <div class="showcase-ipad" id="phoneDevice">
-        <div class="showcase-cam"></div>
         <div class="phone-screen-wrap">
 
           <!-- Screen 0 – iPhone Master · Green -->
@@ -962,7 +934,6 @@
           </div>
 
         </div><!-- /.phone-screen-wrap -->
-        <div class="showcase-home"></div>
       </div><!-- /.showcase-ipad -->
       </div><!-- /.ipad-scaler -->
 
@@ -1006,9 +977,9 @@
             <div class="skill-item"><span class="skill-dot" style="background:var(--green);"></span>Motherboard swapping without data loss</div>
             <div class="skill-item"><span class="skill-dot" style="background:var(--green);"></span>Storage Upgradation</div>
           </div>
-          
+
           <div class="course-ctas">
-            <a href="contact.html#contact-form" class="btn btn--primary flow-btn">
+            <a href="Assets/Brochures/iphone-mac-brochure.pdf" download="iphone-mac-brochure.pdf" class="btn btn--primary flow-btn">
               <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
               <span class="flow-text">Download Brochure</span>
               <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -1046,10 +1017,10 @@
             <div class="skill-item"><span class="skill-dot" style="background:#5856D6;"></span>Hand Skill Development</div>
             <div class="skill-item"><span class="skill-dot" style="background:#5856D6;"></span>Live Practical</div>
           </div>
-        
+
 
           <div class="course-ctas">
-            <a href="contact.html#contact-form" class="btn btn--primary flow-btn">
+            <a href="Assets/Brochures/iphone-mac-brochure.pdf" download="iphone-mac-brochure.pdf" class="btn btn--primary flow-btn">
               <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
               <span class="flow-text">Download Brochure</span>
               <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -1087,9 +1058,9 @@
             <div class="skill-item"><span class="skill-dot"></span>Booting Sequence</div>
             <div class="skill-item"><span class="skill-dot"></span>Retracking Mother Board Layers</div>
           </div>
-          
+
           <div class="course-ctas">
-            <a href="contact.html#contact-form" class="btn btn--primary flow-btn">
+            <a href="Assets/Brochures/android-windows-brochure.pdf" download="android-windows-brochure.pdf" class="btn btn--primary flow-btn">
               <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
               <span class="flow-text">Download Brochure</span>
               <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -1128,7 +1099,7 @@
             <div class="skill-item"><span class="skill-dot" style="background:var(--red);"></span>Live Practical Repair Workflows</div>
           </div>
           <div class="course-ctas">
-            <a href="contact.html#contact-form" class="btn btn--primary flow-btn">
+            <a href="Assets/Brochures/android-windows-brochure.pdf" download="android-windows-brochure.pdf" class="btn btn--primary flow-btn">
               <svg class="flow-arr flow-arr--left" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
               <span class="flow-text">Download Brochure</span>
               <svg class="flow-arr flow-arr--right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
