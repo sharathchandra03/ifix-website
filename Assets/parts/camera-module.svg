@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <defs>
+    <linearGradient id="camBody" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1c1c1e"/>
+      <stop offset="100%" stop-color="#111"/>
+    </linearGradient>
+    <radialGradient id="lens1" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1a3a6a"/>
+      <stop offset="40%" stop-color="#0a1a3e"/>
+      <stop offset="70%" stop-color="#162850"/>
+      <stop offset="100%" stop-color="#050d1a"/>
+    </radialGradient>
+    <radialGradient id="lens2" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#2a3a5a"/>
+      <stop offset="50%" stop-color="#0a1a2e"/>
+      <stop offset="100%" stop-color="#050d1a"/>
+    </radialGradient>
+    <radialGradient id="lensShine" cx="35%" cy="30%" r="50%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.3)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+    </radialGradient>
+    <linearGradient id="metalRing" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#888"/>
+      <stop offset="50%" stop-color="#ddd"/>
+      <stop offset="100%" stop-color="#666"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="#f0f4f8"/>
+  <!-- Module outer shadow -->
+  <rect x="92" y="72" width="216" height="216" rx="36" fill="rgba(0,0,0,0.25)" transform="translate(5,6)"/>
+  <!-- Module outer body -->
+  <rect x="92" y="72" width="216" height="216" rx="36" fill="url(#camBody)" stroke="#333" stroke-width="2"/>
+  <!-- Camera bump ring outer -->
+  <circle cx="200" cy="180" r="90" fill="#161616" stroke="#2a2a2a" stroke-width="2"/>
+  <!-- Wide camera -->
+  <circle cx="160" cy="140" r="46" fill="#111" stroke="url(#metalRing)" stroke-width="3"/>
+  <circle cx="160" cy="140" r="40" fill="url(#lens1)"/>
+  <circle cx="160" cy="140" r="28" fill="#050d1a"/>
+  <circle cx="160" cy="140" r="20" fill="url(#lens1)"/>
+  <circle cx="160" cy="140" r="10" fill="#000d1a"/>
+  <circle cx="160" cy="140" r="46" fill="url(#lensShine)"/>
+  <!-- Wide cam label -->
+  <text x="160" y="196" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="7">12 MP WIDE</text>
+  <!-- Ultra-wide camera -->
+  <circle cx="240" cy="140" r="38" fill="#111" stroke="url(#metalRing)" stroke-width="3"/>
+  <circle cx="240" cy="140" r="32" fill="url(#lens2)"/>
+  <circle cx="240" cy="140" r="22" fill="#050d1a"/>
+  <circle cx="240" cy="140" r="14" fill="url(#lens2)"/>
+  <circle cx="240" cy="140" r="7" fill="#000d1a"/>
+  <circle cx="240" cy="140" r="38" fill="url(#lensShine)"/>
+  <!-- Ultra-wide label -->
+  <text x="240" y="188" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="7">12 MP ULTRA</text>
+  <!-- Flash / LiDAR module -->
+  <circle cx="200" cy="220" r="14" fill="#1a1a1a" stroke="#444" stroke-width="1.5"/>
+  <circle cx="200" cy="220" r="9" fill="#ff9500" opacity="0.8"/>
+  <circle cx="200" cy="220" r="5" fill="#ffcc00"/>
+  <text x="200" y="243" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="7">FLASH</text>
+  <!-- Lens reflection dots on wide cam -->
+  <circle cx="150" cy="131" r="4" fill="white" opacity="0.12"/>
+  <circle cx="155" cy="135" r="2" fill="white" opacity="0.08"/>
+  <!-- Flex connector at bottom of module -->
+  <rect x="164" y="288" width="72" height="20" rx="3" fill="#0d1a0d" stroke="#2a5a2a" stroke-width="1"/>
+  <g stroke="#b8860b" stroke-width="1" opacity="0.8">
+    <line x1="172" y1="288" x2="172" y2="308"/>
+    <line x1="178" y1="288" x2="178" y2="308"/>
+    <line x1="184" y1="288" x2="184" y2="308"/>
+    <line x1="190" y1="288" x2="190" y2="308"/>
+    <line x1="196" y1="288" x2="196" y2="308"/>
+    <line x1="202" y1="288" x2="202" y2="308"/>
+    <line x1="208" y1="288" x2="208" y2="308"/>
+    <line x1="214" y1="288" x2="214" y2="308"/>
+    <line x1="220" y1="288" x2="220" y2="308"/>
+    <line x1="226" y1="288" x2="226" y2="308"/>
+  </g>
+  <!-- OIS badge -->
+  <rect x="148" y="314" width="104" height="18" rx="9" fill="#3478F6"/>
+  <text x="200" y="326" text-anchor="middle" fill="white" font-family="sans-serif" font-size="8" font-weight="bold">OIS · FACTORY TESTED</text>
+  <!-- Label -->
+  <text x="200" y="360" text-anchor="middle" fill="#3478F6" font-family="sans-serif" font-size="11" font-weight="600">iPhone 13 Rear Camera Module</text>
+  <text x="200" y="374" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="9">Dual 12MP Wide + Ultra-wide</text>
+</svg>

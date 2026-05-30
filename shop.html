@@ -89,22 +89,48 @@
     /* RESPONSIVE */
     @media (max-width: 768px) {
       .page-hero { padding: 6.75rem 0 2.5rem; }
-      .products-grid { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 1rem; }
+      .products-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
       .cart-sidebar { width: 100vw; }
-      .products-header { flex-direction: column; align-items: stretch; }
+      .products-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .cart-badge { align-self: flex-end; }
     }
     @media (max-width: 560px) {
       .page-hero { padding: 6rem 0 2.25rem; }
-      .products-filter { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 0.2rem; }
+      /* Fix heading: reduce padding and font size so it stays on one line */
+      .page-hero__inner { padding: 0 1rem; }
+      .page-hero__heading { font-size: clamp(1.75rem, 8vw, 2.4rem); line-height: 1.05; }
+      .page-hero__sub { font-size: 0.9rem; }
+      /* Tighter side padding so cards have more room */
+      .section__inner { padding: 0 1rem; }
+      .products-section { padding: 2.5rem 0; }
+      /* Filter bar scrolls horizontally */
+      .products-filter { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 0.25rem; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+      .products-filter::-webkit-scrollbar { display: none; }
       .filter-btn { white-space: nowrap; }
-      .products-grid { grid-template-columns: 1fr; }
-      .product-card__body { padding: 1.15rem; }
-      .product-card__footer { gap: 0.8rem; }
-      .product-card__btn { padding: 0.55rem 0.8rem; }
+      /* 2-column grid on phones — matches e-commerce conventions */
+      .products-grid { grid-template-columns: repeat(2, 1fr); gap: 0.65rem; margin-bottom: 2rem; }
+      /* Tighter card body */
+      .product-card__body { padding: 0.75rem; }
+      .product-card__category { margin-bottom: 0.3rem; }
+      .product-card__name { font-size: 0.82rem; line-height: 1.25; margin-bottom: 0.35rem; word-break: break-word; }
+      /* Hide description on phones to keep cards compact */
+      .product-card__description { display: none; }
+      /* Footer: stack price above button when narrow */
+      .product-card__footer { flex-direction: column; align-items: stretch; gap: 0.5rem; }
+      .product-card__price { font-size: 1rem; }
+      .product-card__btn { width: 100%; text-align: center; padding: 0.55rem 0.5rem; font-size: 0.78rem; }
+      /* Cart sidebar */
       .cart-sidebar__header,
       .cart-items,
       .cart-footer { padding: 1rem; }
       .youtube-grid { grid-template-columns: 1fr; gap: 1rem; }
+    }
+    @media (max-width: 360px) {
+      .section__inner { padding: 0 0.75rem; }
+      .products-grid { gap: 0.5rem; }
+      .product-card__body { padding: 0.6rem; }
+      .product-card__name { font-size: 0.78rem; }
+      .product-card__price { font-size: 0.9rem; }
     }
   </style>
 </head>
@@ -120,12 +146,21 @@
     </div>
   </section>
 
-  <!-- COMING SOON -->
-  <section style="padding: 6rem 0; text-align: center;">
+  <!-- PRODUCTS SECTION -->
+  <section class="products-section">
     <div class="section__inner">
-      <div style="font-size: 3.5rem; margin-bottom: 1.5rem;">🚧</div>
-      <h2 style="font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; letter-spacing: -0.04em; color: var(--text); margin-bottom: 1rem;">Coming Soon</h2>
-      <p style="color: var(--text-2); font-size: 1.05rem; max-width: 480px; margin: 0 auto 2rem; line-height: 1.75;">Our shop is under construction. We're working on bringing you the best certified refurbished devices. Check back soon!</p>
+      <div class="products-header">
+        <div class="products-filter" id="filters">
+          <button class="filter-btn active" onclick="filterByCategory('all')">All</button>
+        </div>
+        <button class="cart-badge" onclick="openCart()">
+          🛒 Cart &nbsp;<span id="cart-count" style="display:none; background:white; color:var(--accent); border-radius:999px; padding:0.1rem 0.5rem; font-size:0.75rem;">0</span>
+        </button>
+      </div>
+      <p id="products-status" style="display:none; color:var(--text-2); font-size:0.85rem; padding:0.7rem 1rem; background:var(--bg-2); border-radius:var(--r-md); border:1px solid var(--border); margin-bottom:1.5rem;"></p>
+      <div class="products-grid" id="products-grid">
+        <div style="grid-column:1/-1; text-align:center; padding:3rem; color:var(--text-2);">Loading products…</div>
+      </div>
     </div>
   </section>
 
@@ -217,7 +252,10 @@
           renderProductsStatus('Live products are temporarily unavailable. Showing your last saved product list.');
           return;
         }
-        renderProductsStatus('Failed to load products. Start backend API on http://localhost:5000 and check DB connection.');
+        products = DEMO_PRODUCTS;
+        renderProducts();
+        loadFilters();
+        renderProductsStatus('Showing sample product listing. Connect backend API for live inventory.');
       }
     }
 
@@ -238,7 +276,12 @@
       const filtered = category === 'all' ? products : products.filter(p => p.category === category);
       document.getElementById('products-grid').innerHTML = filtered.map(p => `
         <div class="product-card">
-          <div class="product-card__image">${getCategoryEmoji(p.category)}</div>
+          <div class="product-card__image">
+            ${p.image
+              ? `<img src="${p.image}" alt="${p.name}" style="width:100%;height:100%;object-fit:contain;padding:8px;">`
+              : getCategoryEmoji(p.category)
+            }
+          </div>
           <div class="product-card__body">
             <div class="product-card__category">${p.category}</div>
             <div class="product-card__name">${p.name}</div>
@@ -258,10 +301,24 @@
         'laptops': '💻',
         'tablets': '📱',
         'accessories': '🔌',
+        'screens': '🖥️',
+        'batteries': '🔋',
+        'parts': '🔧',
         'default': '📦'
       };
       return emojis[category?.toLowerCase()] || emojis['default'];
     }
+
+    const DEMO_PRODUCTS = [
+      { id: 101, category: 'parts',       name: 'Laptop Motherboard (Intel i5 Gen 10)',  description: 'OEM-grade replacement motherboard, tested and certified by iFix technicians. Compatible with most mid-range laptops.', price: 8499,  image: 'Assets/parts/motherboard.svg'    },
+      { id: 102, category: 'screens',     name: 'iPhone 14 OLED Screen Assembly',        description: 'High-brightness OLED display with digitizer. True Tone compatible, scratch-resistant glass, factory calibrated.', price: 3499,  image: 'Assets/parts/iphone-screen.svg'  },
+      { id: 103, category: 'batteries',   name: 'MacBook Pro 13" Battery (6000 mAh)',     description: 'Original capacity Li-Po replacement cell. Holds 80%+ charge after 500 cycles. Includes adhesive strips.', price: 2999,  image: 'Assets/parts/macbook-battery.svg' },
+      { id: 104, category: 'parts',       name: 'Samsung Galaxy Charging Port Flex',      description: 'USB-C charging port + mic ribbon for Samsung S21 / S22 series. Genuine OEM part, plug-and-play replacement.', price: 699,   image: 'Assets/parts/charging-port.svg'  },
+      { id: 105, category: 'parts',       name: 'iPhone 13 Rear Camera Module',           description: '12 MP dual-camera assembly (wide + ultra-wide) with OIS. Factory-tested, immediate swap, 30-day warranty.', price: 1999,  image: 'Assets/parts/camera-module.svg'  },
+      { id: 106, category: 'parts',       name: 'Laptop Keyboard Replacement (15")',       description: 'Universal slim chiclet keyboard deck for 15-inch laptops. Spill-resistant, backlit variant available, easy ribbon swap.', price: 1299,  image: 'Assets/parts/keyboard.svg'       },
+      { id: 107, category: 'parts',       name: 'iPhone Power Button Flex Cable',          description: 'Power + volume + mute ribbon flex for iPhone 12 / 13 series. OEM spec, includes pre-adhesive foam pad.', price: 449,   image: 'Assets/parts/power-flex.svg'     },
+      { id: 108, category: 'accessories', name: 'Laptop Cooling Fan (DC 5V Dual Ball)',     description: 'High-RPM dual-ball bearing cooling fan for notebook CPUs. Compatible with most Dell, HP, Lenovo models. Quiet operation.', price: 899,   image: 'Assets/parts/cooling-fan.svg'    },
+    ];
 
     // Load filters
     function loadFilters() {
@@ -352,8 +409,11 @@
 
     function updateCartUI() {
       const count = cart.reduce((sum, item) => sum + item.quantity, 0);
-      document.getElementById('cart-count').style.display = count > 0 ? 'inline-flex' : 'none';
-      document.getElementById('cart-count').textContent = count;
+      const cartCountEl = document.getElementById('cart-count');
+      if (cartCountEl) {
+        cartCountEl.style.display = count > 0 ? 'inline' : 'none';
+        cartCountEl.textContent = count;
+      }
 
       if (cart.length === 0) {
         document.getElementById('cart-items').innerHTML = '<div class="cart-empty">Cart is empty</div>';

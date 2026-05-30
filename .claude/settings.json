@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Start-Process -NoNewWindow -FilePath \"python\" -ArgumentList \"-m\", \"http.server\", \"7788\" -WorkingDirectory \"c:\\\\Users\\\\LENOVO\\\\Desktop\\\\Ifix Experiment\")"
+    ]
+  }
+}

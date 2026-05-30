@@ -16,6 +16,13 @@ yarn-error.log*
 Thumbs.db
 .vscode/settings.json
 
+# Playwright MCP output
+.playwright-mcp/
+
+# Local dev server
+serve.js
+mobile-*.png
+
 # Runtime uploads and temporary files
 backend/uploads/blogs/
 

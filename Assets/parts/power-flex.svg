@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <defs>
+    <linearGradient id="flexCable" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a3a1a"/>
+      <stop offset="100%" stop-color="#0d2b0d"/>
+    </linearGradient>
+    <linearGradient id="connectorGold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#d4a017"/>
+      <stop offset="100%" stop-color="#8a6000"/>
+    </linearGradient>
+    <linearGradient id="buttonMetal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#888"/>
+      <stop offset="50%" stop-color="#ddd"/>
+      <stop offset="100%" stop-color="#666"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="#f0f4f8"/>
+
+  <!-- Flex cable body (main ribbon) -->
+  <rect x="160" y="50" width="80" height="260" rx="6" fill="url(#flexCable)" stroke="#2a5a2a" stroke-width="1.5"/>
+  <!-- Trace lines on ribbon -->
+  <g stroke="#b8860b" stroke-width="1" opacity="0.7">
+    <line x1="175" y1="50" x2="175" y2="310"/>
+    <line x1="183" y1="50" x2="183" y2="310"/>
+    <line x1="191" y1="50" x2="191" y2="310"/>
+    <line x1="199" y1="50" x2="199" y2="310"/>
+    <line x1="207" y1="50" x2="207" y2="310"/>
+    <line x1="215" y1="50" x2="215" y2="310"/>
+    <line x1="223" y1="50" x2="223" y2="310"/>
+    <line x1="231" y1="50" x2="231" y2="310"/>
+  </g>
+
+  <!-- Top connector (ZIF connector) -->
+  <rect x="148" y="38" width="104" height="18" rx="4" fill="#1a1a2a" stroke="#3478F6" stroke-width="1.5"/>
+  <g fill="#b8860b" opacity="0.9">
+    <rect x="156" y="41" width="4" height="12" rx="1"/>
+    <rect x="163" y="41" width="4" height="12" rx="1"/>
+    <rect x="170" y="41" width="4" height="12" rx="1"/>
+    <rect x="177" y="41" width="4" height="12" rx="1"/>
+    <rect x="184" y="41" width="4" height="12" rx="1"/>
+    <rect x="191" y="41" width="4" height="12" rx="1"/>
+    <rect x="198" y="41" width="4" height="12" rx="1"/>
+    <rect x="205" y="41" width="4" height="12" rx="1"/>
+    <rect x="212" y="41" width="4" height="12" rx="1"/>
+    <rect x="219" y="41" width="4" height="12" rx="1"/>
+    <rect x="226" y="41" width="4" height="12" rx="1"/>
+    <rect x="233" y="41" width="4" height="12" rx="1"/>
+    <rect x="240" y="41" width="4" height="12" rx="1"/>
+  </g>
+  <text x="200" y="34" text-anchor="middle" fill="#3478F6" font-family="monospace" font-size="7">ZIF CONNECTOR</text>
+
+  <!-- Power button component mid-left -->
+  <rect x="84" y="130" width="80" height="80" rx="8" fill="#1a1a2a" stroke="#3478F6" stroke-width="1.5"/>
+  <!-- trace from button to ribbon -->
+  <rect x="160" y="158" width="4" height="24" rx="1" fill="url(#flexCable)"/>
+  <line x1="164" y1="170" x2="160" y2="170" stroke="#b8860b" stroke-width="1.5"/>
+  <!-- Power button cap -->
+  <circle cx="124" cy="170" r="22" fill="url(#buttonMetal)" stroke="#888" stroke-width="2"/>
+  <circle cx="124" cy="170" r="14" fill="#2a2a2a"/>
+  <path d="M124 158 L124 164" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M116 162 A12 12 0 1 0 132 162" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <text x="124" y="202" text-anchor="middle" fill="#6a9fd8" font-family="monospace" font-size="7">POWER</text>
+
+  <!-- Volume up button right side -->
+  <rect x="236" y="130" width="80" height="34" rx="6" fill="#1a1a2a" stroke="#555" stroke-width="1.5"/>
+  <line x1="240" y1="147" x2="236" y2="147" stroke="#b8860b" stroke-width="1.5"/>
+  <rect x="248" y="138" width="58" height="18" rx="4" fill="url(#buttonMetal)" stroke="#888" stroke-width="1"/>
+  <text x="277" y="151" text-anchor="middle" fill="#333" font-family="monospace" font-size="8" font-weight="bold">VOL +</text>
+  <text x="277" y="128" text-anchor="middle" fill="#6a9fd8" font-family="monospace" font-size="7">VOLUME</text>
+
+  <!-- Volume down button right side -->
+  <rect x="236" y="174" width="80" height="34" rx="6" fill="#1a1a2a" stroke="#555" stroke-width="1.5"/>
+  <line x1="240" y1="191" x2="236" y2="191" stroke="#b8860b" stroke-width="1.5"/>
+  <rect x="248" y="182" width="58" height="18" rx="4" fill="url(#buttonMetal)" stroke="#888" stroke-width="1"/>
+  <text x="277" y="195" text-anchor="middle" fill="#333" font-family="monospace" font-size="8" font-weight="bold">VOL −</text>
+
+  <!-- Mute switch -->
+  <rect x="236" y="218" width="80" height="28" rx="6" fill="#1a1a2a" stroke="#555" stroke-width="1.5"/>
+  <line x1="240" y1="232" x2="236" y2="232" stroke="#b8860b" stroke-width="1.5"/>
+  <rect x="248" y="224" width="58" height="16" rx="8" fill="#ff3b30" opacity="0.8"/>
+  <circle cx="272" cy="232" r="6" fill="white"/>
+  <text x="277" y="258" text-anchor="middle" fill="#6a9fd8" font-family="monospace" font-size="7">MUTE</text>
+
+  <!-- Bottom connector -->
+  <rect x="148" y="308" width="104" height="18" rx="4" fill="#1a1a2a" stroke="#3478F6" stroke-width="1.5"/>
+  <g fill="#b8860b" opacity="0.9">
+    <rect x="156" y="311" width="4" height="12" rx="1"/>
+    <rect x="163" y="311" width="4" height="12" rx="1"/>
+    <rect x="170" y="311" width="4" height="12" rx="1"/>
+    <rect x="177" y="311" width="4" height="12" rx="1"/>
+    <rect x="184" y="311" width="4" height="12" rx="1"/>
+    <rect x="191" y="311" width="4" height="12" rx="1"/>
+    <rect x="198" y="311" width="4" height="12" rx="1"/>
+    <rect x="205" y="311" width="4" height="12" rx="1"/>
+    <rect x="212" y="311" width="4" height="12" rx="1"/>
+    <rect x="219" y="311" width="4" height="12" rx="1"/>
+    <rect x="226" y="311" width="4" height="12" rx="1"/>
+    <rect x="233" y="311" width="4" height="12" rx="1"/>
+    <rect x="240" y="311" width="4" height="12" rx="1"/>
+  </g>
+  <!-- OEM badge -->
+  <rect x="150" y="334" width="100" height="18" rx="9" fill="#3478F6"/>
+  <text x="200" y="346" text-anchor="middle" fill="white" font-family="sans-serif" font-size="8" font-weight="bold">OEM SPEC · PRE-ADHESIVE</text>
+  <!-- Label -->
+  <text x="200" y="374" text-anchor="middle" fill="#3478F6" font-family="sans-serif" font-size="11" font-weight="600">iPhone Power Button Flex Cable</text>
+  <text x="200" y="388" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="9">Power + Volume + Mute — iPhone 12/13</text>
+</svg>
