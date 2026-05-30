@@ -2435,6 +2435,101 @@
     .btn.flow-btn:hover .flow-arr--left  { left: 0.75rem; }
     .btn.flow-btn:hover .flow-arr--right { right: -1.5rem; }
     .btn.flow-btn:hover .flow-text       { transform: translateX(0.5rem); }
+
+    /* ════════════════════════════════════════
+       RESPONSIVE IMPROVEMENTS
+    ════════════════════════════════════════ */
+
+    /* Hero 2-column tablet/small-laptop (961–1280px):
+       Image sits at top-right (flex-start) while margin-top:4rem pushes
+       the text far down the left column — zero the margin so both sides
+       start at the same vertical position. Large desktops (>1280px) keep
+       the original 4rem margin unchanged.                               */
+    @media (min-width: 961px) and (max-width: 1280px) {
+      .hero__left {
+        margin-top: 0;
+      }
+      .hero__right {
+        align-items: center;
+        padding-top: 2rem;
+      }
+    }
+
+    /* Hero single-column (≤960px):
+       .hero already has padding-top:64px that clears the fixed navbar.
+       The existing 6.3rem top-padding + 4rem margin-top = ~165 px of dead
+       space before the first word. Zero the margin and reset padding-top
+       to a small breathing gap only.                                   */
+    @media (max-width: 960px) {
+      .hero__left {
+        margin-top: 0;
+        padding-top: 2rem;
+      }
+      .hero__video-wrap {
+        max-width: min(480px, 90vw);
+      }
+      .hero__sub br {
+        display: none;
+      }
+    }
+
+    /* Tablet single-column (600–960px): slightly more breathing room  */
+    @media (min-width: 600px) and (max-width: 960px) {
+      .hero__left {
+        padding-top: 2.5rem;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+      }
+      .hero__right {
+        padding: 0 2rem 3rem;
+      }
+      .hero__video-wrap {
+        max-width: min(520px, 80vw);
+      }
+    }
+
+    /* Small phones (≤480px): tighten container and hero gap further   */
+    @media (max-width: 480px) {
+      .container {
+        padding: 0 1rem;
+      }
+      .hero__left {
+        padding-top: 1.5rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+      .hero__right {
+        padding: 0 1rem 2rem;
+      }
+      .hero__video-wrap {
+        max-width: min(360px, 92vw);
+      }
+      .section-heading {
+        font-size: clamp(1.65rem, 6.5vw, 2.2rem);
+      }
+    }
+
+    /* CTA banner mobile: stack buttons to full width                  */
+    @media (max-width: 600px) {
+      .cta-banner {
+        padding: 4rem 0;
+      }
+      .cta-banner__inner {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .cta-banner__inner > div:last-child {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+      .cta-banner__inner .btn {
+        width: 100%;
+        justify-content: center;
+      }
+      .industry-panel__track {
+        height: 240px;
+      }
+    }
   </style>
 </head>
 
@@ -2492,24 +2587,30 @@
         vid.play().catch(function () {});
       }
 
-      function recover() {
-        var t = vid.currentTime;
-        vid.load();
-        vid.currentTime = t;
-        tryPlay();
-      }
+      /* --- REMOVED: vid.load() on 'waiting'/'stalled' ---
+         'waiting' fires during normal buffering — calling load() there
+         restarted the full download every ~800 ms, creating an infinite
+         stutter loop. 'stalled' behaves similarly.
+         Only reload if playback is truly dead after a long pause.      */
+      var stallTimer = null;
 
-      vid.addEventListener('stalled', recover);
-      vid.addEventListener('waiting', function () {
-        clearTimeout(vid._waitTimer);
-        vid._waitTimer = setTimeout(recover, 800);
+      vid.addEventListener('stalled', function () {
+        clearTimeout(stallTimer);
+        stallTimer = setTimeout(function () {
+          if (vid.paused && !vid.ended) tryPlay();
+        }, 4000);
       });
+
       vid.addEventListener('playing', function () {
-        clearTimeout(vid._waitTimer);
+        clearTimeout(stallTimer);
       });
 
-      /* Retry autoplay the moment the video enters the viewport —
-         covers browsers that block autoplay on hidden/offscreen elements */
+      vid.addEventListener('canplay', function () {
+        clearTimeout(stallTimer);
+        if (vid.paused) tryPlay();
+      });
+
+      /* Retry autoplay when video enters viewport */
       if ('IntersectionObserver' in window) {
         var io = new IntersectionObserver(function (entries) {
           if (entries[0].isIntersecting && vid.paused) tryPlay();
