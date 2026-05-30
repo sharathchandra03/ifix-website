@@ -79,8 +79,9 @@ const allowedOrigins = rawOrigin ? [rawOrigin] : [];
 
 app.use(cors({
   origin(origin, callback) {
-    // Allow same-origin and server-to-server (no origin header)
     if (!origin) return callback(null, true);
+    // Allow all origins in development
+    if (process.env.NODE_ENV === 'development') return callback(null, true);
     if (allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
       return callback(null, true);
     }
