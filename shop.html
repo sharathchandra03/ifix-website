@@ -238,10 +238,12 @@
         }
         if (products.length > 0) {
           saveProductsCache(products);
+        } else {
+          products = DEMO_PRODUCTS;
+          renderProductsStatus('Showing sample product listing. Connect backend API for live inventory.');
         }
         renderProducts();
         loadFilters();
-        renderProductsStatus('');
       } catch (e) {
         console.error('Error loading products:', e);
         const cached = readProductsCache();
@@ -549,7 +551,10 @@
       }
     }
 
-    // Initialize
+    // Initialize — show demo products immediately, replace with live data if API succeeds
+    products = DEMO_PRODUCTS;
+    renderProducts();
+    loadFilters();
     loadProducts();
     loadYouTubeVideos();
     updateCartUI();
