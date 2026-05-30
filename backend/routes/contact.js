@@ -4,10 +4,37 @@ const { google } = require('googleapis');
 
 function normalizePrivateKey(value) {
   if (!value) return '';
-  return String(value)
-    .trim()
-    .replace(/^"|"$/g, '')
-    .replace(/\\n/g, '\n');
+
+  let key = String(value).trim();
+
+  // Strip surrounding quotes (single or double)
+  key = key.replace(/^["']|["']$/g, '');
+
+  // Hostinger (and some other hosts) double-escape newlines when storing
+  // env vars, so \\n gets stored instead of \n. Handle both cases.
+  key = key.replace(/\\\\n/g, '\n'); // double-escaped first
+  key = key.replace(/\\n/g, '\n');   // standard escaped
+  key = key.replace(/\r\n/g, '\n').replace(/\r/g, '\n'); // Windows CRLF
+
+  // Detect PEM key type from header
+  const headerMatch = key.match(/-----BEGIN ([A-Z ]+)-----/);
+  if (!headerMatch) return key; // not a PEM key — return as-is
+
+  const keyType = headerMatch[1]; // "PRIVATE KEY" or "RSA PRIVATE KEY"
+
+  // Extract raw base64 body — strip ALL whitespace between the markers.
+  // This is the critical step: Hostinger may insert extra spaces, bad line
+  // lengths, or stray chars that cause OpenSSL 3's DER decoder to reject it.
+  const body = key
+    .replace(/-----BEGIN [A-Z ]+-----/, '')
+    .replace(/-----END [A-Z ]+-----/, '')
+    .replace(/\s+/g, '');
+
+  // Reconstruct PEM with exactly 64-char base64 lines (RFC 7468).
+  // OpenSSL 3 is strict about this and will throw "DECODER::unsupported"
+  // for keys with irregular line lengths or stray whitespace.
+  const lines = body.match(/.{1,64}/g) || [];
+  return `-----BEGIN ${keyType}-----\n${lines.join('\n')}\n-----END ${keyType}-----\n`;
 }
 
 function buildGoogleCredentials() {
@@ -139,8 +166,10 @@ router.post('/', async (req, res) => {
         }
       } catch (sheetsError) {
         sheetsErrorMessage = sheetsError.message;
+        // Log full error object so Hostinger logs show the OpenSSL stack
         console.error('Google Sheets error (non-blocking):', sheetsError.message);
-        // Continue even if Google Sheets fails
+        console.error('FULL SHEETS ERROR:', sheetsError);
+        console.error('STACK:', sheetsError.stack);
       }
     }
 
@@ -175,6 +204,19 @@ async function appendToGoogleSheets({ fullName, email, phone, language, city, pi
   if (!credentials.client_email || !credentials.private_key || !credentials.project_id) {
     throw new Error('Google Sheets credentials are incomplete: project_id, client_email, and private_key are required');
   }
+
+  // ── Key diagnostics (remove once Hostinger issue is resolved) ──────────
+  console.log('=== GOOGLE SHEETS DEBUG ===');
+  console.log('Project ID :', credentials.project_id);
+  console.log('Email      :', credentials.client_email);
+  console.log('Key length :', credentials.private_key?.length);
+  console.log('Key starts :', credentials.private_key?.substring(0, 40));
+  console.log('Key ends   :', credentials.private_key?.slice(-40));
+  console.log('Has header :', credentials.private_key?.includes('-----BEGIN'));
+  console.log('Has footer :', credentials.private_key?.includes('-----END'));
+  console.log('Newline cnt:', (credentials.private_key?.match(/\n/g) || []).length);
+  console.log('=== END DEBUG ===');
+  // ────────────────────────────────────────────────────────────────────────
 
   const auth = new google.auth.GoogleAuth({
     credentials,
@@ -242,7 +284,7 @@ router.get('/config-status', (req, res) => {
     hasSpreadsheetId: Boolean(process.env.GOOGLE_SHEETS_ID),
     hasInlineJson,
     hasSplitCredentials,
-    range: process.env.GOOGLE_SHEETS_RANGE || 'Contacts!A:H'
+    range: process.env.GOOGLE_SHEETS_RANGE || 'Sheet1!A:J'
   });
 });
 
