@@ -111,8 +111,8 @@
 
   <!-- MAIN CONTENT -->
   <main style="min-height: 60vh;">
-    <!-- Coming Soon -->
-    <section style="padding: 5rem 2rem; display: flex; align-items: center; justify-content: center;">
+    <!-- Coming Soon (shown only when API fails and no cache) -->
+    <section id="coming-soon-view" style="padding: 5rem 2rem; display: none; align-items: center; justify-content: center;">
       <div style="text-align: center; max-width: 560px;">
         <div style="font-size: 4rem; margin-bottom: 1.5rem; line-height: 1;">✍️</div>
         <h2 style="font-weight: 800; font-size: clamp(1.75rem, 4vw, 2.75rem); letter-spacing: -0.03em; color: var(--text); margin-bottom: 1rem;">Blogs Coming Soon</h2>
@@ -280,6 +280,8 @@
         }
 
         filteredBlogs = blogs;
+        document.getElementById('coming-soon-view').style.display = 'none';
+        showBlogList(false);
         renderBlogGrid();
 
         const initialSlug = getSlugFromLocation();
@@ -292,8 +294,9 @@
         const cached = readBlogCache();
         if (cached.length > 0) {
           blogs = cached;
-
           filteredBlogs = cached;
+          document.getElementById('coming-soon-view').style.display = 'none';
+          showBlogList(false);
           renderBlogGrid();
 
           const initialSlug = getSlugFromLocation();
@@ -305,7 +308,8 @@
           showLoadError('Live blogs are temporarily unavailable. Showing your last saved blogs.');
           return;
         }
-        showLoadError('Unable to load blogs. Start backend API on http://localhost:5000 and verify DB settings.');
+        document.getElementById('coming-soon-view').style.display = 'flex';
+        showLoadError('Unable to load blogs. Check backend API connection.');
       }
     }
 
