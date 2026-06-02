@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Buy quality refurbished phones and laptops from iFix Academy. Used iPhone, Samsung, MacBook certified devices.">
   <title>Shop - iFix Academy</title>
+  <link rel="icon" type="image/png" href="Assets/iFix_Academy_Favicon_96x96.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
@@ -86,6 +87,64 @@
     .youtube-card__play { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.3); color: white; font-size: 3rem; }
     .youtube-card__title { padding: 1rem; background: white; font-weight: 600; font-size: 0.9rem; color: var(--text); line-height: 1.4; }
 
+    /* PRODUCT DETAIL MODAL */
+    .product-modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+      padding: 1rem; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+    }
+    .product-modal-overlay.open { opacity: 1; pointer-events: all; }
+    .product-modal {
+      background: white; border-radius: var(--r-2xl); max-width: 860px; width: 100%;
+      max-height: 90vh; overflow-y: auto; box-shadow: 0 24px 80px rgba(0,0,0,0.25);
+      transform: translateY(20px); transition: transform 0.35s var(--ease-expo);
+      display: grid; grid-template-columns: 1fr 1fr;
+    }
+    .product-modal-overlay.open .product-modal { transform: translateY(0); }
+    .product-modal__img-col {
+      background: var(--bg-2); border-radius: var(--r-2xl) 0 0 var(--r-2xl);
+      display: flex; align-items: center; justify-content: center; padding: 2rem; min-height: 340px;
+    }
+    .product-modal__img-col img { width: 100%; max-height: 320px; object-fit: contain; }
+    .product-modal__img-placeholder { font-size: 5rem; }
+    .product-modal__info-col { padding: 2rem 2rem 2rem 1.75rem; display: flex; flex-direction: column; }
+    .product-modal__close {
+      position: absolute; top: 1rem; right: 1rem; width: 2rem; height: 2rem;
+      border-radius: 999px; background: var(--bg-2); border: 1px solid var(--border);
+      cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center;
+      color: var(--text-2); transition: all 0.2s; z-index: 10;
+    }
+    .product-modal__close:hover { background: var(--text); color: white; }
+    .product-modal { position: relative; }
+    .product-modal__category { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); font-weight: 600; margin-bottom: 0.5rem; }
+    .product-modal__name { font-weight: 800; font-size: 1.35rem; line-height: 1.25; color: var(--text); margin-bottom: 1rem; }
+    .product-modal__price { font-size: 2rem; font-weight: 800; color: var(--accent); margin-bottom: 1.25rem; }
+    .product-modal__divider { border: none; border-top: 1px solid var(--border); margin: 0 0 1.25rem; }
+    .product-modal__desc-heading { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3); font-weight: 600; margin-bottom: 0.5rem; }
+    .product-modal__desc { font-size: 0.92rem; color: var(--text-2); line-height: 1.7; flex: 1; }
+    .product-modal__actions { display: flex; gap: 0.75rem; margin-top: 1.75rem; }
+    .product-modal__add-btn {
+      flex: 1; padding: 0.85rem 1.25rem; background: var(--accent); color: white;
+      border: none; border-radius: var(--r-lg); font-weight: 700; font-size: 1rem;
+      cursor: pointer; transition: background 0.25s;
+    }
+    .product-modal__add-btn:hover { background: var(--accent-h); }
+    .product-modal__buy-btn {
+      flex: 1; padding: 0.85rem 1.25rem; background: #1a1a2e; color: white;
+      border: none; border-radius: var(--r-lg); font-weight: 700; font-size: 1rem;
+      cursor: pointer; transition: background 0.25s;
+    }
+    .product-modal__buy-btn:hover { background: #333; }
+    .product-card { cursor: pointer; }
+
+    @media (max-width: 640px) {
+      .product-modal { grid-template-columns: 1fr; }
+      .product-modal__img-col { border-radius: var(--r-2xl) var(--r-2xl) 0 0; min-height: 200px; padding: 1.25rem; }
+      .product-modal__info-col { padding: 1.25rem; }
+      .product-modal__name { font-size: 1.1rem; }
+      .product-modal__price { font-size: 1.5rem; }
+    }
+
     /* RESPONSIVE */
     @media (max-width: 768px) {
       .page-hero { padding: 6.75rem 0 2.5rem; }
@@ -163,6 +222,26 @@
       </div>
     </div>
   </section>
+
+  <!-- PRODUCT DETAIL MODAL -->
+  <div class="product-modal-overlay" id="product-modal-overlay" onclick="closeProductModal(event)">
+    <div class="product-modal" id="product-modal">
+      <button class="product-modal__close" onclick="closeProductModal(null, true)">✕</button>
+      <div class="product-modal__img-col" id="modal-img-col"></div>
+      <div class="product-modal__info-col">
+        <div class="product-modal__category" id="modal-category"></div>
+        <div class="product-modal__name" id="modal-name"></div>
+        <div class="product-modal__price" id="modal-price"></div>
+        <hr class="product-modal__divider">
+        <div class="product-modal__desc-heading">Product Details</div>
+        <div class="product-modal__desc" id="modal-desc"></div>
+        <div class="product-modal__actions">
+          <button class="product-modal__add-btn" id="modal-add-btn">Add to Cart</button>
+          <button class="product-modal__buy-btn" id="modal-buy-btn">Buy Now</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- CART SIDEBAR -->
   <div class="cart-sidebar" id="cart-sidebar">
@@ -276,26 +355,68 @@
     // Render products
     function renderProducts(category = 'all') {
       const filtered = category === 'all' ? products : products.filter(p => p.category === category);
-      document.getElementById('products-grid').innerHTML = filtered.map(p => `
-        <div class="product-card">
+      document.getElementById('products-grid').innerHTML = filtered.map(p => {
+        const safeId = p.id;
+        return `
+        <div class="product-card" onclick="openProductModal(${safeId})">
           <div class="product-card__image">
             ${(p.image_url || p.image)
-              ? `<img src="${p.image_url || p.image}" alt="${p.name}" style="width:100%;height:100%;object-fit:contain;padding:8px;">`
+              ? `<img src="${p.image_url || p.image}" alt="${escapeHtml(p.name)}" style="width:100%;height:100%;object-fit:contain;padding:8px;">`
               : getCategoryEmoji(p.category)
             }
           </div>
           <div class="product-card__body">
-            <div class="product-card__category">${p.category}</div>
-            <div class="product-card__name">${p.name}</div>
-            <div class="product-card__description">${(p.description || '').substring(0, 60)}...</div>
+            <div class="product-card__category">${escapeHtml(p.category)}</div>
+            <div class="product-card__name">${escapeHtml(p.name)}</div>
+            <div class="product-card__description">${escapeHtml((p.description || '').substring(0, 60))}...</div>
             <div class="product-card__footer">
               <div class="product-card__price">₹${p.price.toLocaleString()}</div>
-              <button class="product-card__btn" onclick="addToCart({id: ${p.id}, name: '${p.name}', price: ${p.price}})">Add</button>
+              <button class="product-card__btn" onclick="event.stopPropagation(); addToCart({id: ${p.id}, name: '${escapeHtml(p.name)}', price: ${p.price}})">Add</button>
             </div>
           </div>
         </div>
-      `).join('');
+      `}).join('');
     }
+
+    function openProductModal(productId) {
+      const p = products.find(x => x.id === productId);
+      if (!p) return;
+
+      const imgCol = document.getElementById('modal-img-col');
+      if (p.image_url || p.image) {
+        imgCol.innerHTML = `<img src="${p.image_url || p.image}" alt="${escapeHtml(p.name)}">`;
+      } else {
+        imgCol.innerHTML = `<div class="product-modal__img-placeholder">${getCategoryEmoji(p.category)}</div>`;
+      }
+
+      document.getElementById('modal-category').textContent = (p.category || '').toUpperCase();
+      document.getElementById('modal-name').textContent = p.name;
+      document.getElementById('modal-price').textContent = '₹' + p.price.toLocaleString();
+      document.getElementById('modal-desc').textContent = p.description || 'No description available.';
+
+      document.getElementById('modal-add-btn').onclick = function() {
+        addToCart({ id: p.id, name: p.name, price: p.price });
+        closeProductModal(null, true);
+      };
+      document.getElementById('modal-buy-btn').onclick = function() {
+        addToCart({ id: p.id, name: p.name, price: p.price });
+        closeProductModal(null, true);
+        openCart();
+      };
+
+      document.getElementById('product-modal-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeProductModal(event, force) {
+      if (!force && event && document.getElementById('product-modal').contains(event.target)) return;
+      document.getElementById('product-modal-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeProductModal(null, true);
+    });
 
     function getCategoryEmoji(category) {
       const emojis = {
