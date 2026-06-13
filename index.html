@@ -506,10 +506,24 @@
       pointer-events: none;
     }
 
-    .course-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 18px 40px rgba(255, 145, 0, 0.18), 0 0 0 1px rgba(255, 145, 0, 0.25), 0 6px 20px rgba(255, 145, 0, 0.10);
-      border-color: rgba(255, 145, 0, 0.45);
+    /* Desktop: spotlight on real cursor hover only (avoids 'stuck hover' on touch) */
+    @media (hover: hover) {
+      .course-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 18px 40px rgba(255, 145, 0, 0.18), 0 0 0 1px rgba(255, 145, 0, 0.25), 0 6px 20px rgba(255, 145, 0, 0.10);
+        border-color: rgba(255, 145, 0, 0.45);
+      }
+      .course-card:hover .course-card__title { color: #1e1930; }
+    }
+
+    /* Mobile / touch: JS spotlights whichever card is centered in the viewport */
+    @media (hover: none) {
+      .course-card.is-active {
+        transform: translateY(-6px);
+        box-shadow: 0 18px 40px rgba(255, 145, 0, 0.18), 0 0 0 1px rgba(255, 145, 0, 0.25), 0 6px 20px rgba(255, 145, 0, 0.10);
+        border-color: rgba(255, 145, 0, 0.45);
+      }
+      .course-card.is-active .course-card__title { color: #1e1930; }
     }
 
     .courses-preview__top .section-label {
@@ -601,10 +615,6 @@
 
     .course-card__link:hover {
       gap: 0.65rem;
-    }
-
-    .course-card:hover .course-card__title {
-      color: #1e1930;
     }
 
     /* ════════════════════════════════════════
@@ -2673,7 +2683,7 @@
         <div class="course-card">
           <span class="course-badge b-popular">High Demand</span>
           <h3 class="course-card__title">iPhone Master Course</h3>
-          <p class="course-card__desc">Premium Lab to learn Professional iPhone repair training focused on tracing real problems and improving hand skills and practicals.</p>
+          <p class="course-card__desc">Premium Lab to learn Professional iPhone repair training focused on tracing real problems & improving hand skills and practicals.</p>
           <div class="course-card__meta"><span>30 Days</span><span>Hands-On Lab</span></div>
           <a href="courses.html#display" class="course-card__link">Explore Program →</a>
         </div>
@@ -2688,7 +2698,8 @@
         <div class="course-card">
           <span class="course-badge b-new">Most Popular</span>
           <h3 class="course-card__title">Windows Master Course</h3>
-          <p class="course-card__desc">Master laptop diagnostics, micro soldering, and advanced repair workflows used in real service environments.</p>
+          <p class="course-card__desc">Master laptop diagnostics, <br>
+            micro - soldering, and advanced repair workflows used in real service environments.</p>
           <div class="course-card__meta"><span>45 Days</span><span>Advanced Repairs</span></div>
           <a href="courses.html#laptop" class="course-card__link">Explore Program →</a>
         </div>
@@ -3001,6 +3012,24 @@
       entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in-view'); obs.unobserve(e.target); } });
     }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
     document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el => obs.observe(el));
+
+    /* ── COURSE CARD AUTO-SPOTLIGHT (touch devices only) ──
+       No cursor on mobile, so we light up whichever card is centered
+       in the viewport as the user scrolls — mirroring the desktop hover. */
+    (function () {
+      if (!('IntersectionObserver' in window)) return;
+      if (!window.matchMedia('(hover: none)').matches) return; // touch/no-cursor only
+      const cards = document.querySelectorAll('.courses-preview .course-card');
+      if (!cards.length) return;
+
+      const setActive = card => cards.forEach(c => c.classList.toggle('is-active', c === card));
+
+      const spotlight = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) setActive(e.target); });
+      }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 }); // active when card crosses screen center
+
+      cards.forEach(c => spotlight.observe(c));
+    })();
   </script>
 
   <!-- GSAP - Hero entrance -->

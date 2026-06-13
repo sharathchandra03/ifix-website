@@ -161,6 +161,8 @@
     }
     .page-hero__inner { max-width:1280px; margin:0 auto; padding:0 2rem; display:grid; grid-template-columns:1.1fr 0.9fr; gap:2.5rem; align-items:center; }
     .page-hero__heading { font-weight:800; font-size:clamp(2.6rem,4.2vw,4rem); line-height:0.96; letter-spacing:-0.04em; color:var(--text); margin-bottom:1rem; }
+    /* negative lift looks great on desktop; adapts down on smaller screens so the heading top isn't clipped under the navbar */
+    .page-hero__head-wrap { margin-top:-4rem; }
     .page-hero__heading span { color:var(--accent); }
     .page-hero__sub { font-size:1.05rem; line-height:1.65; color:var(--text-2); margin-bottom:1.25rem; max-width: 46ch; }
 
@@ -465,12 +467,18 @@
     @media (max-width:900px) {
       .page-hero { padding: 5.5rem 0 2rem; }
       .page-hero__inner { grid-template-columns:1fr; gap:1.8rem; }
+      .page-hero__head-wrap { margin-top:-1.5rem; }
       .page-hero__sub { font-size:0.95rem; }
       .contact-form-inner { max-width:none; }
       .centre-solo { border-radius: 1.5rem; }
     }
     @media (max-width:560px) {
       .page-hero { padding: 5.15rem 0 1.8rem; }
+      .page-hero__head-wrap { margin-top:0; }
+      /* Adaptive heading: scales with viewport + a touch more line-height so capital letters never clip */
+      .page-hero__heading { font-size: clamp(1.85rem, 8.6vw, 2.6rem); line-height: 1.08; overflow-wrap: break-word; }
+      /* Shrink the academy-centre heading a little so it fits comfortably on phones */
+      .centres__top .section-heading { font-size: clamp(1.45rem, 6.4vw, 1.9rem); line-height: 1.15; }
       .qchip { padding: 0.85rem 1rem; }
       .centre-card { padding: 1.5rem; }
       .centre-foot { align-items: flex-start; }
@@ -534,7 +542,7 @@
       <div class="orb orb--sm-blue"></div>
     </div>
     <div class="page-hero__inner" style="position:relative;z-index:1;">
-      <div style="margin-top:-4rem;">
+      <div class="page-hero__head-wrap">
         <span class="section-label" style="font-size:0.78rem;letter-spacing:0.12em;margin-left:0.3rem;">Contact Us</span>
         <h1 class="page-hero__heading">Get in Touch<br>with <span>iFix Academy</span></h1>
         <p class="page-hero__sub">Visit our academy centre in Indiranagar, Bengaluru. Don't have time to visit? Drop us a message and we'll get back to you promptly.</p>

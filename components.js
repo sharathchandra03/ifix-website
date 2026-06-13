@@ -142,7 +142,7 @@
   function buildWhatsAppFloatHTML() {
     const phoneNumber = '916364429494';
     const defaultMessage = encodeURIComponent(
-      'Hi iFix Academy, please tell me what you need from our side so we can start the integration.'
+      'Hi, Can I get more details about your courses?'
     );
 
     return `

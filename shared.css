@@ -488,8 +488,6 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   .navbar__logo-img { height: 44px; }
   .mobile-menu { width: 100vw; border-left: none; }
   .btn { width: 100%; justify-content: center; }
-  .footer__inner { grid-template-columns: 1fr; }
-  .footer__bottom { padding: 1rem; }
   .wa-float {
     right: 0.9rem;
     bottom: 0.9rem;
@@ -548,5 +546,67 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .enroll-cta .btn--wo, .cta-banner .btn--white-outline, .visit-banner .btn--wo {
   padding-left: 1.9rem;
   padding-right: 1.9rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MOBILE FOOTER — dedicated layout (≤560px only)
+   Separate, self-contained block. Desktop/tablet footer untouched.
+   Structure:
+     Row 1  →  Brand (logo + tagline + socials), centered
+     Row 2  →  Quick Links  |  Courses   (two aligned columns)
+     Row 3  →  Contact Us   (full width)
+     Bottom →  Copyright, centered
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 560px) {
+  .footer { padding: 3rem 0 0; }
+
+  .footer__inner {
+    grid-template-columns: 1fr 1fr;     /* Quick Links | Courses */
+    gap: 2.25rem 1.25rem;
+    padding: 0 1.5rem 2.25rem;
+  }
+
+  /* Brand: full width, centered */
+  .footer__brand {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .footer__logo-img {
+    height: 60px;
+    margin-left: 0;                      /* cancel desktop -35px offset */
+  }
+  .footer__tagline {
+    margin: 0.6rem 0 1.1rem;
+    max-width: 22rem;
+  }
+  .footer__social { justify-content: center; }
+  .footer__social-link { width: 40px; height: 40px; }   /* easier tap targets */
+
+  /* Link columns: tidy, left-aligned within each */
+  .footer__col { text-align: left; }
+  .footer__col-title { margin-bottom: 0.9rem; }
+  .footer__list { gap: 0.75rem; }
+  .footer__link { font-size: 0.9rem; }
+
+  /* Contact Us spans both columns on its own row */
+  .footer__col--contact,
+  .footer__inner > .footer__col:last-child {
+    grid-column: 1 / -1;
+    border-top: 1px solid var(--border);
+    padding-top: 1.75rem;
+  }
+  .footer__contact-item { font-size: 0.9rem; }
+
+  /* Bottom bar: stacked + centered */
+  .footer__bottom {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.3rem;
+    padding: 1.1rem 1.5rem 1.5rem;
+  }
 }
 
