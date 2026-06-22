@@ -120,12 +120,15 @@ async function logDatabaseStatus() {
 // doesn't crash the entire server
 // ============================================================
 const routesToLoad = [
-  ['/api/products', './routes/products'],
-  ['/api/blog',     './routes/blog'],
-  ['/api/youtube',  './routes/youtube'],
-  ['/api/contact',  './routes/contact'],
-  ['/api/auth',     './routes/auth'],
-  // ['/api/payment',  './routes/payment'],
+  ['/api/products',    './routes/products'],
+  ['/api/categories',  './routes/categories'],
+  ['/api/orders',      './routes/orders'],
+  ['/api/form-config', './routes/form-config'],
+  ['/api/blog',        './routes/blog'],
+  ['/api/youtube',     './routes/youtube'],
+  ['/api/contact',     './routes/contact'],
+  ['/api/auth',        './routes/auth'],
+  ['/api/payment',     './routes/payment'],
 ];
 
 for (const [routePath, filePath] of routesToLoad) {

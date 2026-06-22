@@ -1604,6 +1604,91 @@
     }
 
     /* ══════════════════════════════════════════════
+       CHECKOUT MODAL
+    ══════════════════════════════════════════════ */
+    .checkout-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(17, 24, 39, .55);
+      backdrop-filter: blur(3px);
+      z-index: 200;
+      display: none;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 2rem 1rem;
+      overflow-y: auto;
+    }
+    .checkout-modal.open { display: flex; }
+    .checkout-modal__box {
+      background: #fff;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 560px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, .25);
+      overflow: hidden;
+      margin: auto;
+    }
+    .checkout-modal__head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .checkout-modal__head h2 { font-size: 1.25rem; margin: 0; }
+    .checkout-modal__close {
+      background: none; border: none; font-size: 1.25rem; cursor: pointer; color: var(--text-2);
+    }
+    .checkout-modal__body { padding: 1.5rem; }
+    .checkout-summary {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: .85rem 1rem;
+      margin-bottom: 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      font-weight: 600;
+    }
+    .checkout-field { margin-bottom: 1rem; }
+    .checkout-field label {
+      display: block; font-size: .85rem; font-weight: 600; margin-bottom: .35rem; color: var(--text);
+    }
+    .checkout-field label .req { color: #dc2626; }
+    .checkout-field input,
+    .checkout-field textarea {
+      width: 100%;
+      padding: .7rem .85rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: .95rem;
+      font-family: inherit;
+      box-sizing: border-box;
+    }
+    .checkout-field textarea { min-height: 70px; resize: vertical; }
+    .checkout-field input:focus,
+    .checkout-field textarea:focus { outline: none; border-color: var(--accent, #2563eb); }
+    .checkout-field.invalid input,
+    .checkout-field.invalid textarea { border-color: #dc2626; }
+    .checkout-field__error { color: #dc2626; font-size: .78rem; margin-top: .25rem; display: none; }
+    .checkout-field.invalid .checkout-field__error { display: block; }
+    .checkout-submit-btn {
+      width: 100%;
+      padding: .9rem;
+      border: none;
+      border-radius: 10px;
+      background: var(--accent, #2563eb);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: .5rem;
+    }
+    .checkout-submit-btn:disabled { opacity: .65; cursor: not-allowed; }
+    .checkout-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1rem; }
+    @media (max-width: 480px) { .checkout-grid { grid-template-columns: 1fr; } }
+
+    /* ══════════════════════════════════════════════
        YOUTUBE
     ══════════════════════════════════════════════ */
     .youtube-section {
@@ -2140,6 +2225,26 @@
   <!-- CART OVERLAY -->
   <div id="cart-overlay" onclick="closeCart()"></div>
 
+  <!-- CHECKOUT MODAL -->
+  <div class="checkout-modal" id="checkout-modal">
+    <div class="checkout-modal__box">
+      <div class="checkout-modal__head">
+        <h2>Checkout</h2>
+        <button class="checkout-modal__close" onclick="closeCheckout()" aria-label="Close">✕</button>
+      </div>
+      <div class="checkout-modal__body">
+        <div class="checkout-summary">
+          <span id="checkout-summary-items">0 items</span>
+          <span id="checkout-summary-total">₹0</span>
+        </div>
+        <form id="checkout-form" onsubmit="event.preventDefault(); submitCheckout();">
+          <div id="checkout-fields"></div>
+          <button type="submit" class="checkout-submit-btn" id="checkout-submit-btn">Place Order</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast -->
   <div class="cart-toast" id="cart-toast">
     <span class="cart-toast__check">✓</span>
@@ -2404,35 +2509,179 @@
       document.getElementById('cart-overlay').style.display = 'none';
     }
 
-    async function proceedToCheckout() {
-      if (cart.length === 0) { showToast('Add items to cart first'); return; }
-      const total = cart.reduce((s, i) => s + i.price * i.quantity, 0);
-      const btn = document.getElementById('checkout-btn');
-      if (btn) { btn.disabled = true; btn.textContent = 'Opening payment…'; }
+    /* ── Checkout form (dynamic + admin-connected) ───── */
+
+    // Fallback field config used if the backend is unavailable.
+    const DEFAULT_CHECKOUT_FIELDS = [
+      { field_key: 'full_name',   label: 'Full Name',    field_type: 'text',     placeholder: 'Enter your full name',   is_required: 1 },
+      { field_key: 'email',       label: 'Email',        field_type: 'email',    placeholder: 'you@example.com',        is_required: 1 },
+      { field_key: 'phone',       label: 'Phone Number', field_type: 'tel',      placeholder: '10-digit mobile number', is_required: 1 },
+      { field_key: 'address',     label: 'Address',      field_type: 'textarea', placeholder: 'House no, street, area',  is_required: 1 },
+      { field_key: 'city',        label: 'City',         field_type: 'text',     placeholder: 'City',                   is_required: 1 },
+      { field_key: 'state',       label: 'State',        field_type: 'text',     placeholder: 'State',                  is_required: 1 },
+      { field_key: 'postal_code', label: 'Postal Code',  field_type: 'text',     placeholder: '6-digit PIN code',       is_required: 1 },
+      { field_key: 'notes',       label: 'Order Notes',  field_type: 'textarea', placeholder: 'Any special instructions (optional)', is_required: 0 }
+    ];
+
+    // Maps checkout field keys → the order payload columns the backend expects.
+    const ORDER_FIELD_MAP = {
+      full_name: 'customer_name', name: 'customer_name',
+      email: 'customer_email', phone: 'customer_phone',
+      address: 'customer_address', city: 'customer_city',
+      state: 'customer_state', postal_code: 'customer_postal_code',
+      notes: 'notes'
+    };
+
+    let checkoutFields = DEFAULT_CHECKOUT_FIELDS;
+
+    async function loadCheckoutForm() {
       try {
-        const orderRes = await fetch(`${API_BASE}/payment/create-order`, {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ amount: total, customer_name: '', customer_email: '', customer_phone: '', items: cart })
-        });
-        const orderData = await orderRes.json();
-        if (!orderData.success) { alert('Failed to create order'); return; }
-        const options = {
-          key: orderData.order.key, amount: orderData.order.amount,
-          currency: orderData.order.currency, order_id: orderData.order.id,
-          handler: response => verifyPayment(response)
-        };
-        const razorpay = new Razorpay(options);
-        razorpay.on('payment.failed', () => {
-          if (btn) { btn.disabled = false; btn.textContent = 'Proceed to Checkout →'; }
-        });
-        razorpay.open();
+        const res = await fetch(`${API_BASE}/form-config`);
+        if (!res.ok) throw new Error(res.status);
+        const fields = await res.json();
+        if (Array.isArray(fields) && fields.length) checkoutFields = fields;
       } catch (e) {
-        alert('Error: ' + e.message);
-        if (btn) { btn.disabled = false; btn.textContent = 'Proceed to Checkout →'; }
+        console.warn('Using default checkout form (config unavailable):', e.message);
+        checkoutFields = DEFAULT_CHECKOUT_FIELDS;
       }
     }
 
+    function renderCheckoutFields() {
+      const wrap = wrapInGrid();
+      document.getElementById('checkout-fields').innerHTML = wrap;
+    }
+
+    // Fields that are naturally short get paired into a 2-column grid.
+    function wrapInGrid() {
+      return checkoutFields.map(f => {
+        const id = `co-${f.field_key}`;
+        const req = f.is_required ? '<span class="req">*</span>' : '';
+        const input = f.field_type === 'textarea'
+          ? `<textarea id="${id}" data-key="${escapeHtml(f.field_key)}" placeholder="${escapeHtml(f.placeholder || '')}"></textarea>`
+          : `<input id="${id}" data-key="${escapeHtml(f.field_key)}" type="${escapeHtml(f.field_type || 'text')}" placeholder="${escapeHtml(f.placeholder || '')}">`;
+        return `
+          <div class="checkout-field" data-required="${f.is_required ? 1 : 0}">
+            <label for="${id}">${escapeHtml(f.label)} ${req}</label>
+            ${input}
+            <div class="checkout-field__error">This field is required.</div>
+          </div>`;
+      }).join('');
+    }
+
+    async function proceedToCheckout() {
+      if (cart.length === 0) { showToast('Add items to cart first'); return; }
+      await loadCheckoutForm();
+      renderCheckoutFields();
+      const count = cart.reduce((s, i) => s + i.quantity, 0);
+      const total = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+      document.getElementById('checkout-summary-items').textContent = `${count} item${count !== 1 ? 's' : ''}`;
+      document.getElementById('checkout-summary-total').textContent = '₹' + total.toLocaleString();
+      closeCart();
+      document.getElementById('checkout-modal').classList.add('open');
+    }
+
+    function closeCheckout() {
+      document.getElementById('checkout-modal').classList.remove('open');
+    }
+
+    function validateCheckout() {
+      let valid = true;
+      document.querySelectorAll('#checkout-fields .checkout-field').forEach(group => {
+        const field = group.querySelector('input, textarea');
+        const required = group.getAttribute('data-required') === '1';
+        if (required && !field.value.trim()) {
+          group.classList.add('invalid');
+          valid = false;
+        } else {
+          group.classList.remove('invalid');
+        }
+      });
+      return valid;
+    }
+
+    function collectCheckoutData() {
+      const data = {};
+      document.querySelectorAll('#checkout-fields input, #checkout-fields textarea').forEach(el => {
+        const key = el.getAttribute('data-key');
+        const column = ORDER_FIELD_MAP[key] || key;
+        data[column] = el.value.trim();
+      });
+      return data;
+    }
+
+    async function submitCheckout() {
+      if (!validateCheckout()) { showToast('Please fill all required fields'); return; }
+
+      const btn = document.getElementById('checkout-submit-btn');
+      btn.disabled = true; btn.textContent = 'Placing order…';
+
+      const customer = collectCheckoutData();
+      const total = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+
+      try {
+        // Feature-detect Razorpay; if enabled, use the online payment flow.
+        let paymentEnabled = false;
+        try {
+          const cfgRes = await fetch(`${API_BASE}/payment/config`);
+          if (cfgRes.ok) paymentEnabled = (await cfgRes.json()).enabled;
+        } catch (e) { /* fall back to direct order placement */ }
+
+        if (paymentEnabled) {
+          await checkoutWithRazorpay(customer, total, btn);
+        } else {
+          await placeOrderDirect(customer, btn);
+        }
+      } catch (e) {
+        alert('Error: ' + e.message);
+        btn.disabled = false; btn.textContent = 'Place Order';
+      }
+    }
+
+    // Direct order placement (no online payment configured yet).
+    async function placeOrderDirect(customer, btn) {
+      const res = await fetch(`${API_BASE}/orders`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...customer, items: cart })
+      });
+      const result = await res.json();
+      if (!res.ok || !result.success) throw new Error(result.error || 'Failed to place order');
+      alert(`Order placed successfully!\nYour order ID is ${result.order_id}.\nWe will contact you to confirm.`);
+      cart = []; saveCart(); updateCartUI(); closeCheckout();
+      btn.disabled = false; btn.textContent = 'Place Order';
+    }
+
+    // Razorpay flow — activated automatically once keys are configured.
+    async function checkoutWithRazorpay(customer, total, btn) {
+      const orderRes = await fetch(`${API_BASE}/payment/create-order`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: total, ...customer, items: cart })
+      });
+      const orderData = await orderRes.json();
+      if (!orderData.success) throw new Error(orderData.error || 'Failed to create payment order');
+
+      const options = {
+        key: orderData.order.key,
+        amount: orderData.order.amount,
+        currency: orderData.order.currency,
+        order_id: orderData.order.id,
+        name: 'iFix India Academy',
+        prefill: {
+          name: customer.customer_name || '',
+          email: customer.customer_email || '',
+          contact: customer.customer_phone || ''
+        },
+        handler: response => verifyPayment(response),
+        modal: { ondismiss: () => { btn.disabled = false; btn.textContent = 'Place Order'; } }
+      };
+      const razorpay = new Razorpay(options);
+      razorpay.on('payment.failed', () => {
+        btn.disabled = false; btn.textContent = 'Place Order';
+      });
+      razorpay.open();
+    }
+
     async function verifyPayment(response) {
+      const btn = document.getElementById('checkout-submit-btn');
       try {
         const res = await fetch(`${API_BASE}/payment/verify-payment`, {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -2443,19 +2692,16 @@
           })
         });
         const result = await res.json();
-        const btn = document.getElementById('checkout-btn');
         if (result.success) {
           alert('Payment successful! Thank you for your order.');
-          cart = []; saveCart(); updateCartUI(); closeCart();
-          if (btn) { btn.disabled = false; btn.textContent = 'Proceed to Checkout →'; }
+          cart = []; saveCart(); updateCartUI(); closeCheckout();
         } else {
           alert('Payment verification failed');
-          if (btn) { btn.disabled = false; btn.textContent = 'Proceed to Checkout →'; }
         }
       } catch (e) {
         alert('Error: ' + e.message);
-        const btn = document.getElementById('checkout-btn');
-        if (btn) { btn.disabled = false; btn.textContent = 'Proceed to Checkout →'; }
+      } finally {
+        if (btn) { btn.disabled = false; btn.textContent = 'Place Order'; }
       }
     }
 

@@ -317,6 +317,8 @@
           <div class="admin-menu__item" onclick="switchTab('create-blog')">✍️ Create Blog</div>
           <div class="admin-menu__item" onclick="switchTab('manage-products')">📦 Manage Products</div>
           <div class="admin-menu__item" onclick="cancelProductEdit(); switchTab('add-product')">➕ Add Product</div>
+          <div class="admin-menu__item" onclick="switchTab('orders')">📋 Manage Orders</div>
+          <div class="admin-menu__item" onclick="switchTab('manage-form')">🧾 Manage Form</div>
         </nav>
         <div class="admin-footer">
           <button class="logout-btn" onclick="logout()">🚪 Logout</button>
@@ -350,6 +352,10 @@
             <div class="stat-card">
               <div class="stat-label">Total Products</div>
               <div class="stat-value" id="stat-products">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Total Orders</div>
+              <div class="stat-value" id="stat-orders">0</div>
             </div>
           </div>
         </div>
@@ -594,16 +600,12 @@
               </div>
               <div class="form-group">
                 <label class="form-label">Category *</label>
-                <input type="text" id="product-category" class="form-input" placeholder="parts, screens, batteries..." list="category-options" required>
-                <datalist id="category-options">
-                  <option value="parts">
-                  <option value="screens">
-                  <option value="batteries">
-                  <option value="accessories">
-                  <option value="phones">
-                  <option value="laptops">
-                  <option value="tablets">
-                </datalist>
+                <div style="display:flex; gap:.5rem; align-items:stretch;">
+                  <select id="product-category" class="form-input" required style="flex:1;">
+                    <option value="" disabled selected>Select a category…</option>
+                  </select>
+                  <button type="button" class="tool-btn" style="white-space:nowrap;" onclick="openCategoryModal()">+ New</button>
+                </div>
               </div>
             </div>
             <div class="form-row">
@@ -641,7 +643,99 @@
           </form>
         </div>
 
+        <!-- MANAGE ORDERS TAB -->
+        <div id="orders" class="admin-section">
+          <div class="admin-header">
+            <h2 class="admin-title">Manage Orders</h2>
+            <button class="btn btn--primary" onclick="loadOrders()">↻ Refresh</button>
+          </div>
+          <div class="form-group" style="max-width:420px; margin-bottom:1rem;">
+            <input type="text" id="order-search" class="form-input" placeholder="🔍 Search by order ID, name, email, phone…" oninput="renderOrdersTable()">
+          </div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Customer</th>
+                  <th>Contact</th>
+                  <th>Address</th>
+                  <th>Products</th>
+                  <th>Qty</th>
+                  <th>Total</th>
+                  <th>Payment</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="orders-table"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- MANAGE FORM TAB -->
+        <div id="manage-form" class="admin-section">
+          <div class="admin-header">
+            <h2 class="admin-title">Manage Checkout Form</h2>
+            <div style="display:flex; gap:.5rem;">
+              <button class="btn" onclick="addFormFieldRow()">+ Add Field</button>
+              <button class="btn btn--primary" id="form-save-btn" onclick="saveFormConfig()">Save Configuration</button>
+            </div>
+          </div>
+          <p style="color:var(--text-2); margin-bottom:1rem;">
+            Control the fields shown on the shop checkout form. Reorder, edit labels, set field types, mark fields required, or remove them. Changes apply to the live checkout after saving.
+          </p>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:90px;">Order</th>
+                  <th>Label</th>
+                  <th>Type</th>
+                  <th>Placeholder</th>
+                  <th style="width:90px;">Required</th>
+                  <th style="width:110px;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="form-fields-table"></tbody>
+            </table>
+          </div>
+        </div>
+
       </main>
+    </div>
+  </div>
+
+  <!-- ADD CATEGORY MODAL -->
+  <div id="category-modal" class="modal-backdrop" aria-hidden="true">
+    <div class="preview-modal" style="max-width:420px;">
+      <div class="preview-modal__head">
+        <strong>Add New Category</strong>
+        <button type="button" class="close-btn" onclick="closeCategoryModal()">✕</button>
+      </div>
+      <div class="preview-modal__body">
+        <div class="form-group">
+          <label class="form-label">Category Name</label>
+          <input type="text" id="new-category-name" class="form-input" placeholder="e.g. cameras" onkeydown="if(event.key==='Enter'){event.preventDefault();submitNewCategory();}">
+          <div id="category-modal-msg" style="color:#dc2626; margin-top:.5rem; font-size:.9rem;"></div>
+        </div>
+        <div class="form-buttons" style="margin-top:1rem;">
+          <button type="button" class="cancel-btn" onclick="closeCategoryModal()">Cancel</button>
+          <button type="button" class="save-btn" id="category-save-btn" onclick="submitNewCategory()">Create Category</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORDER DETAIL MODAL -->
+  <div id="order-modal" class="modal-backdrop" aria-hidden="true">
+    <div class="preview-modal">
+      <div class="preview-modal__head">
+        <strong>Order Details</strong>
+        <button type="button" class="close-btn" onclick="closeOrderModal()">✕</button>
+      </div>
+      <div class="preview-modal__body" id="order-modal-body"></div>
     </div>
   </div>
 
@@ -1547,6 +1641,9 @@
       }
       await loadBlogs();
       await loadAdminProducts();
+      await loadCategories();
+      await loadOrders();
+      await loadFormConfig();
       updateStats();
     }
 
@@ -1633,6 +1730,8 @@
       document.getElementById('stat-published').textContent = published;
       document.getElementById('stat-drafts').textContent = draft;
       document.getElementById('stat-views').textContent = views;
+      const ordersStat = document.getElementById('stat-orders');
+      if (ordersStat) ordersStat.textContent = allOrders.length;
     }
 
     // Edit Blog
@@ -1776,7 +1875,7 @@
       editingProductId = id;
       document.getElementById('product-form-title').textContent = 'Edit Product';
       document.getElementById('product-name').value = p.name || '';
-      document.getElementById('product-category').value = p.category || '';
+      setCategorySelectValue(p.category || '');
       document.getElementById('product-price').value = p.price || '';
       document.getElementById('product-stock').value = p.stock ?? 0;
       document.getElementById('product-description').value = p.description || '';
@@ -1849,6 +1948,348 @@
       const preview = document.getElementById('product-image-preview');
       preview.src = '';
       preview.style.display = 'none';
+    }
+
+    // ============================================================
+    // CATEGORY MANAGEMENT
+    // ============================================================
+    let allCategories = [];
+
+    async function loadCategories() {
+      try {
+        const res = await fetch(`${API_BASE}/categories`, { headers: authHeaders() });
+        if (!res.ok) throw new Error(`${res.status}`);
+        allCategories = await res.json();
+      } catch (e) {
+        console.error('Error loading categories:', e);
+        allCategories = [];
+      }
+      renderCategorySelect();
+    }
+
+    function renderCategorySelect() {
+      const select = document.getElementById('product-category');
+      if (!select) return;
+      const current = select.value;
+      select.innerHTML = '<option value="" disabled selected>Select a category…</option>'
+        + allCategories.map(c => `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)}</option>`).join('');
+      if (current) setCategorySelectValue(current);
+    }
+
+    // Set the select to a value, injecting a temporary option for legacy categories
+    function setCategorySelectValue(value) {
+      const select = document.getElementById('product-category');
+      if (!select) return;
+      if (!value) { select.value = ''; return; }
+      const exists = Array.from(select.options).some(o => o.value === value);
+      if (!exists) {
+        const opt = document.createElement('option');
+        opt.value = value;
+        opt.textContent = value;
+        select.appendChild(opt);
+      }
+      select.value = value;
+    }
+
+    function openCategoryModal() {
+      document.getElementById('new-category-name').value = '';
+      document.getElementById('category-modal-msg').textContent = '';
+      const modal = document.getElementById('category-modal');
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+      setTimeout(() => document.getElementById('new-category-name').focus(), 50);
+    }
+
+    function closeCategoryModal() {
+      const modal = document.getElementById('category-modal');
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+    }
+
+    async function submitNewCategory() {
+      const input = document.getElementById('new-category-name');
+      const msg = document.getElementById('category-modal-msg');
+      const name = input.value.trim();
+      msg.textContent = '';
+
+      if (!name) { msg.textContent = 'Category name cannot be empty.'; return; }
+      if (allCategories.some(c => c.name.toLowerCase() === name.toLowerCase())) {
+        msg.textContent = 'That category already exists.';
+        return;
+      }
+
+      const btn = document.getElementById('category-save-btn');
+      btn.disabled = true; btn.textContent = 'Saving…';
+      try {
+        const res = await fetch(`${API_BASE}/categories`, {
+          method: 'POST',
+          headers: authHeaders({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify({ name })
+        });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.error || `Server error ${res.status}`);
+        }
+        const created = await res.json();
+        await loadCategories();
+        setCategorySelectValue(created.name);
+        closeCategoryModal();
+      } catch (e) {
+        msg.textContent = e.message;
+      } finally {
+        btn.disabled = false; btn.textContent = 'Create Category';
+      }
+    }
+
+    // ============================================================
+    // ORDER MANAGEMENT
+    // ============================================================
+    let allOrders = [];
+    const ORDER_STATUSES = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
+
+    function parseOrderItems(items) {
+      if (Array.isArray(items)) return items;
+      if (typeof items === 'string') { try { return JSON.parse(items); } catch (e) { return []; } }
+      return [];
+    }
+
+    function itemsSummary(items) {
+      const list = parseOrderItems(items);
+      if (!list.length) return '—';
+      return list.map(i => `${escapeHtml(i.name || 'Item')} ×${i.quantity || 1}`).join(', ');
+    }
+
+    function statusBadge(value, kind) {
+      const colors = {
+        pending:    '#b45309', processing: '#1d4ed8', shipped: '#7c3aed',
+        delivered:  '#15803d', cancelled:  '#b91c1c',
+        paid:       '#15803d', failed:     '#b91c1c'
+      };
+      const c = colors[value] || '#4b5563';
+      return `<span style="display:inline-block;padding:.2rem .55rem;border-radius:999px;font-size:.75rem;font-weight:600;color:#fff;background:${c};text-transform:capitalize;">${escapeHtml(value || 'pending')}</span>`;
+    }
+
+    async function loadOrders() {
+      try {
+        const res = await fetch(`${API_BASE}/orders`, { headers: authHeaders() });
+        if (!res.ok) throw new Error(`${res.status}`);
+        allOrders = await res.json();
+      } catch (e) {
+        console.error('Error loading orders:', e);
+        allOrders = [];
+      }
+      renderOrdersTable();
+      const ordersStat = document.getElementById('stat-orders');
+      if (ordersStat) ordersStat.textContent = allOrders.length;
+    }
+
+    function renderOrdersTable() {
+      const tbody = document.getElementById('orders-table');
+      if (!tbody) return;
+      const q = (document.getElementById('order-search')?.value || '').trim().toLowerCase();
+      const filtered = !q ? allOrders : allOrders.filter(o =>
+        [o.order_id, o.customer_name, o.customer_email, o.customer_phone]
+          .some(v => String(v || '').toLowerCase().includes(q))
+      );
+
+      if (!filtered.length) {
+        tbody.innerHTML = `<tr><td colspan="11" style="text-align:center;padding:2rem;color:var(--text-2);">${allOrders.length ? 'No orders match your search.' : 'No orders yet.'}</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(o => {
+        const address = [o.customer_address, o.customer_city, o.customer_state, o.customer_postal_code]
+          .filter(Boolean).join(', ');
+        const date = o.created_at ? new Date(o.created_at).toLocaleString() : '—';
+        const statusSelect = `<select class="form-input" style="padding:.3rem;min-width:120px;" onchange="updateOrderStatus(${o.id}, this.value)">
+          ${ORDER_STATUSES.map(s => `<option value="${s}" ${o.status === s ? 'selected' : ''}>${s.charAt(0).toUpperCase() + s.slice(1)}</option>`).join('')}
+        </select>`;
+        return `
+          <tr>
+            <td><strong>${escapeHtml(o.order_id)}</strong></td>
+            <td>${escapeHtml(o.customer_name)}</td>
+            <td>${escapeHtml(o.customer_email)}<br><span style="color:var(--text-2);">${escapeHtml(o.customer_phone || '')}</span></td>
+            <td style="max-width:200px;font-size:.85rem;">${escapeHtml(address || '—')}</td>
+            <td style="max-width:220px;font-size:.85rem;">${itemsSummary(o.items)}</td>
+            <td>${o.quantity ?? '—'}</td>
+            <td>₹${Number(o.total_amount || 0).toLocaleString()}</td>
+            <td>${statusBadge(o.payment_status, 'payment')}</td>
+            <td>${statusSelect}</td>
+            <td style="font-size:.8rem;">${escapeHtml(date)}</td>
+            <td>
+              <div class="action-buttons">
+                <button class="action-btn edit" onclick="viewOrder(${o.id})">View</button>
+                <button class="action-btn delete" onclick="deleteOrder(${o.id})">Delete</button>
+              </div>
+            </td>
+          </tr>`;
+      }).join('');
+    }
+
+    async function updateOrderStatus(id, status) {
+      try {
+        const res = await fetch(`${API_BASE}/orders/${id}/status`, {
+          method: 'PUT',
+          headers: authHeaders({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify({ status })
+        });
+        if (!res.ok) { const err = await res.json().catch(() => ({})); throw new Error(err.error || res.status); }
+        const o = allOrders.find(x => x.id === id);
+        if (o) o.status = status;
+      } catch (e) {
+        alert('Error updating status: ' + e.message);
+        renderOrdersTable();
+      }
+    }
+
+    async function deleteOrder(id) {
+      if (!confirm('Delete this order? This cannot be undone.')) return;
+      try {
+        const res = await fetch(`${API_BASE}/orders/${id}`, { method: 'DELETE', headers: authHeaders() });
+        if (!res.ok) throw new Error(`Delete failed: ${res.status}`);
+        await loadOrders();
+      } catch (e) {
+        alert('Error: ' + e.message);
+      }
+    }
+
+    function viewOrder(id) {
+      const o = allOrders.find(x => x.id === id);
+      if (!o) return;
+      const items = parseOrderItems(o.items);
+      const address = [o.customer_address, o.customer_city, o.customer_state, o.customer_postal_code]
+        .filter(Boolean).join(', ');
+      const itemRows = items.length ? items.map(i => `
+        <tr>
+          <td>${escapeHtml(i.name || 'Item')}</td>
+          <td style="text-align:center;">${i.quantity || 1}</td>
+          <td style="text-align:right;">₹${Number(i.price || 0).toLocaleString()}</td>
+          <td style="text-align:right;">₹${(Number(i.price || 0) * Number(i.quantity || 1)).toLocaleString()}</td>
+        </tr>`).join('') : '<tr><td colspan="4" style="color:var(--text-2);">No items recorded.</td></tr>';
+
+      document.getElementById('order-modal-body').innerHTML = `
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1rem;">
+          <div><strong>Order ID:</strong><br>${escapeHtml(o.order_id)}</div>
+          <div><strong>Date:</strong><br>${o.created_at ? new Date(o.created_at).toLocaleString() : '—'}</div>
+          <div><strong>Customer:</strong><br>${escapeHtml(o.customer_name)}</div>
+          <div><strong>Email:</strong><br>${escapeHtml(o.customer_email)}</div>
+          <div><strong>Phone:</strong><br>${escapeHtml(o.customer_phone || '—')}</div>
+          <div><strong>Payment:</strong><br>${statusBadge(o.payment_status, 'payment')}</div>
+          <div style="grid-column:1 / -1;"><strong>Address:</strong><br>${escapeHtml(address || '—')}</div>
+          ${o.notes ? `<div style="grid-column:1 / -1;"><strong>Notes:</strong><br>${escapeHtml(o.notes)}</div>` : ''}
+          ${o.razorpay_order_id ? `<div style="grid-column:1 / -1;"><strong>Razorpay Order:</strong><br>${escapeHtml(o.razorpay_order_id)}</div>` : ''}
+          ${o.razorpay_payment_id ? `<div style="grid-column:1 / -1;"><strong>Razorpay Payment:</strong><br>${escapeHtml(o.razorpay_payment_id)}</div>` : ''}
+        </div>
+        <table style="width:100%;border-collapse:collapse;">
+          <thead><tr style="text-align:left;border-bottom:1px solid var(--border);">
+            <th>Product</th><th style="text-align:center;">Qty</th><th style="text-align:right;">Price</th><th style="text-align:right;">Subtotal</th>
+          </tr></thead>
+          <tbody>${itemRows}</tbody>
+          <tfoot><tr style="border-top:2px solid var(--border);font-weight:700;">
+            <td colspan="3" style="text-align:right;padding-top:.5rem;">Total</td>
+            <td style="text-align:right;padding-top:.5rem;">₹${Number(o.total_amount || 0).toLocaleString()}</td>
+          </tr></tfoot>
+        </table>`;
+      const modal = document.getElementById('order-modal');
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeOrderModal() {
+      const modal = document.getElementById('order-modal');
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+    }
+
+    // ============================================================
+    // CHECKOUT FORM CONFIGURATION (Manage Form)
+    // ============================================================
+    let formFields = [];
+    const FIELD_TYPES = ['text', 'email', 'tel', 'number', 'textarea', 'select'];
+
+    async function loadFormConfig() {
+      try {
+        const res = await fetch(`${API_BASE}/form-config/all`, { headers: authHeaders() });
+        if (!res.ok) throw new Error(`${res.status}`);
+        formFields = await res.json();
+      } catch (e) {
+        console.error('Error loading form config:', e);
+        formFields = [];
+      }
+      renderFormFields();
+    }
+
+    function renderFormFields() {
+      const tbody = document.getElementById('form-fields-table');
+      if (!tbody) return;
+      if (!formFields.length) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--text-2);">No fields configured. Click "+ Add Field".</td></tr>';
+        return;
+      }
+      tbody.innerHTML = formFields.map((f, idx) => `
+        <tr>
+          <td style="white-space:nowrap;">
+            <button class="action-btn" onclick="moveFormField(${idx}, -1)" ${idx === 0 ? 'disabled' : ''} title="Move up">▲</button>
+            <button class="action-btn" onclick="moveFormField(${idx}, 1)" ${idx === formFields.length - 1 ? 'disabled' : ''} title="Move down">▼</button>
+          </td>
+          <td><input type="text" class="form-input" value="${escapeHtml(f.label || '')}" onchange="updateFormField(${idx}, 'label', this.value)"></td>
+          <td>
+            <select class="form-input" onchange="updateFormField(${idx}, 'field_type', this.value)">
+              ${FIELD_TYPES.map(t => `<option value="${t}" ${f.field_type === t ? 'selected' : ''}>${t}</option>`).join('')}
+            </select>
+          </td>
+          <td><input type="text" class="form-input" value="${escapeHtml(f.placeholder || '')}" onchange="updateFormField(${idx}, 'placeholder', this.value)"></td>
+          <td style="text-align:center;"><input type="checkbox" ${f.is_required ? 'checked' : ''} onchange="updateFormField(${idx}, 'is_required', this.checked)"></td>
+          <td><button class="action-btn delete" onclick="removeFormField(${idx})">Remove</button></td>
+        </tr>
+      `).join('');
+    }
+
+    function updateFormField(idx, key, value) {
+      if (!formFields[idx]) return;
+      formFields[idx][key] = (key === 'is_required') ? (value ? 1 : 0) : value;
+    }
+
+    function moveFormField(idx, dir) {
+      const target = idx + dir;
+      if (target < 0 || target >= formFields.length) return;
+      const tmp = formFields[idx];
+      formFields[idx] = formFields[target];
+      formFields[target] = tmp;
+      renderFormFields();
+    }
+
+    function removeFormField(idx) {
+      formFields.splice(idx, 1);
+      renderFormFields();
+    }
+
+    function addFormFieldRow() {
+      formFields.push({ field_key: '', label: 'New Field', field_type: 'text', placeholder: '', is_required: 0, is_active: 1, is_system: 0 });
+      renderFormFields();
+    }
+
+    async function saveFormConfig() {
+      const btn = document.getElementById('form-save-btn');
+      // Basic validation: every field needs a non-empty label
+      for (const f of formFields) {
+        if (!String(f.label || '').trim()) { alert('Every field needs a label.'); return; }
+      }
+      btn.disabled = true; btn.textContent = 'Saving…';
+      try {
+        const res = await fetch(`${API_BASE}/form-config`, {
+          method: 'PUT',
+          headers: authHeaders({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify({ fields: formFields })
+        });
+        if (!res.ok) { const err = await res.json().catch(() => ({})); throw new Error(err.error || res.status); }
+        alert('Checkout form configuration saved!');
+        await loadFormConfig();
+      } catch (e) {
+        alert('Error: ' + e.message);
+      } finally {
+        btn.disabled = false; btn.textContent = 'Save Configuration';
+      }
     }
 
     function setupEditors() {

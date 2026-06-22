@@ -108,6 +108,96 @@ async function initializeDatabase() {
     `);
     console.log('✅ Orders table created');
 
+    // Extend orders with full checkout + Razorpay fields (idempotent)
+    await ensureColumn(connection, 'orders', 'customer_address', 'TEXT');
+    await ensureColumn(connection, 'orders', 'customer_city', 'VARCHAR(120)');
+    await ensureColumn(connection, 'orders', 'customer_state', 'VARCHAR(120)');
+    await ensureColumn(connection, 'orders', 'customer_postal_code', 'VARCHAR(20)');
+    await ensureColumn(connection, 'orders', 'notes', 'TEXT');
+    await ensureColumn(connection, 'orders', 'quantity', 'INT DEFAULT 0');
+    await ensureColumn(connection, 'orders', 'payment_status', "VARCHAR(30) DEFAULT 'pending'");
+    await ensureColumn(connection, 'orders', 'razorpay_signature', 'VARCHAR(255)');
+    console.log('✅ Orders table columns ensured');
+
+    // Categories Table (product categories managed from admin)
+    await connection.execute(`
+      CREATE TABLE IF NOT EXISTS categories (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(100) UNIQUE NOT NULL,
+        slug VARCHAR(120),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_name (name)
+      )
+    `);
+    console.log('✅ Categories table created');
+
+    // Form Fields Table (dynamic checkout form configuration)
+    await connection.execute(`
+      CREATE TABLE IF NOT EXISTS form_fields (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        field_key VARCHAR(80) UNIQUE NOT NULL,
+        label VARCHAR(150) NOT NULL,
+        field_type VARCHAR(40) DEFAULT 'text',
+        placeholder VARCHAR(255),
+        is_required TINYINT(1) DEFAULT 0,
+        sort_order INT DEFAULT 0,
+        is_active TINYINT(1) DEFAULT 1,
+        is_system TINYINT(1) DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_sort_order (sort_order)
+      )
+    `);
+    console.log('✅ Form fields table created');
+
+    // Seed default categories (only when empty) — merge defaults with any existing product categories
+    const [catCount] = await connection.query('SELECT COUNT(*) AS count FROM categories');
+    if (catCount[0].count === 0) {
+      const defaultCategories = ['parts', 'screens', 'batteries', 'accessories', 'phones', 'laptops', 'tablets'];
+      let existingProductCats = [];
+      try {
+        const [rows] = await connection.query(
+          "SELECT DISTINCT category FROM products WHERE category IS NOT NULL AND category <> ''"
+        );
+        existingProductCats = rows.map(r => String(r.category).trim()).filter(Boolean);
+      } catch (e) { /* products table may be empty — ignore */ }
+
+      const seen = new Set();
+      const merged = [...defaultCategories, ...existingProductCats].filter(name => {
+        const key = name.toLowerCase();
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+
+      for (const name of merged) {
+        const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+        await connection.query('INSERT IGNORE INTO categories (name, slug) VALUES (?, ?)', [name, slug]);
+      }
+      console.log(`✅ Seeded ${merged.length} default categories`);
+    }
+
+    // Seed default checkout form fields (only when empty)
+    const [ffCount] = await connection.query('SELECT COUNT(*) AS count FROM form_fields');
+    if (ffCount[0].count === 0) {
+      const defaultFields = [
+        ['full_name',   'Full Name',    'text',     'Enter your full name',  1, 1, 1],
+        ['email',       'Email',        'email',    'you@example.com',       1, 2, 1],
+        ['phone',       'Phone Number', 'tel',      '10-digit mobile number',1, 3, 1],
+        ['address',     'Address',      'textarea', 'House no, street, area', 1, 4, 1],
+        ['city',        'City',         'text',     'City',                  1, 5, 1],
+        ['state',       'State',        'text',     'State',                 1, 6, 1],
+        ['postal_code', 'Postal Code',  'text',     '6-digit PIN code',      1, 7, 1],
+        ['notes',       'Order Notes',  'textarea', 'Any special instructions (optional)', 0, 8, 1]
+      ];
+      for (const [field_key, label, field_type, placeholder, is_required, sort_order, is_system] of defaultFields) {
+        await connection.query(
+          'INSERT IGNORE INTO form_fields (field_key, label, field_type, placeholder, is_required, sort_order, is_active, is_system) VALUES (?, ?, ?, ?, ?, ?, 1, ?)',
+          [field_key, label, field_type, placeholder, is_required, sort_order, is_system]
+        );
+      }
+      console.log(`✅ Seeded ${defaultFields.length} default form fields`);
+    }
+
     // Blog Posts Table
     await connection.execute(`
       CREATE TABLE IF NOT EXISTS blog_posts (
