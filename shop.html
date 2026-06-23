@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description"
     content="Buy quality refurbished phones and laptops from iFix Academy. Used iPhone, Samsung, MacBook certified devices.">
-  <title>Shop – iFix Academy</title>
+  <title>Shop - iFix Academy</title>
   <link rel="icon" type="image/png" href="Assets/iFix_Academy_Favicon_96x96.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -896,13 +896,14 @@
 
     .filter-btn.active {
       background: white;
-      color: var(--text);
-      box-shadow: 0 1px 6px rgba(0, 0, 0, .1), 0 0 0 1px rgba(0, 0, 0, .06);
+      color: #c2660a;
+      font-weight: 600;
+      box-shadow: 0 1px 6px rgba(255, 145, 0, .18), 0 0 0 1px rgba(255, 145, 0, .35);
     }
 
     .filter-btn:hover:not(.active) {
-      color: var(--text);
-      background: rgba(0, 0, 0, .04);
+      color: #b85e00;
+      background: rgba(255, 145, 0, .10);
     }
 
     /* Cart button */
@@ -1952,6 +1953,481 @@
         font-size: .9rem;
       }
     }
+
+    /* ══════════════════════════════════════════════
+       SHOP CONTROLS — search + filters
+    ══════════════════════════════════════════════ */
+    .shop-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .shop-search {
+      position: relative;
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    .shop-search__icon {
+      position: absolute;
+      left: 1rem;
+      width: 18px;
+      height: 18px;
+      color: var(--text-3);
+      pointer-events: none;
+    }
+
+    .shop-search__input {
+      width: 100%;
+      font-family: var(--ff);
+      font-size: .92rem;
+      color: var(--text);
+      padding: .8rem 2.6rem .8rem 2.9rem;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      box-shadow: var(--shadow-sm);
+      transition: border-color .25s, box-shadow .25s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    .shop-search__input::-webkit-search-cancel-button {
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    .shop-search__input::placeholder {
+      color: var(--text-3);
+    }
+
+    .shop-search__input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(52, 120, 246, .15);
+    }
+
+    .shop-search__clear {
+      position: absolute;
+      right: .7rem;
+      width: 24px;
+      height: 24px;
+      border: none;
+      background: var(--bg-2);
+      color: var(--text-2);
+      border-radius: 999px;
+      font-size: .72rem;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      transition: background .2s, color .2s;
+    }
+
+    .shop-search__clear:hover {
+      background: var(--text);
+      color: #fff;
+    }
+
+    .shop-search.has-value .shop-search__clear {
+      display: flex;
+    }
+
+    /* Filter bar */
+    .shop-filters {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.25rem;
+    }
+
+    .shop-filters__right {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      flex-wrap: wrap;
+    }
+
+    .shop-select {
+      display: flex;
+      align-items: center;
+      gap: .45rem;
+    }
+
+    .shop-select label {
+      font-size: .8rem;
+      font-weight: 600;
+      color: var(--text-2);
+    }
+
+    .shop-select select {
+      font-family: var(--ff);
+      font-size: .82rem;
+      font-weight: 500;
+      color: var(--text);
+      padding: .5rem 2rem .5rem .85rem;
+      background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2386868b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right .7rem center;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      cursor: pointer;
+      -webkit-appearance: none;
+      appearance: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+
+    .shop-select select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(52, 120, 246, .12);
+    }
+
+    .stock-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: .45rem;
+      font-size: .82rem;
+      font-weight: 500;
+      color: var(--text-2);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .stock-toggle input {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .filter-reset {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      font-family: var(--ff);
+      font-size: .8rem;
+      font-weight: 600;
+      color: var(--text-2);
+      padding: .5rem .9rem;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .filter-reset svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .filter-reset:hover {
+      color: #b85e00;
+      border-color: rgba(255, 145, 0, .45);
+      background: rgba(255, 145, 0, .08);
+    }
+
+    .shop-result-count {
+      font-size: .82rem;
+      color: var(--text-2);
+      margin-bottom: 1.25rem;
+    }
+
+    .shop-result-count:empty {
+      display: none;
+    }
+
+    .products-loading {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 3rem;
+      color: var(--text-2);
+    }
+
+    /* Empty state */
+    .products-empty {
+      grid-column: 1/-1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 4rem 1.5rem;
+      color: var(--text-2);
+    }
+
+    .products-empty__icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 20px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(180deg, var(--bg-2), #fff);
+      border: 1px solid var(--border);
+      margin-bottom: 1.25rem;
+      font-size: 2rem;
+    }
+
+    .products-empty__title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: .4rem;
+    }
+
+    .products-empty__sub {
+      font-size: .88rem;
+      max-width: 22rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .products-empty__btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      font-family: var(--ff);
+      font-size: .85rem;
+      font-weight: 700;
+      color: #fff;
+      background: var(--accent);
+      border: none;
+      padding: .7rem 1.4rem;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background .25s, transform .2s;
+    }
+
+    .products-empty__btn:hover {
+      background: var(--accent-h);
+      transform: translateY(-1px);
+    }
+
+    /* Out-of-stock badge on card */
+    .product-card__stock-tag {
+      position: absolute;
+      top: .7rem;
+      left: .7rem;
+      z-index: 2;
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      padding: .2rem .55rem;
+      border-radius: 999px;
+      background: rgba(255, 59, 48, .12);
+      color: #c4291f;
+    }
+
+    @media (max-width: 768px) {
+      .shop-filters {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .shop-filters__right {
+        justify-content: space-between;
+      }
+
+      .filter-pill-track {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .filter-pill-track::-webkit-scrollbar {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .shop-controls {
+        flex-wrap: wrap;
+      }
+
+      .shop-search {
+        order: 2;
+        flex: 1 1 100%;
+      }
+
+      .cart-trigger {
+        order: 1;
+        margin-left: auto;
+      }
+
+      .shop-filters__right {
+        gap: .6rem;
+      }
+
+      .shop-select {
+        flex: 1;
+      }
+
+      .shop-select select {
+        flex: 1;
+        width: 100%;
+      }
+    }
+
+    /* ══════════════════════════════════════════════
+       FAQ SECTION
+    ══════════════════════════════════════════════ */
+    .faq-section {
+      background: var(--bg-2);
+      padding: clamp(3rem, 6vw, 5rem) 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .faq-section__inner {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .faq-section__head {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .faq-section__eyebrow {
+      display: inline-block;
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: .75rem;
+    }
+
+    .faq-section__title {
+      font-weight: 800;
+      font-size: clamp(1.7rem, 3.5vw, 2.5rem);
+      letter-spacing: -.03em;
+      color: var(--text);
+      margin-bottom: .85rem;
+    }
+
+    .faq-section__title span {
+      color: var(--accent);
+    }
+
+    .faq-section__sub {
+      font-size: .95rem;
+      line-height: 1.65;
+      color: var(--text-2);
+      max-width: 34rem;
+      margin: 0 auto;
+    }
+
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: .75rem;
+    }
+
+    .faq-item {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      transition: border-color .25s, box-shadow .25s;
+    }
+
+    .faq-item.open {
+      border-color: rgba(52, 120, 246, .35);
+      box-shadow: 0 8px 28px -12px rgba(52, 120, 246, .25);
+    }
+
+    .faq-item__q {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      text-align: left;
+      font-family: var(--ff);
+      font-size: .98rem;
+      font-weight: 600;
+      color: var(--text);
+      padding: 1.15rem 1.35rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .faq-item__q:hover {
+      color: var(--accent);
+    }
+
+    .faq-item__icon {
+      position: relative;
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      background: var(--bg-2);
+      transition: background .25s;
+    }
+
+    .faq-item__icon::before,
+    .faq-item__icon::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 10px;
+      height: 2px;
+      background: var(--text-2);
+      border-radius: 2px;
+      transform: translate(-50%, -50%);
+      transition: transform .3s var(--ease-expo), background .25s;
+    }
+
+    .faq-item__icon::after {
+      transform: translate(-50%, -50%) rotate(90deg);
+    }
+
+    .faq-item.open .faq-item__icon {
+      background: var(--accent);
+    }
+
+    .faq-item.open .faq-item__icon::before,
+    .faq-item.open .faq-item__icon::after {
+      background: #fff;
+    }
+
+    .faq-item.open .faq-item__icon::after {
+      transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    .faq-item__a {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .35s var(--ease-expo);
+    }
+
+    .faq-item__a p {
+      padding: 0 1.35rem 1.25rem;
+      font-size: .9rem;
+      line-height: 1.7;
+      color: var(--text-2);
+      margin: 0;
+    }
+
+    @media (max-width: 560px) {
+      .faq-section__inner {
+        padding: 0 1rem;
+      }
+
+      .faq-item__q {
+        font-size: .9rem;
+        padding: 1rem 1.1rem;
+      }
+    }
   </style>
 </head>
 
@@ -2164,9 +2640,17 @@
     </div>
 
     <div class="section__inner">
-      <div class="products-header">
-        <div class="filter-pill-track products-filter" id="filters">
-          <button class="filter-btn active" onclick="filterByCategory('all')">All</button>
+      <!-- Search + cart row -->
+      <div class="shop-controls">
+        <div class="shop-search">
+          <svg class="shop-search__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="7" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input type="search" id="product-search" class="shop-search__input"
+            placeholder="Search products by name, category…" autocomplete="off" aria-label="Search products">
+          <button class="shop-search__clear" id="search-clear" type="button" aria-label="Clear search">✕</button>
         </div>
         <button class="cart-trigger" onclick="openCart()">
           <span>🛒</span>
@@ -2174,9 +2658,124 @@
           <span class="cart-trigger__count" id="cart-count">0</span>
         </button>
       </div>
+
+      <!-- Filter bar -->
+      <div class="shop-filters">
+        <div class="filter-pill-track products-filter" id="filters" role="group" aria-label="Filter by category">
+          <button class="filter-btn active" data-cat="all">All</button>
+        </div>
+        <div class="shop-filters__right">
+          <div class="shop-select">
+            <label for="price-filter">Price</label>
+            <select id="price-filter" aria-label="Filter by price">
+              <option value="all">Any price</option>
+              <option value="0-500">Under ₹500</option>
+              <option value="500-1500">₹500 – ₹1,500</option>
+              <option value="1500-3000">₹1,500 – ₹3,000</option>
+              <option value="3000-999999999">₹3,000 &amp; above</option>
+            </select>
+          </div>
+          <label class="stock-toggle">
+            <input type="checkbox" id="stock-filter">
+            <span>In stock only</span>
+          </label>
+          <button class="filter-reset" id="filter-reset" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 2v6h6" />
+              <path d="M3.51 15a9 9 0 1 0 2.13-9.36L3 8" />
+            </svg>
+            Reset
+          </button>
+        </div>
+      </div>
+
+      <p class="shop-result-count" id="result-count"></p>
       <p id="products-status"></p>
       <div class="products-grid" id="products-grid">
-        <div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-2)">Loading products…</div>
+        <div class="products-loading">Loading products…</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ SECTION -->
+  <section class="faq-section" id="faq">
+    <div class="faq-section__inner">
+      <div class="faq-section__head">
+        <span class="faq-section__eyebrow">Help Centre</span>
+        <h2 class="faq-section__title">Frequently Asked <span>Questions</span></h2>
+        <p class="faq-section__sub">Everything you need to know about buying genuine repair parts, screens and
+          batteries from iFix Academy.</p>
+      </div>
+
+      <div class="faq-list" id="faq-list">
+        <div class="faq-item">
+          <button class="faq-item__q" aria-expanded="false">
+            <span>Are the replacement parts genuine and original?</span>
+            <span class="faq-item__icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-item__a">
+            <p>Yes. Every screen, battery and component we sell is OEM-grade and individually inspected and tested by
+              our certified technicians before it ships. We never sell low-quality copy parts, so your repair lasts and
+              performs like the original.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-item__q" aria-expanded="false">
+            <span>Do the products come with a warranty?</span>
+            <span class="faq-item__icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-item__a">
+            <p>All parts include a 30-day warranty covering manufacturing defects. If a component arrives faulty or
+              fails under normal installation, contact our support team and we will arrange a free replacement.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-item__q" aria-expanded="false">
+            <span>How long does shipping take and where do you deliver?</span>
+            <span class="faq-item__icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-item__a">
+            <p>We ship pan-India. Orders are dispatched within 24–48 hours and typically arrive in 3–6 business days
+              depending on your location. Every part is packed in protective, anti-static packaging for safe transit.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-item__q" aria-expanded="false">
+            <span>Will a part fit my exact phone or laptop model?</span>
+            <span class="faq-item__icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-item__a">
+            <p>Each listing states the compatible models in its description. If you are unsure, message us on WhatsApp
+              with your device model and we will confirm the correct part for you before you order.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-item__q" aria-expanded="false">
+            <span>What payment methods do you accept?</span>
+            <span class="faq-item__icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-item__a">
+            <p>We support secure online payments through UPI, debit/credit cards and net banking via our encrypted
+              checkout. Cash-on-delivery may be available for selected pin codes — you'll see eligible options at
+              checkout.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-item__q" aria-expanded="false">
+            <span>Can I return or exchange a product?</span>
+            <span class="faq-item__icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-item__a">
+            <p>Yes. Unused parts in original packaging can be returned or exchanged within 7 days of delivery. For
+              defective items covered under warranty, we cover return shipping and send a replacement at no extra cost.</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -2290,25 +2889,20 @@
       try {
         const res = await fetch(`${API_BASE}/products`);
         if (!res.ok) throw new Error(`Products request failed (${res.status})`);
-        products = await res.json();
-        if (!Array.isArray(products)) throw new Error('Invalid products payload');
-        if (products.length > 0) {
-          saveProductsCache(products);
-          products = [...products, ...DEMO_PRODUCTS];
-        } else {
-          products = DEMO_PRODUCTS;
-        }
-        renderProducts(); loadFilters();
+        const data = await res.json();
+        if (!Array.isArray(data)) throw new Error('Invalid products payload');
+        products = data;
+        saveProductsCache(products);
+        loadFilters(); applyFilters();
       } catch (e) {
         console.error('Error loading products:', e);
+        // Fall back to the last successfully loaded admin products (never demo data).
         const cached = readProductsCache();
+        products = cached;
+        loadFilters(); applyFilters();
         if (cached.length > 0) {
-          products = cached; renderProducts(); loadFilters();
           renderProductsStatus('Live products are temporarily unavailable. Showing your last saved product list.');
-          return;
         }
-        products = DEMO_PRODUCTS; renderProducts(); loadFilters();
-        renderProductsStatus('Showing sample product listing. Connect backend API for live inventory.');
       }
     }
 
@@ -2328,15 +2922,81 @@
       return map[(category || '').toLowerCase()] || 'cat-default';
     }
 
-    function renderProducts(category = 'all') {
-      const filtered = category === 'all' ? products : products.filter(p => p.category === category);
-      document.getElementById('products-grid').innerHTML = filtered.map(p => `
+    // Current filter state — all conditions combine (AND).
+    const filterState = { category: 'all', price: 'all', inStockOnly: false, search: '' };
+
+    function isInStock(p) {
+      // Treat missing stock data as available so admin items without the field still show.
+      return p.stock === undefined || p.stock === null || Number(p.stock) > 0;
+    }
+
+    function applyFilters() {
+      const q = filterState.search.trim().toLowerCase();
+      const [pMin, pMax] = filterState.price === 'all'
+        ? [0, Infinity]
+        : filterState.price.split('-').map(Number);
+
+      const filtered = products.filter(p => {
+        if (filterState.category !== 'all' && p.category !== filterState.category) return false;
+        const price = Number(p.price) || 0;
+        if (price < pMin || price > pMax) return false;
+        if (filterState.inStockOnly && !isInStock(p)) return false;
+        if (q) {
+          const haystack = `${p.name || ''} ${p.category || ''} ${p.description || ''}`.toLowerCase();
+          if (!haystack.includes(q)) return false;
+        }
+        return true;
+      });
+
+      renderProducts(filtered);
+      renderResultCount(filtered.length);
+    }
+
+    function renderResultCount(n) {
+      const el = document.getElementById('result-count');
+      if (!el) return;
+      if (products.length === 0) { el.textContent = ''; return; }
+      const filtersActive = filterState.category !== 'all' || filterState.price !== 'all'
+        || filterState.inStockOnly || filterState.search.trim();
+      el.textContent = filtersActive
+        ? `Showing ${n} of ${products.length} product${products.length !== 1 ? 's' : ''}`
+        : `${products.length} product${products.length !== 1 ? 's' : ''} available`;
+    }
+
+    function renderProducts(list) {
+      const grid = document.getElementById('products-grid');
+
+      // No products at all in admin → polished empty state.
+      if (products.length === 0) {
+        grid.innerHTML = emptyStateHtml(
+          '📦', 'No products available yet',
+          'Our store is being stocked. Please check back soon for genuine repair parts, screens and batteries.',
+          false
+        );
+        return;
+      }
+
+      // Products exist but none match the active filters/search.
+      if (list.length === 0) {
+        grid.innerHTML = emptyStateHtml(
+          '🔍', 'No products match your filters',
+          'Try adjusting your search or filters to see more products.',
+          true
+        );
+        return;
+      }
+
+      grid.innerHTML = list.map(p => {
+        const inStock = isInStock(p);
+        const safeName = escapeHtml(p.name);
+        return `
         <div class="product-card" onclick="openProductModal(${p.id})">
           <div class="product-card__image">
             ${(p.image_url || p.image)
-          ? `<img src="${p.image_url || p.image}" alt="${escapeHtml(p.name)}">`
-          : getCategoryEmoji(p.category)
-        }
+            ? `<img src="${p.image_url || p.image}" alt="${safeName}">`
+            : getCategoryEmoji(p.category)
+          }
+            ${!inStock ? '<span class="product-card__stock-tag">Out of stock</span>' : ''}
             <div class="product-card__quick">
               <span class="product-card__quick-label">Quick View</span>
             </div>
@@ -2344,15 +3004,25 @@
           </div>
           <div class="product-card__body">
             <div class="product-card__category ${getCatClass(p.category)}">${escapeHtml(p.category)}</div>
-            <div class="product-card__name">${escapeHtml(p.name)}</div>
+            <div class="product-card__name">${safeName}</div>
             <div class="product-card__description">${escapeHtml((p.description || '').substring(0, 62))}…</div>
             <div class="product-card__footer">
-              <div class="product-card__price"><span class="product-card__price-sym">₹</span>${p.price.toLocaleString()}</div>
-              <button class="product-card__btn" onclick="event.stopPropagation(); addToCart({id:${p.id},name:'${escapeHtml(p.name)}',price:${p.price}})">+ Add</button>
+              <div class="product-card__price"><span class="product-card__price-sym">₹</span>${Number(p.price).toLocaleString()}</div>
+              <button class="product-card__btn" onclick="event.stopPropagation(); addToCart({id:${p.id},name:'${safeName}',price:${p.price}})">+ Add</button>
             </div>
           </div>
-        </div>
-      `).join('');
+        </div>`;
+      }).join('');
+    }
+
+    function emptyStateHtml(icon, title, sub, showReset) {
+      return `
+        <div class="products-empty">
+          <div class="products-empty__icon">${icon}</div>
+          <div class="products-empty__title">${title}</div>
+          <div class="products-empty__sub">${sub}</div>
+          ${showReset ? '<button class="products-empty__btn" onclick="resetFilters()">Clear all filters</button>' : ''}
+        </div>`;
     }
 
     function openProductModal(productId) {
@@ -2393,30 +3063,92 @@
       return emojis[(category || '').toLowerCase()] || emojis['default'];
     }
 
-    const DEMO_PRODUCTS = [
-      { id: 101, category: 'parts', name: 'Laptop Motherboard (Intel i5 Gen 10)', description: 'OEM-grade replacement motherboard, tested and certified by iFix technicians. Compatible with most mid-range laptops.', price: 8499, image: 'Assets/parts/motherboard.svg' },
-      { id: 102, category: 'screens', name: 'iPhone 14 OLED Screen Assembly', description: 'High-brightness OLED display with digitizer. True Tone compatible, scratch-resistant glass, factory calibrated.', price: 3499, image: 'Assets/parts/iphone-screen.svg' },
-      { id: 103, category: 'batteries', name: 'MacBook Pro 13" Battery (6000 mAh)', description: 'Original capacity Li-Po replacement cell. Holds 80%+ charge after 500 cycles. Includes adhesive strips.', price: 2999, image: 'Assets/parts/macbook-battery.svg' },
-      { id: 104, category: 'parts', name: 'Samsung Galaxy Charging Port Flex', description: 'USB-C charging port + mic ribbon for Samsung S21 / S22 series. Genuine OEM part, plug-and-play replacement.', price: 699, image: 'Assets/parts/charging-port.svg' },
-      { id: 105, category: 'parts', name: 'iPhone 13 Rear Camera Module', description: '12 MP dual-camera assembly (wide + ultra-wide) with OIS. Factory-tested, immediate swap, 30-day warranty.', price: 1999, image: 'Assets/parts/camera-module.svg' },
-      { id: 106, category: 'parts', name: 'Laptop Keyboard Replacement (15")', description: 'Universal slim chiclet keyboard deck for 15-inch laptops. Spill-resistant, backlit variant available, easy ribbon swap.', price: 1299, image: 'Assets/parts/keyboard.svg' },
-      { id: 107, category: 'parts', name: 'iPhone Power Button Flex Cable', description: 'Power + volume + mute ribbon flex for iPhone 12 / 13 series. OEM spec, includes pre-adhesive foam pad.', price: 449, image: 'Assets/parts/power-flex.svg' },
-      { id: 108, category: 'accessories', name: 'Laptop Cooling Fan (DC 5V Dual Ball)', description: 'High-RPM dual-ball bearing cooling fan for notebook CPUs. Compatible with most Dell, HP, Lenovo models. Quiet operation.', price: 899, image: 'Assets/parts/cooling-fan.svg' },
-    ];
-
     function loadFilters() {
-      const categories = ['all', ...new Set(products.map(p => p.category))];
+      const categories = ['all', ...new Set(products.map(p => p.category).filter(Boolean))];
       document.getElementById('filters').innerHTML = categories.map(cat => `
-        <button class="filter-btn ${cat === 'all' ? 'active' : ''}" onclick="filterByCategory('${cat}')">
-          ${cat.charAt(0).toUpperCase() + cat.slice(1)}
+        <button class="filter-btn ${cat === filterState.category ? 'active' : ''}" data-cat="${escapeHtml(cat)}" onclick="filterByCategory('${escapeHtml(cat)}', this)">
+          ${cat === 'all' ? 'All' : cat.charAt(0).toUpperCase() + cat.slice(1)}
         </button>
       `).join('');
     }
 
-    function filterByCategory(category) {
-      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-      event.target.classList.add('active');
-      renderProducts(category);
+    function filterByCategory(category, btn) {
+      filterState.category = category;
+      document.querySelectorAll('#filters .filter-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      applyFilters();
+    }
+
+    function resetFilters() {
+      filterState.category = 'all';
+      filterState.price = 'all';
+      filterState.inStockOnly = false;
+      filterState.search = '';
+      const search = document.getElementById('product-search');
+      const price = document.getElementById('price-filter');
+      const stock = document.getElementById('stock-filter');
+      if (search) { search.value = ''; search.closest('.shop-search').classList.remove('has-value'); }
+      if (price) price.value = 'all';
+      if (stock) stock.checked = false;
+      document.querySelectorAll('#filters .filter-btn').forEach(b =>
+        b.classList.toggle('active', b.getAttribute('data-cat') === 'all'));
+      applyFilters();
+    }
+
+    function initShopControls() {
+      const search = document.getElementById('product-search');
+      const searchWrap = search ? search.closest('.shop-search') : null;
+      const clearBtn = document.getElementById('search-clear');
+      const price = document.getElementById('price-filter');
+      const stock = document.getElementById('stock-filter');
+      const reset = document.getElementById('filter-reset');
+
+      if (search) {
+        search.addEventListener('input', () => {
+          filterState.search = search.value;
+          if (searchWrap) searchWrap.classList.toggle('has-value', search.value.length > 0);
+          applyFilters();
+        });
+      }
+      if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+          search.value = '';
+          filterState.search = '';
+          if (searchWrap) searchWrap.classList.remove('has-value');
+          applyFilters();
+          search.focus();
+        });
+      }
+      if (price) {
+        price.addEventListener('change', () => { filterState.price = price.value; applyFilters(); });
+      }
+      if (stock) {
+        stock.addEventListener('change', () => { filterState.inStockOnly = stock.checked; applyFilters(); });
+      }
+      if (reset) reset.addEventListener('click', resetFilters);
+    }
+
+    /* ── FAQ accordion (one open at a time) ──────────── */
+    function initFaq() {
+      const items = document.querySelectorAll('.faq-item');
+      items.forEach(item => {
+        const btn = item.querySelector('.faq-item__q');
+        const answer = item.querySelector('.faq-item__a');
+        if (!btn || !answer) return;
+        btn.addEventListener('click', () => {
+          const isOpen = item.classList.contains('open');
+          items.forEach(other => {
+            other.classList.remove('open');
+            other.querySelector('.faq-item__a').style.maxHeight = null;
+            other.querySelector('.faq-item__q').setAttribute('aria-expanded', 'false');
+          });
+          if (!isOpen) {
+            item.classList.add('open');
+            answer.style.maxHeight = answer.scrollHeight + 'px';
+            btn.setAttribute('aria-expanded', 'true');
+          }
+        });
+      });
     }
 
     function renderYouTubeVideos() {
@@ -2705,9 +3437,8 @@
       }
     }
 
-    products = DEMO_PRODUCTS;
-    renderProducts();
-    loadFilters();
+    initShopControls();
+    initFaq();
     loadProducts();
     loadYouTubeVideos();
     updateCartUI();
