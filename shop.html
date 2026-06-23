@@ -1604,6 +1604,18 @@
       display: none;
     }
 
+    /* Keep the floating WhatsApp / Call buttons (shared.css, z-index 260) from
+       covering the cart's "Proceed to Checkout" button and the checkout modal.
+       Hide them while either panel is open so checkout CTAs stay fully clickable. */
+    body.panel-open .wa-float,
+    body.panel-open .call-float {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(12px);
+      transition: opacity .25s var(--ease-expo), transform .25s var(--ease-expo), visibility .25s;
+    }
+
     /* ══════════════════════════════════════════════
        CHECKOUT MODAL
     ══════════════════════════════════════════════ */
@@ -3235,10 +3247,14 @@
     function openCart() {
       document.getElementById('cart-sidebar').classList.add('open');
       document.getElementById('cart-overlay').style.display = 'block';
+      document.body.classList.add('panel-open');
     }
     function closeCart() {
       document.getElementById('cart-sidebar').classList.remove('open');
       document.getElementById('cart-overlay').style.display = 'none';
+      if (!document.getElementById('checkout-modal').classList.contains('open')) {
+        document.body.classList.remove('panel-open');
+      }
     }
 
     /* ── Checkout form (dynamic + admin-connected) ───── */
@@ -3310,10 +3326,12 @@
       document.getElementById('checkout-summary-total').textContent = '₹' + total.toLocaleString();
       closeCart();
       document.getElementById('checkout-modal').classList.add('open');
+      document.body.classList.add('panel-open');
     }
 
     function closeCheckout() {
       document.getElementById('checkout-modal').classList.remove('open');
+      document.body.classList.remove('panel-open');
     }
 
     function validateCheckout() {
