@@ -319,6 +319,7 @@
           <div class="admin-menu__item" onclick="cancelProductEdit(); switchTab('add-product')">➕ Add Product</div>
           <div class="admin-menu__item" onclick="switchTab('orders')">📋 Manage Orders</div>
           <div class="admin-menu__item" onclick="switchTab('manage-form')">🧾 Manage Form</div>
+          <div class="admin-menu__item" onclick="switchTab('account')">🔐 Account Settings</div>
         </nav>
         <div class="admin-footer">
           <button class="logout-btn" onclick="logout()">🚪 Logout</button>
@@ -701,6 +702,39 @@
               <tbody id="form-fields-table"></tbody>
             </table>
           </div>
+        </div>
+
+        <!-- ACCOUNT SETTINGS TAB -->
+        <div id="account" class="admin-section">
+          <div class="admin-header">
+            <h2 class="admin-title">Account Settings</h2>
+          </div>
+          <p style="color:var(--text-2); margin-bottom:1rem; max-width:560px;">
+            Change your admin username and password. You must enter your current
+            password to confirm. Leave a field blank to keep it unchanged.
+          </p>
+
+          <div id="account-message" style="margin-bottom:1rem;"></div>
+
+          <form onsubmit="changeCredentials(event)" style="max-width:480px;">
+            <div class="form-group">
+              <label class="form-label">Current password <span style="color:#e11">*</span></label>
+              <input type="password" id="acc-current-password" class="form-input" placeholder="Enter current password" autocomplete="current-password" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">New username</label>
+              <input type="text" id="acc-new-username" class="form-input" placeholder="Leave blank to keep current" autocomplete="username">
+            </div>
+            <div class="form-group">
+              <label class="form-label">New password</label>
+              <input type="password" id="acc-new-password" class="form-input" placeholder="Min 8 characters (blank to keep)" autocomplete="new-password">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Confirm new password</label>
+              <input type="password" id="acc-confirm-password" class="form-input" placeholder="Re-enter new password" autocomplete="new-password">
+            </div>
+            <button type="submit" class="btn btn--primary" id="acc-save-btn">Save changes</button>
+          </form>
         </div>
 
       </main>
@@ -1815,6 +1849,73 @@
       document.querySelectorAll('.admin-menu__item').forEach(item => item.classList.remove('active'));
       const activeMenu = Array.from(document.querySelectorAll('.admin-menu__item')).find(item => item.getAttribute('onclick')?.includes(tab));
       activeMenu?.classList.add('active');
+    }
+
+    // Change own admin username/password from inside the panel
+    async function changeCredentials(e) {
+      e.preventDefault();
+      const msg = document.getElementById('account-message');
+      const btn = document.getElementById('acc-save-btn');
+      const currentPassword = document.getElementById('acc-current-password').value;
+      const newUsername = document.getElementById('acc-new-username').value.trim();
+      const newPassword = document.getElementById('acc-new-password').value;
+      const confirmPassword = document.getElementById('acc-confirm-password').value;
+
+      const show = (type, text) => {
+        const style = type === 'error'
+          ? 'background:#fee;color:#b00;'
+          : 'background:#e8f7ee;color:#127a3a;';
+        msg.innerHTML = `<div style="padding:.6rem .8rem;border-radius:8px;font-size:.9rem;${style}">${escapeHtml(text)}</div>`;
+      };
+
+      if (!currentPassword) return show('error', 'Please enter your current password.');
+      if (!newUsername && !newPassword) return show('error', 'Enter a new username and/or a new password.');
+      if (newPassword && newPassword.length < 8) return show('error', 'New password must be at least 8 characters.');
+      if (newPassword && newPassword !== confirmPassword) return show('error', 'New password and confirmation do not match.');
+
+      btn.disabled = true;
+      const originalLabel = btn.textContent;
+      btn.textContent = 'Saving…';
+      try {
+        const res = await fetch(`${API_BASE}/auth/credentials`, {
+          method: 'PUT',
+          headers: authHeaders({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify({
+            currentPassword,
+            newUsername: newUsername || undefined,
+            newPassword: newPassword || undefined
+          })
+        });
+
+        const data = await res.json().catch(() => ({}));
+
+        if (res.status === 401) {
+          // 401 = bad current password OR an expired session token.
+          if (data.error && /current password/i.test(data.error)) {
+            show('error', data.error);
+          } else {
+            handleUnauthorized();
+          }
+          return;
+        }
+        if (!res.ok) {
+          show('error', data.error || 'Failed to update credentials.');
+          return;
+        }
+
+        // Persist the refreshed token so the session stays valid under the new username.
+        if (data.token) {
+          token = data.token;
+          localStorage.setItem('admin_token', token);
+        }
+        show('success', 'Credentials updated successfully.' + (newUsername ? ` New username: ${newUsername}.` : ''));
+        e.target.reset();
+      } catch (err) {
+        show('error', 'Network error: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = originalLabel;
+      }
     }
 
     // Logout

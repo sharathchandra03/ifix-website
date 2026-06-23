@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const { sendServerError } = require('../utils/respond');
 const { google } = require('googleapis');
+const { verifyToken } = require('./auth');
 
 function normalizePrivateKey(value) {
   if (!value) return '';
@@ -166,18 +168,20 @@ router.post('/', async (req, res) => {
         }
       } catch (sheetsError) {
         sheetsErrorMessage = sheetsError.message;
-        // Log full error object so Hostinger logs show the OpenSSL stack
         console.error('Google Sheets error (non-blocking):', sheetsError.message);
-        console.error('FULL SHEETS ERROR:', sheetsError);
-        console.error('STACK:', sheetsError.stack);
+        if (process.env.GOOGLE_SHEETS_DEBUG === 'true') {
+          console.error('STACK:', sheetsError.stack);
+        }
       }
     }
+
+    // Only expose internal error detail outside production (or when debugging).
+    const exposeDetail = process.env.NODE_ENV !== 'production' || process.env.GOOGLE_SHEETS_DEBUG === 'true';
 
     if (!dbSaved && !sheetsSynced) {
       return res.status(500).json({
         error: 'Unable to save contact submission',
-        dbError: dbErrorMessage || null,
-        sheetsError: sheetsErrorMessage || null
+        ...(exposeDetail ? { dbError: dbErrorMessage || null, sheetsError: sheetsErrorMessage || null } : {})
       });
     }
 
@@ -187,11 +191,11 @@ router.post('/', async (req, res) => {
       contactId,
       dbSaved,
       sheetsSynced,
-      ...(dbErrorMessage ? { dbError: dbErrorMessage } : {}),
-      ...(sheetsErrorMessage ? { sheetsError: sheetsErrorMessage } : {})
+      ...(exposeDetail && dbErrorMessage ? { dbError: dbErrorMessage } : {}),
+      ...(exposeDetail && sheetsErrorMessage ? { sheetsError: sheetsErrorMessage } : {})
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    sendServerError(res, error);
   } finally {
     if (connection) connection.release();
   }
@@ -205,18 +209,18 @@ async function appendToGoogleSheets({ fullName, email, phone, language, city, pi
     throw new Error('Google Sheets credentials are incomplete: project_id, client_email, and private_key are required');
   }
 
-  // ── Key diagnostics (remove once Hostinger issue is resolved) ──────────
-  console.log('=== GOOGLE SHEETS DEBUG ===');
-  console.log('Project ID :', credentials.project_id);
-  console.log('Email      :', credentials.client_email);
-  console.log('Key length :', credentials.private_key?.length);
-  console.log('Key starts :', credentials.private_key?.substring(0, 40));
-  console.log('Key ends   :', credentials.private_key?.slice(-40));
-  console.log('Has header :', credentials.private_key?.includes('-----BEGIN'));
-  console.log('Has footer :', credentials.private_key?.includes('-----END'));
-  console.log('Newline cnt:', (credentials.private_key?.match(/\n/g) || []).length);
-  console.log('=== END DEBUG ===');
-  // ────────────────────────────────────────────────────────────────────────
+  // Key diagnostics — opt-in only. Never log key material in production.
+  // Enable with GOOGLE_SHEETS_DEBUG=true if troubleshooting credentials.
+  if (process.env.GOOGLE_SHEETS_DEBUG === 'true') {
+    console.log('=== GOOGLE SHEETS DEBUG ===');
+    console.log('Project ID :', credentials.project_id);
+    console.log('Email      :', credentials.client_email);
+    console.log('Key present:', Boolean(credentials.private_key));
+    console.log('Key length :', credentials.private_key?.length);
+    console.log('Has header :', credentials.private_key?.includes('-----BEGIN'));
+    console.log('Has footer :', credentials.private_key?.includes('-----END'));
+    console.log('=== END DEBUG ===');
+  }
 
   const auth = new google.auth.GoogleAuth({
     credentials,
@@ -288,15 +292,15 @@ router.get('/config-status', (req, res) => {
   });
 });
 
-// GET all contacts (admin only)
-router.get('/', async (req, res) => {
+// GET all contacts (admin only — contains PII)
+router.get('/', verifyToken, async (req, res) => {
   try {
     const connection = await global.db.getConnection();
     const [rows] = await connection.query('SELECT * FROM contacts ORDER BY created_at DESC');
     connection.release();
     res.json(rows);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    sendServerError(res, error);
   }
 });
 

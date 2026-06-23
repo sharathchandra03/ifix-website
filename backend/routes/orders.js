@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const { sendServerError } = require('../utils/respond');
+const { verifyToken } = require('./auth');
 
 const ALLOWED_STATUSES = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
 const ALLOWED_PAYMENT_STATUSES = ['pending', 'paid', 'failed'];
@@ -66,24 +68,24 @@ router.post('/', async (req, res) => {
       connection.release();
     }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    sendServerError(res, error);
   }
 });
 
 // GET all orders (admin)
-router.get('/', async (req, res) => {
+router.get('/', verifyToken, async (req, res) => {
   try {
     const connection = await global.db.getConnection();
     const [rows] = await connection.query('SELECT * FROM orders ORDER BY created_at DESC');
     connection.release();
     res.json(rows);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    sendServerError(res, error);
   }
 });
 
 // GET single order (admin)
-router.get('/:id', async (req, res) => {
+router.get('/:id', verifyToken, async (req, res) => {
   try {
     const connection = await global.db.getConnection();
     const [rows] = await connection.query('SELECT * FROM orders WHERE id = ?', [req.params.id]);
@@ -91,12 +93,12 @@ router.get('/:id', async (req, res) => {
     if (rows.length === 0) return res.status(404).json({ error: 'Order not found' });
     res.json(rows[0]);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    sendServerError(res, error);
   }
 });
 
 // PUT update fulfillment status (admin)
-router.put('/:id/status', async (req, res) => {
+router.put('/:id/status', verifyToken, async (req, res) => {
   const status = (req.body.status || '').toLowerCase();
   if (!ALLOWED_STATUSES.includes(status)) {
     return res.status(400).json({ error: `Status must be one of: ${ALLOWED_STATUSES.join(', ')}` });
@@ -111,12 +113,12 @@ router.put('/:id/status', async (req, res) => {
     if (result.affectedRows === 0) return res.status(404).json({ error: 'Order not found' });
     res.json({ success: true, status });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    sendServerError(res, error);
   }
 });
 
 // PUT update payment status + razorpay fields (admin / Razorpay hook)
-router.put('/:id/payment', async (req, res) => {
+router.put('/:id/payment', verifyToken, async (req, res) => {
   const payment_status = (req.body.payment_status || '').toLowerCase();
   if (!ALLOWED_PAYMENT_STATUSES.includes(payment_status)) {
     return res.status(400).json({ error: `Payment status must be one of: ${ALLOWED_PAYMENT_STATUSES.join(', ')}` });
@@ -137,12 +139,12 @@ router.put('/:id/payment', async (req, res) => {
     if (result.affectedRows === 0) return res.status(404).json({ error: 'Order not found' });
     res.json({ success: true, payment_status });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    sendServerError(res, error);
   }
 });
 
 // DELETE order (admin)
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', verifyToken, async (req, res) => {
   try {
     const connection = await global.db.getConnection();
     const [result] = await connection.query('DELETE FROM orders WHERE id = ?', [req.params.id]);
@@ -150,7 +152,7 @@ router.delete('/:id', async (req, res) => {
     if (result.affectedRows === 0) return res.status(404).json({ error: 'Order not found' });
     res.json({ deleted: true });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    sendServerError(res, error);
   }
 });
 

@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const { sendServerError } = require('../utils/respond');
+const { verifyToken } = require('./auth');
 
 const ALLOWED_TYPES = ['text', 'email', 'tel', 'number', 'textarea', 'select'];
 
@@ -20,12 +22,12 @@ router.get('/', async (req, res) => {
     connection.release();
     res.json(rows);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    sendServerError(res, error);
   }
 });
 
 // GET all fields incl. inactive (admin)
-router.get('/all', async (req, res) => {
+router.get('/all', verifyToken, async (req, res) => {
   try {
     const connection = await global.db.getConnection();
     const [rows] = await connection.query(
@@ -34,12 +36,12 @@ router.get('/all', async (req, res) => {
     connection.release();
     res.json(rows);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    sendServerError(res, error);
   }
 });
 
 // PUT replace the full form configuration (admin)
-router.put('/', async (req, res) => {
+router.put('/', verifyToken, async (req, res) => {
   const fields = Array.isArray(req.body.fields) ? req.body.fields : null;
   if (!fields) {
     return res.status(400).json({ error: 'Expected { fields: [...] }' });
@@ -94,7 +96,7 @@ router.put('/', async (req, res) => {
     res.json({ success: true, count: normalized.length });
   } catch (error) {
     await connection.rollback();
-    res.status(500).json({ error: error.message });
+    sendServerError(res, error);
   } finally {
     connection.release();
   }

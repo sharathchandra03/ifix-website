@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { sendServerError } = require('../utils/respond');
 const { verifyToken } = require('./auth');
 const multer = require('multer');
 const path = require('path');
@@ -182,7 +183,7 @@ router.get('/', async (req, res) => {
     res.json(blogs.map(blog => normalizeBlogImageFields(blog, req)));
   } catch (error) {
     log.error('Failed to fetch published blogs', error.message);
-    res.status(500).json({ error: error.message });
+    sendServerError(res, error);
   }
 });
 
@@ -227,7 +228,7 @@ router.get('/post/:slug', async (req, res) => {
     res.json(blog || {});
   } catch (error) {
     log.error('Failed to fetch blog', error.message);
-    res.status(500).json({ error: error.message });
+    sendServerError(res, error);
   }
 });
 
@@ -251,7 +252,7 @@ router.get('/media/:id', async (req, res) => {
     return res.send(rows[0].image_data);
   } catch (error) {
     log.error('Failed to fetch media', error.message);
-    return res.status(500).json({ error: error.message });
+    return sendServerError(res, error);
   } finally {
     if (connection) connection.release();
   }
@@ -313,7 +314,7 @@ router.post('/', verifyToken, async (req, res) => {
       return res.status(409).json({ error: 'A blog with this title already exists. Try a different title.' });
     }
     log.error('Failed to create blog', error.message);
-    res.status(500).json({ error: error.message });
+    sendServerError(res, error);
   } finally {
     if (connection) connection.release();
   }
@@ -373,7 +374,7 @@ router.put('/:id', verifyToken, async (req, res) => {
     res.json({ updated });
   } catch (error) {
     log.error('Failed to update blog', error.message);
-    res.status(500).json({ error: error.message });
+    sendServerError(res, error);
   }
 });
 
@@ -411,7 +412,7 @@ router.delete('/:id', verifyToken, async (req, res) => {
     log.info('Blog deleted:', { id: req.params.id, success: deleted });
     res.json({ deleted });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    sendServerError(res, error);
   }
 });
 

@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { sendServerError } = require('../utils/respond');
 const crypto = require('crypto');
 
 // ============================================================
@@ -148,7 +149,7 @@ router.post('/verify-payment', async (req, res) => {
 
     res.json({ success: true, message: 'Payment verified successfully' });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    sendServerError(res, error);
   }
 });
 
@@ -166,7 +167,7 @@ router.get('/order-status/:orderId', async (req, res) => {
     if (rows.length === 0) return res.status(404).json({ error: 'Order not found' });
     res.json(rows[0]);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    sendServerError(res, error);
   }
 });
 
